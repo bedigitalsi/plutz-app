@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* PDF-style contract preview styling */
+.contract-content h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1e40af;
+    margin-top: 0;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 3px solid #1e40af;
+    line-height: 1.3;
+}
+
+.contract-content h2 {
+    font-size: 22px;
+    font-weight: 600;
+    color: #1e40af;
+    margin-top: 32px;
+    margin-bottom: 16px;
+    line-height: 1.3;
+}
+
+.contract-content h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #374151;
+    margin-top: 24px;
+    margin-bottom: 12px;
+    line-height: 1.3;
+}
+
+.contract-content p {
+    margin-bottom: 16px;
+    text-align: justify;
+}
+
+.contract-content strong {
+    font-weight: 600;
+    color: #111827;
+}
+
+.contract-content ul,
+.contract-content ol {
+    margin-bottom: 16px;
+    padding-left: 32px;
+}
+
+.contract-content li {
+    margin-bottom: 8px;
+}
+
+.contract-content blockquote {
+    border-left: 4px solid #1e40af;
+    padding-left: 20px;
+    margin: 20px 0;
+    color: #4b5563;
+    font-style: italic;
+}
+
+.contract-content hr {
+    margin: 32px 0;
+    border: 0;
+    border-top: 2px solid #e5e7eb;
+}

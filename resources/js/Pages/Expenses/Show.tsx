@@ -101,7 +101,13 @@ export default function Show({ expense }: Props) {
                                 </span>
                             </div>
 
-                            <div className="mt-6">
+                            <div className="mt-6 flex gap-3">
+                                <Link
+                                    href={route('expenses.edit', expense.id)}
+                                    className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+                                >
+                                    Edit
+                                </Link>
                                 <button
                                     onClick={handleDelete}
                                     className="rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500"

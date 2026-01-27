@@ -91,6 +91,66 @@ class ExpenseController extends Controller
         ]);
     }
 
+    public function edit(Expense $expense): Response
+    {
+        $expense->load('attachments');
+
+        return Inertia::render('Expenses/Edit', [
+            'expense' => $expense,
+        ]);
+    }
+
+    public function update(Request $request, Expense $expense)
+    {
+        $validated = $request->validate([
+            'invoice_date' => 'required|date',
+            'amount' => 'required|numeric|min:0',
+            'currency' => 'nullable|string|size:3',
+            'company_name' => 'required|string|max:255',
+            'notes' => 'nullable|string',
+            'status' => 'nullable|in:paid,unpaid',
+            'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240',
+            'delete_attachments' => 'nullable|array',
+        ]);
+
+        $validated['currency'] = $validated['currency'] ?? 'EUR';
+        $validated['status'] = $validated['status'] ?? 'paid';
+
+        $expense->update($validated);
+
+        // Delete selected attachments
+        if ($request->has('delete_attachments')) {
+            foreach ($request->delete_attachments as $attachmentId) {
+                $attachment = Attachment::find($attachmentId);
+                if ($attachment && $attachment->attachable_id === $expense->id) {
+                    Storage::disk($attachment->disk)->delete($attachment->path);
+                    $attachment->delete();
+                }
+            }
+        }
+
+        // Handle new file upload
+        if ($request->hasFile('attachment')) {
+            $file = $request->file('attachment');
+            $path = $file->store('expenses', 'local');
+
+            Attachment::create([
+                'id' => (string) Str::uuid(),
+                'attachable_type' => Expense::class,
+                'attachable_id' => $expense->id,
+                'disk' => 'local',
+                'path' => $path,
+                'original_name' => $file->getClientOriginalName(),
+                'mime' => $file->getMimeType(),
+                'size' => $file->getSize(),
+                'created_by' => Auth::id(),
+            ]);
+        }
+
+        return Redirect::route('expenses.show', $expense->id)
+            ->with('success', 'Expense updated successfully.');
+    }
+
     public function destroy(Expense $expense)
     {
         $expense->delete();

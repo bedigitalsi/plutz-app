@@ -59,8 +59,8 @@ class InquiryController extends Controller
         $validated = $request->validate([
             'performance_date' => 'required|date',
             'performance_time_mode' => 'required|in:exact_time,text_time',
-            'performance_time_exact' => ['nullable', 'required_if:performance_time_mode,exact_time', 'regex:/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/'],
-            'performance_time_text' => 'nullable|required_if:performance_time_mode,text_time|string|max:255',
+            'performance_time_exact' => ['nullable', 'required_if:performance_time_mode,exact_time', 'exclude_if:performance_time_mode,text_time', 'regex:/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/'],
+            'performance_time_text' => ['nullable', 'required_if:performance_time_mode,text_time', 'exclude_if:performance_time_mode,exact_time', 'string', 'max:255'],
             'duration_minutes' => 'nullable|integer|min:1',
             'location_name' => 'required|string|max:255',
             'location_address' => 'nullable|string|max:500',
@@ -113,8 +113,8 @@ class InquiryController extends Controller
         $validated = $request->validate([
             'performance_date' => 'required|date',
             'performance_time_mode' => 'required|in:exact_time,text_time',
-            'performance_time_exact' => ['nullable', 'required_if:performance_time_mode,exact_time', 'regex:/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/'],
-            'performance_time_text' => 'nullable|required_if:performance_time_mode,text_time|string|max:255',
+            'performance_time_exact' => ['nullable', 'required_if:performance_time_mode,exact_time', 'exclude_if:performance_time_mode,text_time', 'regex:/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/'],
+            'performance_time_text' => ['nullable', 'required_if:performance_time_mode,text_time', 'exclude_if:performance_time_mode,exact_time', 'string', 'max:255'],
             'duration_minutes' => 'nullable|integer|min:1',
             'location_name' => 'required|string|max:255',
             'location_address' => 'nullable|string|max:500',
@@ -127,6 +127,11 @@ class InquiryController extends Controller
             'currency' => 'nullable|string|max:3',
             'notes' => 'nullable|string',
         ]);
+
+        // Set default duration if not provided
+        if (empty($validated['duration_minutes'])) {
+            $validated['duration_minutes'] = \App\Models\Setting::where('key', 'default_duration_minutes')->value('value') ?? 120;
+        }
 
         $inquiry->update($validated);
 

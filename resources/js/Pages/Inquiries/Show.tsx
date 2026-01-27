@@ -115,12 +115,12 @@ export default function Show({ inquiry }: Props) {
                                     </>
                                 )}
 
-                                {inquiry.status === 'confirmed' && !inquiry.income && (
+                                {!inquiry.income && (
                                     <Link
                                         href={`/incomes/create?inquiry_id=${inquiry.id}`}
                                         className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500"
                                     >
-                                        Mark as Paid
+                                        Create Income
                                     </Link>
                                 )}
 

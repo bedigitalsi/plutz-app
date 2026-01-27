@@ -208,6 +208,13 @@ export default function Index({ expenses, filters }: Props) {
                                                 >
                                                     View
                                                 </Link>
+                                                <span className="mx-2 text-gray-300">|</span>
+                                                <Link
+                                                    href={route('expenses.edit', expense.id)}
+                                                    className="text-indigo-600 hover:text-indigo-900"
+                                                >
+                                                    Edit
+                                                </Link>
                                             </td>
                                         </tr>
                                     ))}

@@ -37,8 +37,7 @@ class Inquiry extends Model
     ];
 
     protected $casts = [
-        'performance_date' => 'date',
-        'performance_time_exact' => 'datetime',
+        'performance_date' => 'date:Y-m-d',
         'received_at' => 'datetime',
         'price_amount' => 'decimal:2',
         'duration_minutes' => 'integer',

@@ -67,7 +67,7 @@ class IcalFeedController extends Controller
 
         // Get confirmed inquiries only
         $inquiries = Inquiry::confirmed()
-            ->with(['performanceType'])
+            ->with(['performanceType', 'bandSize'])
             ->orderBy('performance_date', 'asc')
             ->get();
 
@@ -102,13 +102,41 @@ class IcalFeedController extends Controller
                 $summary = $inquiry->performanceType->name . ' - ' . $summary;
             }
 
-            $description = '';
+            $descParts = [];
+            if ($inquiry->performance_time_mode === 'exact_time' && $inquiry->performance_time_exact) {
+                $descParts[] = 'Time: ' . $inquiry->performance_time_exact;
+            } elseif ($inquiry->performance_time_mode === 'text_time' && $inquiry->performance_time_text) {
+                $descParts[] = 'Time: ' . $inquiry->performance_time_text;
+            }
+            $duration = $inquiry->duration_minutes ?? 120;
+            $descParts[] = 'Duration: ' . $duration . ' min';
+            if ($inquiry->performanceType) {
+                $descParts[] = 'Type: ' . $inquiry->performanceType->name;
+            }
+            if ($inquiry->bandSize) {
+                $descParts[] = 'Band size: ' . $inquiry->bandSize->name;
+            }
+            if ($inquiry->location_name) {
+                $locationDesc = $inquiry->location_name;
+                if ($inquiry->location_address) {
+                    $locationDesc .= ', ' . $inquiry->location_address;
+                }
+                $descParts[] = 'Location: ' . $locationDesc;
+            }
             if ($inquiry->contact_person) {
-                $description .= 'Contact: ' . $inquiry->contact_person;
+                $contactInfo = $inquiry->contact_person;
+                if ($inquiry->contact_email) {
+                    $contactInfo .= ' (' . $inquiry->contact_email . ')';
+                }
+                if ($inquiry->contact_phone) {
+                    $contactInfo .= ' ' . $inquiry->contact_phone;
+                }
+                $descParts[] = 'Contact: ' . $contactInfo;
             }
-            if ($inquiry->price_amount) {
-                $description .= '\\nPrice: ' . $inquiry->price_amount . ' ' . $inquiry->currency;
+            if ($inquiry->notes) {
+                $descParts[] = 'Notes: ' . $inquiry->notes;
             }
+            $description = implode('\\n', $descParts);
 
             $location = $inquiry->location_name;
             if ($inquiry->location_address) {

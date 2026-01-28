@@ -10,9 +10,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class GenerateSignedContractPdf implements ShouldQueue
 {
@@ -28,16 +28,8 @@ class GenerateSignedContractPdf implements ShouldQueue
         // Prepare HTML from markdown
         $html = $this->generateHtml();
 
-        // Write HTML to temp file (use same disk root as attachment disk)
-        $disk = \Storage::disk('local');
-        $tempDir = $disk->path('temp');
-        if (!file_exists($tempDir)) {
-            mkdir($tempDir, 0755, true);
-        }
-        $htmlPath = $disk->path('temp/contract-' . $this->contract->id . '.html');
-        file_put_contents($htmlPath, $html);
-
         // PDF output path
+        $disk = Storage::disk('local');
         $pdfPath = 'contracts/' . $this->contract->id . '/signed.pdf';
         $pdfFullPath = $disk->path($pdfPath);
 
@@ -47,21 +39,10 @@ class GenerateSignedContractPdf implements ShouldQueue
             mkdir($pdfDir, 0755, true);
         }
 
-        // Call Node script for PDF generation
-        $scriptPath = base_path('tools/render-contract-pdf.cjs');
-        
-        $result = Process::run([
-            'node',
-            $scriptPath,
-            '--input',
-            $htmlPath,
-            '--output',
-            $pdfFullPath,
-        ]);
-
-        if (!$result->successful()) {
-            throw new \Exception('PDF generation failed: ' . $result->errorOutput());
-        }
+        // Generate PDF using DOMPDF
+        $pdf = Pdf::loadHTML($html);
+        $pdf->setPaper('a4', 'portrait');
+        file_put_contents($pdfFullPath, $pdf->output());
 
         // Store as attachment
         Attachment::create([
@@ -75,9 +56,6 @@ class GenerateSignedContractPdf implements ShouldQueue
             'size' => filesize($pdfFullPath),
             'created_by' => $this->contract->created_by,
         ]);
-
-        // Cleanup temp files
-        @unlink($htmlPath);
     }
 
     private function generateHtml(): string

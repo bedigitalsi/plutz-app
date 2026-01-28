@@ -82,7 +82,7 @@ class GenerateSignedContractPdf implements ShouldQueue
 <head>
     <meta charset="UTF-8">
     <style>
-        body { font-family: Arial, sans-serif; margin: 40px; line-height: 1.6; }
+        body { font-family: DejaVu Sans, sans-serif; margin: 40px; line-height: 1.6; }
         h1 { color: #333; border-bottom: 2px solid #1e40af; padding-bottom: 10px; }
         h2 { color: #1e40af; margin-top: 30px; }
         .signature { margin-top: 50px; }

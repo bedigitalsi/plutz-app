@@ -48,10 +48,10 @@ class IcalFeedController extends Controller
 
     public function destroy(IcalFeed $icalFeed)
     {
-        $icalFeed->update(['is_active' => false]);
+        $icalFeed->delete();
 
         return Redirect::route('ical-feeds.index')
-            ->with('success', 'Feed deactivated successfully.');
+            ->with('success', 'Feed deleted successfully.');
     }
 
     /**

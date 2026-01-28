@@ -49,8 +49,8 @@ export default function Index({ feeds, baseUrl }: Props) {
         });
     };
 
-    const handleDeactivate = (feedId: number) => {
-        if (confirm('Are you sure you want to deactivate this feed? The subscription URL will stop working.')) {
+    const handleDelete = (feedId: number) => {
+        if (confirm('Are you sure you want to delete this feed? The subscription URL will stop working.')) {
             router.delete(route('ical-feeds.destroy', feedId));
         }
     };
@@ -215,39 +215,28 @@ export default function Index({ feeds, baseUrl }: Props) {
                             {feeds.map((feed) => (
                                 <div
                                     key={feed.id}
-                                    className={`overflow-hidden rounded-lg bg-white shadow-sm ${
-                                        !feed.is_active ? 'opacity-60' : ''
-                                    }`}
+                                    className="overflow-hidden rounded-lg bg-white shadow-sm"
                                 >
                                     <div className="p-6">
                                         <div className="flex items-start justify-between">
                                             <div className="flex-1">
                                                 <h3 className="text-lg font-semibold text-gray-900">
                                                     {feed.name}
-                                                    {!feed.is_active && (
-                                                        <span className="ml-2 text-sm font-normal text-gray-500">
-                                                            (Deactivated)
-                                                        </span>
-                                                    )}
                                                 </h3>
                                                 <p className="mt-1 text-sm text-gray-600">
                                                     Created by {feed.creator.name} on {formatDate(feed.created_at)}
                                                 </p>
-                                                {feed.is_active && (
-                                                    <p className="mt-2 text-xs text-gray-500">
-                                                        This feed shows all confirmed inquiries.
-                                                    </p>
-                                                )}
+                                                <p className="mt-2 text-xs text-gray-500">
+                                                    This feed shows all confirmed inquiries.
+                                                </p>
                                             </div>
 
-                                            {feed.is_active && (
-                                                <button
-                                                    onClick={() => handleDeactivate(feed.id)}
-                                                    className="ml-4 rounded-md bg-red-600 px-3 py-1 text-sm font-semibold text-white shadow-sm hover:bg-red-500"
-                                                >
-                                                    Deactivate
-                                                </button>
-                                            )}
+                                            <button
+                                                onClick={() => handleDelete(feed.id)}
+                                                className="ml-4 rounded-md bg-red-600 px-3 py-1 text-sm font-semibold text-white shadow-sm hover:bg-red-500"
+                                            >
+                                                Delete
+                                            </button>
                                         </div>
                                     </div>
                                 </div>

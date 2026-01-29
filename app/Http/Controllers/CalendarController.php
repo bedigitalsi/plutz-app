@@ -3,17 +3,79 @@
 namespace App\Http\Controllers;
 
 use App\Models\Inquiry;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class CalendarController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        return Inertia::render('Calendar/Index');
+        $month = $request->input('month', now()->format('Y-m'));
+        $date = Carbon::createFromFormat('Y-m', $month)->startOfMonth();
+
+        // Get all inquiries for the visible calendar range (includes prev/next month overflow)
+        $calendarStart = $date->copy()->startOfWeek(Carbon::MONDAY);
+        $calendarEnd = $date->copy()->endOfMonth()->endOfWeek(Carbon::SUNDAY);
+
+        $events = Inquiry::with(['performanceType', 'bandSize'])
+            ->whereBetween('performance_date', [$calendarStart, $calendarEnd])
+            ->orderBy('performance_date')
+            ->get()
+            ->map(function ($inquiry) {
+                return [
+                    'id' => $inquiry->id,
+                    'date' => $inquiry->performance_date->format('Y-m-d'),
+                    'day' => (int) $inquiry->performance_date->format('j'),
+                    'title' => $inquiry->location_name ?? $inquiry->contact_person ?? 'Event',
+                    'location_address' => $inquiry->location_address,
+                    'status' => $inquiry->status,
+                    'time' => $inquiry->performance_time_mode === 'exact_time' && $inquiry->performance_time_exact
+                        ? Carbon::parse($inquiry->performance_time_exact)->format('g:i A')
+                        : ($inquiry->performance_time_text ?? null),
+                    'price' => $inquiry->price_amount ? (float) $inquiry->price_amount : null,
+                    'currency' => $inquiry->currency ?? 'EUR',
+                    'performance_type' => $inquiry->performanceType?->name,
+                ];
+            });
+
+        // Upcoming events (future confirmed + pending, not rejected)
+        $upcoming = Inquiry::with(['performanceType'])
+            ->where('performance_date', '>=', now()->toDateString())
+            ->where('status', '!=', 'rejected')
+            ->orderBy('performance_date')
+            ->limit(10)
+            ->get()
+            ->map(function ($inquiry) {
+                return [
+                    'id' => $inquiry->id,
+                    'date' => $inquiry->performance_date->format('Y-m-d'),
+                    'day_label' => $inquiry->performance_date->format('M d'),
+                    'day_name' => $inquiry->performance_date->format('l'),
+                    'title' => $inquiry->location_name ?? $inquiry->contact_person ?? 'Event',
+                    'location_address' => $inquiry->location_address,
+                    'status' => $inquiry->status,
+                    'time' => $inquiry->performance_time_mode === 'exact_time' && $inquiry->performance_time_exact
+                        ? Carbon::parse($inquiry->performance_time_exact)->format('g:i A')
+                        : ($inquiry->performance_time_text ?? null),
+                    'price' => $inquiry->price_amount ? (float) $inquiry->price_amount : null,
+                    'currency' => $inquiry->currency ?? 'EUR',
+                ];
+            });
+
+        return Inertia::render('Calendar/Index', [
+            'currentMonth' => $date->format('Y-m'),
+            'monthLabel' => $date->format('F Y'),
+            'events' => $events,
+            'upcoming' => $upcoming,
+            'calendarStart' => $calendarStart->format('Y-m-d'),
+            'calendarEnd' => $calendarEnd->format('Y-m-d'),
+            'today' => now()->format('Y-m-d'),
+        ]);
     }
 
+    // Keep the JSON endpoint for any AJAX needs
     public function events(Request $request)
     {
         $request->validate([
@@ -32,13 +94,11 @@ class CalendarController extends Controller
                 $title = $inquiry->performanceType->name . ' - ' . $title;
             }
 
-            // Determine start and end times
             $start = $inquiry->performance_date->format('Y-m-d');
             $allDay = true;
 
             if ($inquiry->performance_time_mode === 'exact_time' && $inquiry->performance_time_exact) {
-                // Extract just the time portion from the datetime field
-                $timeStr = \Carbon\Carbon::parse($inquiry->performance_time_exact)->format('H:i:s');
+                $timeStr = Carbon::parse($inquiry->performance_time_exact)->format('H:i:s');
                 $start = $inquiry->performance_date->format('Y-m-d') . 'T' . $timeStr;
                 $allDay = false;
             }
@@ -60,9 +120,8 @@ class CalendarController extends Controller
                 ],
             ];
 
-            // Add end time if we have duration
             if (!$allDay && $inquiry->duration_minutes) {
-                $startTime = \Carbon\Carbon::parse($start);
+                $startTime = Carbon::parse($start);
                 $endTime = $startTime->copy()->addMinutes($inquiry->duration_minutes);
                 $event['end'] = $endTime->format('Y-m-d\TH:i:s');
             }
@@ -76,10 +135,10 @@ class CalendarController extends Controller
     private function getStatusColor(string $status): string
     {
         return match($status) {
-            'confirmed' => '#10b981', // green
-            'pending' => '#f59e0b',   // amber
-            'rejected' => '#6b7280',  // gray
-            default => '#3b82f6',     // blue
+            'confirmed' => '#10b981',
+            'pending' => '#f59e0b',
+            'rejected' => '#6b7280',
+            default => '#3b82f6',
         };
     }
 }

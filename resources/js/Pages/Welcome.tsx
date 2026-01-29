@@ -36,7 +36,7 @@ export default function Welcome({
 
     if (auth.user) {
         return (
-            <div className="flex min-h-screen flex-col items-center justify-center bg-gray-900 selection:bg-[#FF2D20] selection:text-white">
+            <div className="flex min-h-screen flex-col items-center justify-center bg-plutz-dark selection:bg-plutz-teal selection:text-white">
                 <Head title="Welcome" />
                 <div className="mb-8">
                      <img 
@@ -45,25 +45,25 @@ export default function Welcome({
                         className="h-24 w-auto" 
                     />
                 </div>
-                <div className="w-full max-w-md space-y-8 bg-white px-4 py-8 shadow-md sm:rounded-lg dark:bg-gray-800">
+                <div className="w-full max-w-md space-y-8 rounded-xl bg-plutz-cream px-8 py-8 shadow-warm-lg sm:rounded-xl">
                     <div className="text-center">
-                        <h2 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                        <h2 className="font-serif text-2xl font-bold tracking-tight text-plutz-brown">
                             Welcome back, {auth.user.name}!
                         </h2>
-                        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                        <p className="mt-2 text-sm text-plutz-warm-gray">
                             You are already logged in.
                         </p>
                     </div>
                     <div className="mt-6 flex justify-center">
                         <Link
                             href={route('dashboard')}
-                            className="rounded-md bg-gray-800 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:bg-gray-200 dark:text-gray-800 dark:hover:bg-white"
+                            className="rounded-xl bg-plutz-teal px-6 py-2.5 text-sm font-semibold text-white shadow-warm hover:bg-plutz-teal-dark focus:outline-none focus:ring-2 focus:ring-plutz-teal focus:ring-offset-2 transition duration-150"
                         >
                             Go to Dashboard
                         </Link>
                     </div>
                 </div>
-                <footer className="py-16 text-center text-sm text-white/70">
+                <footer className="py-16 text-center text-sm text-plutz-cream/40">
                     Laravel v{laravelVersion} (PHP v{phpVersion})
                 </footer>
             </div>
@@ -75,7 +75,7 @@ export default function Welcome({
             <Head title="Welcome" />
 
             {status && (
-                <div className="mb-4 text-sm font-medium text-green-600">
+                <div className="mb-4 text-sm font-medium text-emerald-600">
                     {status}
                 </div>
             )}
@@ -89,7 +89,7 @@ export default function Welcome({
                         type="email"
                         name="email"
                         value={data.email}
-                        className="mt-1 block w-full"
+                        className="mt-1 block w-full rounded-lg border-plutz-cream-dark bg-white focus:border-plutz-teal focus:ring-plutz-teal"
                         autoComplete="username"
                         isFocused={true}
                         onChange={(e) => setData('email', e.target.value)}
@@ -106,7 +106,7 @@ export default function Welcome({
                         type="password"
                         name="password"
                         value={data.password}
-                        className="mt-1 block w-full"
+                        className="mt-1 block w-full rounded-lg border-plutz-cream-dark bg-white focus:border-plutz-teal focus:ring-plutz-teal"
                         autoComplete="current-password"
                         onChange={(e) => setData('password', e.target.value)}
                     />
@@ -126,17 +126,17 @@ export default function Welcome({
                                 )
                             }
                         />
-                        <span className="ms-2 text-sm text-gray-600">
+                        <span className="ms-2 text-sm text-plutz-brown">
                             Remember me
                         </span>
                     </label>
                 </div>
 
-                <div className="mt-4 flex items-center justify-end">
+                <div className="mt-6 flex items-center justify-end">
                     {canResetPassword && (
                         <Link
                             href={route('password.request')}
-                            className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                            className="rounded-md text-sm text-plutz-warm-gray underline hover:text-plutz-brown focus:outline-none focus:ring-2 focus:ring-plutz-teal focus:ring-offset-2 transition duration-150"
                         >
                             Forgot your password?
                         </Link>
@@ -147,7 +147,7 @@ export default function Welcome({
                     </PrimaryButton>
                 </div>
             </form>
-            <div className="mt-8 text-center text-xs text-gray-500">
+            <div className="mt-8 text-center text-xs text-plutz-warm-gray/60">
                 Laravel v{laravelVersion} (PHP v{phpVersion})
             </div>
         </GuestLayout>

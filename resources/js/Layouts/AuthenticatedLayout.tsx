@@ -14,24 +14,22 @@ export default function Authenticated({
         useState(false);
 
     return (
-        <div className="min-h-screen bg-gray-100">
-            <nav className="border-b border-gray-100 bg-white">
+        <div className="min-h-screen bg-plutz-cream">
+            <nav className="bg-plutz-dark shadow-warm-md">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="flex h-16 justify-between">
                         <div className="flex">
                             <div className="flex shrink-0 items-center">
                                 <Link href="/">
-                                    <div className="flex h-12 w-auto items-center rounded bg-gray-900 px-3">
-                                        <img 
-                                            src="/images/logo-plutz-25.svg" 
-                                            alt="Plutz Logo" 
-                                            className="h-8 w-auto" 
-                                        />
-                                    </div>
+                                    <img 
+                                        src="/images/logo-plutz-25.svg" 
+                                        alt="Plutz Logo" 
+                                        className="h-9 w-auto" 
+                                    />
                                 </Link>
                             </div>
 
-                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                            <div className="hidden space-x-6 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink
                                     href={route('dashboard')}
                                     active={route().current('dashboard')}
@@ -96,7 +94,7 @@ export default function Authenticated({
                                         <span className="inline-flex rounded-md">
                                             <button
                                                 type="button"
-                                                className="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none"
+                                                className="inline-flex items-center rounded-lg border border-plutz-accent-light/30 bg-plutz-brown/50 px-3 py-2 text-sm font-medium leading-4 text-plutz-cream transition duration-150 ease-in-out hover:bg-plutz-brown/70 focus:outline-none"
                                             >
                                                 {user.name}
 
@@ -141,7 +139,7 @@ export default function Authenticated({
                                         (previousState) => !previousState,
                                     )
                                 }
-                                className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none"
+                                className="inline-flex items-center justify-center rounded-lg p-2 text-plutz-cream/70 transition duration-150 ease-in-out hover:bg-plutz-brown/50 hover:text-plutz-cream focus:bg-plutz-brown/50 focus:text-plutz-cream focus:outline-none"
                             >
                                 <svg
                                     className="h-6 w-6"
@@ -240,12 +238,12 @@ export default function Authenticated({
                         </ResponsiveNavLink>
                     </div>
 
-                    <div className="border-t border-gray-200 pb-1 pt-4">
+                    <div className="border-t border-plutz-brown/30 pb-1 pt-4">
                         <div className="px-4">
-                            <div className="text-base font-medium text-gray-800">
+                            <div className="text-base font-medium text-plutz-cream">
                                 {user.name}
                             </div>
-                            <div className="text-sm font-medium text-gray-500">
+                            <div className="text-sm font-medium text-plutz-cream/60">
                                 {user.email}
                             </div>
                         </div>
@@ -267,7 +265,7 @@ export default function Authenticated({
             </nav>
 
             {header && (
-                <header className="bg-white shadow">
+                <header className="bg-white shadow-warm">
                     <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                         {header}
                     </div>

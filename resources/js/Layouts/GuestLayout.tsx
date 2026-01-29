@@ -3,18 +3,18 @@ import { PropsWithChildren } from 'react';
 
 export default function Guest({ children }: PropsWithChildren) {
     return (
-        <div className="flex min-h-screen flex-col items-center bg-gray-900 pt-6 sm:justify-center sm:pt-0">
+        <div className="flex min-h-screen flex-col items-center bg-plutz-dark pt-6 sm:justify-center sm:pt-0">
             <div>
                 <Link href="/">
                     <img 
                         src="/images/logo-plutz-25.svg" 
                         alt="Plutz Logo" 
-                        className="h-20 w-auto fill-current text-gray-500" 
+                        className="h-20 w-auto" 
                     />
                 </Link>
             </div>
 
-            <div className="mt-6 w-full overflow-hidden bg-white px-6 py-4 shadow-md sm:max-w-md sm:rounded-lg">
+            <div className="mt-8 w-full overflow-hidden rounded-xl bg-plutz-cream px-8 py-6 shadow-warm-lg sm:max-w-md">
                 {children}
             </div>
         </div>

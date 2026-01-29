@@ -5,20 +5,20 @@ export default function Install() {
         <>
             <Head title="Install Plutz App" />
 
-            <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+            <div className="min-h-screen bg-plutz-dark py-12 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-3xl mx-auto">
-                    <div className="bg-white shadow sm:rounded-lg">
+                    <div className="bg-plutz-surface shadow sm:rounded-lg">
                         <div className="px-4 py-5 sm:p-6">
-                            <h1 className="text-3xl font-bold text-gray-900 mb-6">
+                            <h1 className="text-3xl font-bold text-plutz-cream mb-6">
                                 Install Plutz on Your iPhone
                             </h1>
 
                             <div className="prose prose-blue max-w-none">
-                                <h2 className="text-xl font-semibold text-gray-900 mt-6 mb-4">
+                                <h2 className="text-xl font-semibold text-plutz-cream mt-6 mb-4">
                                     Installation Steps
                                 </h2>
 
-                                <ol className="list-decimal list-inside space-y-4 text-gray-700">
+                                <ol className="list-decimal list-inside space-y-4 text-stone-400">
                                     <li className="pl-2">
                                         <strong>Open Safari</strong> on your iPhone (this only works in Safari, not Chrome or other browsers)
                                     </li>
@@ -36,7 +36,7 @@ export default function Install() {
                                     </li>
                                 </ol>
 
-                                <div className="mt-8 bg-blue-50 border-l-4 border-blue-400 p-4">
+                                <div className="mt-8 bg-plutz-tan/10 border-l-4 border-plutz-tan/30 p-4">
                                     <div className="flex">
                                         <div className="flex-shrink-0">
                                             <svg
@@ -53,18 +53,18 @@ export default function Install() {
                                             </svg>
                                         </div>
                                         <div className="ml-3">
-                                            <p className="text-sm text-blue-700">
+                                            <p className="text-sm text-plutz-tan">
                                                 <strong>Tip:</strong> Once installed, the app will open in full-screen mode without the Safari browser chrome, giving you a native app experience!
                                             </p>
                                         </div>
                                     </div>
                                 </div>
 
-                                <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">
+                                <h2 className="text-xl font-semibold text-plutz-cream mt-8 mb-4">
                                     Benefits of Installing
                                 </h2>
 
-                                <ul className="list-disc list-inside space-y-2 text-gray-700">
+                                <ul className="list-disc list-inside space-y-2 text-stone-400">
                                     <li className="pl-2">Quick access from your home screen</li>
                                     <li className="pl-2">Full-screen experience without browser UI</li>
                                     <li className="pl-2">Faster loading times</li>

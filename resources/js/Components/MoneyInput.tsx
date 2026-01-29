@@ -25,18 +25,18 @@ export default function MoneyInput({
     return (
         <div>
             {label && <InputLabel value={label + (required ? ' *' : '')} />}
-            <div className="mt-1 flex rounded-md shadow-sm">
+            <div className="mt-1 flex rounded-lg shadow-sm">
                 <TextInput
                     type="number"
                     step="0.01"
                     min="0"
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
-                    className="block w-full rounded-none rounded-l-md"
+                    className="block w-full rounded-none rounded-l-lg"
                     disabled={disabled}
                     required={required}
                 />
-                <span className="inline-flex items-center rounded-r-md border border-l-0 border-gray-300 bg-gray-50 px-3 text-sm text-gray-500">
+                <span className="inline-flex items-center rounded-r-lg border border-l-0 border-plutz-tan/20 bg-stone-900/50 px-3 text-sm text-stone-500">
                     {currency}
                 </span>
             </div>

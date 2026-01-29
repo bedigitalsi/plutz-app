@@ -14,7 +14,7 @@ export default function Guest({ children }: PropsWithChildren) {
                 </Link>
             </div>
 
-            <div className="mt-8 w-full overflow-hidden rounded-xl bg-plutz-cream px-8 py-6 shadow-warm-lg sm:max-w-md">
+            <div className="mt-8 w-full overflow-hidden rounded-xl bg-plutz-surface border border-plutz-tan/10 px-8 py-6 shadow-sm sm:max-w-md">
                 {children}
             </div>
         </div>

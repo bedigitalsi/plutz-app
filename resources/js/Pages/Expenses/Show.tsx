@@ -61,41 +61,26 @@ export default function Show({ expense }: Props) {
     };
 
     return (
-        <AuthenticatedLayout
-            header={
-                <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                        Expense Details
-                    </h2>
-                    <Link
-                        href={route('expenses.index')}
-                        className="text-sm text-gray-600 hover:text-gray-900"
-                    >
-                        ← Back to List
-                    </Link>
-                </div>
-            }
-        >
+        <AuthenticatedLayout className="bg-plutz-dark">
             <Head title={`Expense - ${expense.company_name}`} />
 
-            <div className="py-12">
-                <div className="mx-auto max-w-4xl sm:px-6 lg:px-8">
+            <div className="max-w-[1200px] mx-auto w-full p-6">
                     {/* Header */}
-                    <div className="mb-6 overflow-hidden rounded-lg bg-white shadow-sm">
+                    <div className="mb-6 overflow-hidden rounded-lg bg-plutz-surface shadow-sm">
                         <div className="p-6">
                             <div className="flex items-start justify-between">
                                 <div>
-                                    <h3 className="text-2xl font-bold text-gray-900">
+                                    <h3 className="text-2xl font-bold text-plutz-cream">
                                         {expense.company_name}
                                     </h3>
-                                    <p className="mt-1 text-lg font-semibold text-gray-900">
+                                    <p className="mt-1 text-lg font-semibold text-plutz-cream">
                                         {parseFloat(expense.amount.toString()).toFixed(2)} {expense.currency}
                                     </p>
                                 </div>
                                 <span className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
                                     expense.status === 'paid' 
-                                        ? 'bg-green-100 text-green-800' 
-                                        : 'bg-yellow-100 text-yellow-800'
+                                        ? 'bg-green-500/100/10 text-green-400' 
+                                        : 'bg-amber-500/10 text-amber-400'
                                 }`}>
                                     {expense.status === 'paid' ? 'Paid' : 'Unpaid'}
                                 </span>
@@ -104,13 +89,13 @@ export default function Show({ expense }: Props) {
                             <div className="mt-6 flex gap-3">
                                 <Link
                                     href={route('expenses.edit', expense.id)}
-                                    className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+                                    className="rounded-md bg-plutz-tan px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-plutz-tan/90"
                                 >
                                     Edit
                                 </Link>
                                 <button
                                     onClick={handleDelete}
-                                    className="rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500"
+                                    className="rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500/100"
                                 >
                                     Delete
                                 </button>
@@ -121,23 +106,23 @@ export default function Show({ expense }: Props) {
                     {/* Details */}
                     <div className="space-y-6">
                         {/* Invoice Details */}
-                        <div className="overflow-hidden rounded-lg bg-white shadow-sm">
-                            <div className="border-b border-gray-200 px-6 py-4">
-                                <h4 className="text-lg font-medium text-gray-900">Invoice Details</h4>
+                        <div className="overflow-hidden rounded-lg bg-plutz-surface shadow-sm">
+                            <div className="border-b border-plutz-tan/10 px-6 py-4">
+                                <h4 className="text-lg font-medium text-plutz-cream">Invoice Details</h4>
                             </div>
                             <div className="p-6">
                                 <dl className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                     <div>
-                                        <dt className="text-sm font-medium text-gray-500">Invoice Date</dt>
-                                        <dd className="mt-1 text-sm text-gray-900">{formatDate(expense.invoice_date)}</dd>
+                                        <dt className="text-sm font-medium text-stone-500">Invoice Date</dt>
+                                        <dd className="mt-1 text-sm text-plutz-cream">{formatDate(expense.invoice_date)}</dd>
                                     </div>
                                     <div>
-                                        <dt className="text-sm font-medium text-gray-500">Entered At</dt>
-                                        <dd className="mt-1 text-sm text-gray-900">{formatDateTime(expense.entered_at)}</dd>
+                                        <dt className="text-sm font-medium text-stone-500">Entered At</dt>
+                                        <dd className="mt-1 text-sm text-plutz-cream">{formatDateTime(expense.entered_at)}</dd>
                                     </div>
                                     <div>
-                                        <dt className="text-sm font-medium text-gray-500">Created By</dt>
-                                        <dd className="mt-1 text-sm text-gray-900">{expense.creator.name}</dd>
+                                        <dt className="text-sm font-medium text-stone-500">Created By</dt>
+                                        <dd className="mt-1 text-sm text-plutz-cream">{expense.creator.name}</dd>
                                     </div>
                                 </dl>
                             </div>
@@ -145,32 +130,32 @@ export default function Show({ expense }: Props) {
 
                         {/* Notes */}
                         {expense.notes && (
-                            <div className="overflow-hidden rounded-lg bg-white shadow-sm">
-                                <div className="border-b border-gray-200 px-6 py-4">
-                                    <h4 className="text-lg font-medium text-gray-900">Notes</h4>
+                            <div className="overflow-hidden rounded-lg bg-plutz-surface shadow-sm">
+                                <div className="border-b border-plutz-tan/10 px-6 py-4">
+                                    <h4 className="text-lg font-medium text-plutz-cream">Notes</h4>
                                 </div>
                                 <div className="p-6">
-                                    <p className="whitespace-pre-wrap text-sm text-gray-700">{expense.notes}</p>
+                                    <p className="whitespace-pre-wrap text-sm text-stone-400">{expense.notes}</p>
                                 </div>
                             </div>
                         )}
 
                         {/* Attachments */}
                         {expense.attachments.length > 0 && (
-                            <div className="overflow-hidden rounded-lg bg-white shadow-sm">
-                                <div className="border-b border-gray-200 px-6 py-4">
-                                    <h4 className="text-lg font-medium text-gray-900">Attachments</h4>
+                            <div className="overflow-hidden rounded-lg bg-plutz-surface shadow-sm">
+                                <div className="border-b border-plutz-tan/10 px-6 py-4">
+                                    <h4 className="text-lg font-medium text-plutz-cream">Attachments</h4>
                                 </div>
                                 <div className="p-6">
                                     <div className="space-y-3">
                                         {expense.attachments.map((attachment) => (
                                             <div
                                                 key={attachment.id}
-                                                className="flex items-center justify-between rounded-lg border border-gray-200 p-4"
+                                                className="flex items-center justify-between rounded-lg border border-plutz-tan/10 p-4"
                                             >
                                                 <div className="flex items-center">
                                                     <svg
-                                                        className="h-8 w-8 text-gray-400"
+                                                        className="h-8 w-8 text-stone-500"
                                                         fill="none"
                                                         viewBox="0 0 24 24"
                                                         stroke="currentColor"
@@ -183,17 +168,17 @@ export default function Show({ expense }: Props) {
                                                         />
                                                     </svg>
                                                     <div className="ml-4">
-                                                        <p className="text-sm font-medium text-gray-900">
+                                                        <p className="text-sm font-medium text-plutz-cream">
                                                             {attachment.original_name}
                                                         </p>
-                                                        <p className="text-sm text-gray-500">
+                                                        <p className="text-sm text-stone-500">
                                                             {formatFileSize(attachment.size)} • {attachment.mime}
                                                         </p>
                                                     </div>
                                                 </div>
                                                 <a
                                                     href={`/attachments/${attachment.id}/download`}
-                                                    className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500"
+                                                    className="rounded-md bg-plutz-tan px-3 py-2 text-sm font-semibold text-white hover:bg-plutz-tan/90"
                                                     download
                                                 >
                                                     Download
@@ -206,7 +191,6 @@ export default function Show({ expense }: Props) {
                         )}
                     </div>
                 </div>
-            </div>
         </AuthenticatedLayout>
     );
 }

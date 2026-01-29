@@ -65,50 +65,49 @@ export default function Email({ settings }: Props) {
     };
 
     return (
-        <AuthenticatedLayout
-            header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                    Email Settings
-                </h2>
-            }
-        >
+        <AuthenticatedLayout className="bg-plutz-dark">
             <Head title="Email Settings" />
+            <div className="max-w-[1200px] mx-auto w-full p-6 pb-0">
+                <div className="flex items-center justify-between mb-2">
+                    <h2 className="text-2xl font-serif text-plutz-cream">Email Settings</h2>
+                </div>
+            </div>
 
-            <div className="py-12">
-                <div className="mx-auto max-w-4xl sm:px-6 lg:px-8">
+
+            <div className="max-w-[1200px] mx-auto w-full p-6">
                     <form onSubmit={submit} className="space-y-6">
                         {/* Sender Settings */}
-                        <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                            <h3 className="text-lg font-medium text-gray-900 mb-4">Sender Settings</h3>
+                        <div className="bg-plutz-surface overflow-hidden shadow-sm sm:rounded-lg p-6">
+                            <h3 className="text-lg font-medium text-plutz-cream mb-4">Sender Settings</h3>
                             
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block text-sm font-medium text-stone-400 mb-2">
                                         From Email
                                     </label>
                                     <input
                                         type="email"
                                         value={data.mail_from_address}
                                         onChange={(e) => setData('mail_from_address', e.target.value)}
-                                        className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                        className="w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
                                     />
                                     {errors.mail_from_address && (
-                                        <div className="text-red-600 text-sm mt-1">{errors.mail_from_address}</div>
+                                        <div className="text-red-400 text-sm mt-1">{errors.mail_from_address}</div>
                                     )}
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block text-sm font-medium text-stone-400 mb-2">
                                         From Name
                                     </label>
                                     <input
                                         type="text"
                                         value={data.mail_from_name}
                                         onChange={(e) => setData('mail_from_name', e.target.value)}
-                                        className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                        className="w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
                                     />
                                     {errors.mail_from_name && (
-                                        <div className="text-red-600 text-sm mt-1">{errors.mail_from_name}</div>
+                                        <div className="text-red-400 text-sm mt-1">{errors.mail_from_name}</div>
                                     )}
                                 </div>
                             </div>
@@ -119,9 +118,9 @@ export default function Email({ settings }: Props) {
                                         type="checkbox"
                                         checked={data.mail_force_from}
                                         onChange={(e) => setData('mail_force_from', e.target.checked)}
-                                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                        className="rounded border-plutz-tan/20 text-plutz-tan focus:ring-plutz-tan"
                                     />
-                                    <span className="ml-2 text-sm text-gray-700">
+                                    <span className="ml-2 text-sm text-stone-400">
                                         Force From Email (Recommended Settings: Enable)
                                     </span>
                                 </label>
@@ -131,9 +130,9 @@ export default function Email({ settings }: Props) {
                                         type="checkbox"
                                         checked={data.mail_force_from_name}
                                         onChange={(e) => setData('mail_force_from_name', e.target.checked)}
-                                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                        className="rounded border-plutz-tan/20 text-plutz-tan focus:ring-plutz-tan"
                                     />
-                                    <span className="ml-2 text-sm text-gray-700">
+                                    <span className="ml-2 text-sm text-stone-400">
                                         Force Sender Name
                                     </span>
                                 </label>
@@ -143,74 +142,74 @@ export default function Email({ settings }: Props) {
                                         type="checkbox"
                                         checked={data.mail_set_return_path}
                                         onChange={(e) => setData('mail_set_return_path', e.target.checked)}
-                                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                        className="rounded border-plutz-tan/20 text-plutz-tan focus:ring-plutz-tan"
                                     />
-                                    <span className="ml-2 text-sm text-gray-700">
+                                    <span className="ml-2 text-sm text-stone-400">
                                         Set the return-path to match the From Email
                                     </span>
                                 </label>
                             </div>
 
                             <div className="mt-4">
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                <label className="block text-sm font-medium text-stone-400 mb-2">
                                     Admin Recipient Email
                                 </label>
                                 <input
                                     type="email"
                                     value={data.mail_admin_recipient}
                                     onChange={(e) => setData('mail_admin_recipient', e.target.value)}
-                                    className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                    className="w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
                                 />
-                                <p className="text-sm text-gray-500 mt-1">
+                                <p className="text-sm text-stone-500 mt-1">
                                     Email address to receive admin notifications (e.g., signed contracts)
                                 </p>
                                 {errors.mail_admin_recipient && (
-                                    <div className="text-red-600 text-sm mt-1">{errors.mail_admin_recipient}</div>
+                                    <div className="text-red-400 text-sm mt-1">{errors.mail_admin_recipient}</div>
                                 )}
                             </div>
                         </div>
 
                         {/* SMTP Settings */}
-                        <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                            <h3 className="text-lg font-medium text-gray-900 mb-4">SMTP Settings</h3>
+                        <div className="bg-plutz-surface overflow-hidden shadow-sm sm:rounded-lg p-6">
+                            <h3 className="text-lg font-medium text-plutz-cream mb-4">SMTP Settings</h3>
                             
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block text-sm font-medium text-stone-400 mb-2">
                                         SMTP Host
                                     </label>
                                     <input
                                         type="text"
                                         value={data.mail_host}
                                         onChange={(e) => setData('mail_host', e.target.value)}
-                                        className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                        className="w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
                                     />
                                     {errors.mail_host && (
-                                        <div className="text-red-600 text-sm mt-1">{errors.mail_host}</div>
+                                        <div className="text-red-400 text-sm mt-1">{errors.mail_host}</div>
                                     )}
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block text-sm font-medium text-stone-400 mb-2">
                                         SMTP Port
                                     </label>
                                     <input
                                         type="number"
                                         value={data.mail_port}
                                         onChange={(e) => setData('mail_port', parseInt(e.target.value))}
-                                        className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                        className="w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
                                     />
                                     {errors.mail_port && (
-                                        <div className="text-red-600 text-sm mt-1">{errors.mail_port}</div>
+                                        <div className="text-red-400 text-sm mt-1">{errors.mail_port}</div>
                                     )}
-                                    <p className="text-sm text-gray-500 mt-1">
+                                    <p className="text-sm text-stone-500 mt-1">
                                         SSL usually uses port 465, TLS usually uses 587 or 25
                                     </p>
                                 </div>
                             </div>
 
                             <div className="mt-4">
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                <label className="block text-sm font-medium text-stone-400 mb-2">
                                     Encryption
                                 </label>
                                 <div className="flex space-x-4">
@@ -220,9 +219,9 @@ export default function Email({ settings }: Props) {
                                             value="none"
                                             checked={data.mail_encryption === 'none'}
                                             onChange={(e) => setData('mail_encryption', e.target.value)}
-                                            className="text-blue-600 focus:ring-blue-500"
+                                            className="text-plutz-tan focus:ring-plutz-tan"
                                         />
-                                        <span className="ml-2 text-sm text-gray-700">None</span>
+                                        <span className="ml-2 text-sm text-stone-400">None</span>
                                     </label>
                                     <label className="flex items-center">
                                         <input
@@ -230,9 +229,9 @@ export default function Email({ settings }: Props) {
                                             value="ssl"
                                             checked={data.mail_encryption === 'ssl'}
                                             onChange={(e) => setData('mail_encryption', e.target.value)}
-                                            className="text-blue-600 focus:ring-blue-500"
+                                            className="text-plutz-tan focus:ring-plutz-tan"
                                         />
-                                        <span className="ml-2 text-sm text-gray-700">SSL</span>
+                                        <span className="ml-2 text-sm text-stone-400">SSL</span>
                                     </label>
                                     <label className="flex items-center">
                                         <input
@@ -240,9 +239,9 @@ export default function Email({ settings }: Props) {
                                             value="tls"
                                             checked={data.mail_encryption === 'tls'}
                                             onChange={(e) => setData('mail_encryption', e.target.value)}
-                                            className="text-blue-600 focus:ring-blue-500"
+                                            className="text-plutz-tan focus:ring-plutz-tan"
                                         />
-                                        <span className="ml-2 text-sm text-gray-700">TLS</span>
+                                        <span className="ml-2 text-sm text-stone-400">TLS</span>
                                     </label>
                                 </div>
                             </div>
@@ -253,9 +252,9 @@ export default function Email({ settings }: Props) {
                                         type="checkbox"
                                         checked={data.mail_auto_tls}
                                         onChange={(e) => setData('mail_auto_tls', e.target.checked)}
-                                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                        className="rounded border-plutz-tan/20 text-plutz-tan focus:ring-plutz-tan"
                                     />
-                                    <span className="ml-2 text-sm text-gray-700">
+                                    <span className="ml-2 text-sm text-stone-400">
                                         Use Auto TLS (By default, the TLS encryption would be used if the server supports it. On some servers, it could be a problem and may need to be disabled.)
                                     </span>
                                 </label>
@@ -267,9 +266,9 @@ export default function Email({ settings }: Props) {
                                         type="checkbox"
                                         checked={data.mail_auth_enabled}
                                         onChange={(e) => setData('mail_auth_enabled', e.target.checked)}
-                                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                        className="rounded border-plutz-tan/20 text-plutz-tan focus:ring-plutz-tan"
                                     />
-                                    <span className="ml-2 text-sm text-gray-700 font-medium">
+                                    <span className="ml-2 text-sm text-stone-400 font-medium">
                                         Authentication (If you need to provide your SMTP server's credentials (username and password) enable the authentication, in most cases this is required.)
                                     </span>
                                 </label>
@@ -277,22 +276,22 @@ export default function Email({ settings }: Props) {
                                 {data.mail_auth_enabled && (
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ml-6">
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            <label className="block text-sm font-medium text-stone-400 mb-2">
                                                 SMTP Username
                                             </label>
                                             <input
                                                 type="text"
                                                 value={data.mail_username}
                                                 onChange={(e) => setData('mail_username', e.target.value)}
-                                                className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                                className="w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
                                             />
                                             {errors.mail_username && (
-                                                <div className="text-red-600 text-sm mt-1">{errors.mail_username}</div>
+                                                <div className="text-red-400 text-sm mt-1">{errors.mail_username}</div>
                                             )}
                                         </div>
 
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            <label className="block text-sm font-medium text-stone-400 mb-2">
                                                 SMTP Password
                                             </label>
                                             <input
@@ -300,15 +299,15 @@ export default function Email({ settings }: Props) {
                                                 value={data.mail_password}
                                                 onChange={(e) => setData('mail_password', e.target.value)}
                                                 placeholder={settings.has_password ? '••••••••••' : 'Enter password'}
-                                                className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                                className="w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
                                             />
-                                            <p className="text-sm text-gray-500 mt-1">
+                                            <p className="text-sm text-stone-500 mt-1">
                                                 {settings.has_password 
                                                     ? 'Leave blank to keep existing password'
                                                     : 'This input will be securely encrypted using WP SALTS as encryption keys before saving'}
                                             </p>
                                             {errors.mail_password && (
-                                                <div className="text-red-600 text-sm mt-1">{errors.mail_password}</div>
+                                                <div className="text-red-400 text-sm mt-1">{errors.mail_password}</div>
                                             )}
                                         </div>
                                     </div>
@@ -317,8 +316,8 @@ export default function Email({ settings }: Props) {
                         </div>
 
                         {/* Test Email */}
-                        <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                            <h3 className="text-lg font-medium text-gray-900 mb-4">Send Test Email</h3>
+                        <div className="bg-plutz-surface overflow-hidden shadow-sm sm:rounded-lg p-6">
+                            <h3 className="text-lg font-medium text-plutz-cream mb-4">Send Test Email</h3>
                             
                             <div className="flex space-x-4">
                                 <div className="flex-1">
@@ -327,19 +326,19 @@ export default function Email({ settings }: Props) {
                                         value={testEmail}
                                         onChange={(e) => setTestEmail(e.target.value)}
                                         placeholder="Enter email address to send test"
-                                        className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                        className="w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
                                     />
                                 </div>
                                 <button
                                     type="button"
                                     onClick={handleSendTest}
                                     disabled={sendingTest || !testEmail}
-                                    className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 disabled:opacity-50"
+                                    className="px-4 py-2 bg-stone-700 text-white rounded-md hover:bg-stone-700 disabled:opacity-50"
                                 >
                                     {sendingTest ? 'Sending...' : 'Send Test'}
                                 </button>
                             </div>
-                            <p className="text-sm text-gray-500 mt-2">
+                            <p className="text-sm text-stone-500 mt-2">
                                 Send a test email to verify your SMTP settings are working correctly.
                             </p>
                         </div>
@@ -349,14 +348,13 @@ export default function Email({ settings }: Props) {
                             <button
                                 type="submit"
                                 disabled={processing}
-                                className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+                                className="px-6 py-2 bg-plutz-tan text-plutz-dark rounded-md hover:bg-plutz-tan/90 disabled:opacity-50"
                             >
                                 {processing ? 'Saving...' : 'Save Settings'}
                             </button>
                         </div>
                     </form>
                 </div>
-            </div>
         </AuthenticatedLayout>
     );
 }

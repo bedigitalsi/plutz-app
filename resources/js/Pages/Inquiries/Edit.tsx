@@ -73,30 +73,22 @@ export default function Edit({ inquiry, performanceTypes, bandSizes }: Props) {
     };
 
     return (
-        <AuthenticatedLayout
-            header={
-                <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                        Edit Inquiry
-                    </h2>
-                    <Link
-                        href={route('inquiries.show', inquiry.id)}
-                        className="text-sm text-gray-600 hover:text-gray-900"
-                    >
-                        ← Back to Details
-                    </Link>
-                </div>
-            }
-        >
+        <AuthenticatedLayout className="bg-plutz-dark">
             <Head title="Edit Inquiry" />
+            <div className="max-w-[1200px] mx-auto w-full p-6 pb-0">
+                <div className="flex items-center justify-between mb-2">
+                    <h2 className="text-2xl font-serif text-plutz-cream">Edit Inquiry</h2>
+                    <Link href={route('inquiries.show', inquiry.id)} className="text-plutz-tan hover:text-plutz-tan-light text-sm font-medium">Back to Details</Link>
+                </div>
+            </div>
 
-            <div className="py-12">
-                <div className="mx-auto max-w-3xl sm:px-6 lg:px-8">
-                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+
+            <div className="max-w-[1200px] mx-auto w-full p-6">
+                    <div className="overflow-hidden bg-plutz-surface shadow-sm sm:rounded-lg">
                         <form onSubmit={submit} className="space-y-6 p-6">
                             {/* Performance Details */}
-                            <div className="border-b border-gray-200 pb-6">
-                                <h3 className="text-lg font-medium text-gray-900">Performance Details</h3>
+                            <div className="border-b border-plutz-tan/10 pb-6">
+                                <h3 className="text-lg font-medium text-plutz-cream">Performance Details</h3>
                                 
                                 <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
                                     <div>
@@ -116,7 +108,7 @@ export default function Edit({ inquiry, performanceTypes, bandSizes }: Props) {
                                         <InputLabel htmlFor="performance_type_id" value="Performance Type *" />
                                         <select
                                             id="performance_type_id"
-                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                            className="mt-1 block w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
                                             value={data.performance_type_id}
                                             onChange={(e) => setData('performance_type_id', e.target.value)}
                                             required
@@ -140,18 +132,18 @@ export default function Edit({ inquiry, performanceTypes, bandSizes }: Props) {
                                                 type="radio"
                                                 checked={timeMode === 'exact_time'}
                                                 onChange={() => handleTimeModeChange('exact_time')}
-                                                className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                                className="h-4 w-4 border-plutz-tan/20 text-plutz-tan focus:ring-plutz-tan"
                                             />
-                                            <span className="ml-2 text-sm text-gray-700">Exact time</span>
+                                            <span className="ml-2 text-sm text-stone-400">Exact time</span>
                                         </label>
                                         <label className="flex items-center">
                                             <input
                                                 type="radio"
                                                 checked={timeMode === 'text_time'}
                                                 onChange={() => handleTimeModeChange('text_time')}
-                                                className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                                className="h-4 w-4 border-plutz-tan/20 text-plutz-tan focus:ring-plutz-tan"
                                             />
-                                            <span className="ml-2 text-sm text-gray-700">Text description</span>
+                                            <span className="ml-2 text-sm text-stone-400">Text description</span>
                                         </label>
                                     </div>
 
@@ -191,7 +183,7 @@ export default function Edit({ inquiry, performanceTypes, bandSizes }: Props) {
                                         <InputLabel htmlFor="band_size_id" value="Band Size *" />
                                         <select
                                             id="band_size_id"
-                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                            className="mt-1 block w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
                                             value={data.band_size_id}
                                             onChange={(e) => setData('band_size_id', e.target.value)}
                                             required
@@ -208,8 +200,8 @@ export default function Edit({ inquiry, performanceTypes, bandSizes }: Props) {
                             </div>
 
                             {/* Location */}
-                            <div className="border-b border-gray-200 pb-6">
-                                <h3 className="text-lg font-medium text-gray-900">Location</h3>
+                            <div className="border-b border-plutz-tan/10 pb-6">
+                                <h3 className="text-lg font-medium text-plutz-cream">Location</h3>
                                 
                                 <div className="mt-4">
                                     <InputLabel htmlFor="location_name" value="Location Name *" />
@@ -238,8 +230,8 @@ export default function Edit({ inquiry, performanceTypes, bandSizes }: Props) {
                             </div>
 
                             {/* Contact */}
-                            <div className="border-b border-gray-200 pb-6">
-                                <h3 className="text-lg font-medium text-gray-900">Contact Information</h3>
+                            <div className="border-b border-plutz-tan/10 pb-6">
+                                <h3 className="text-lg font-medium text-plutz-cream">Contact Information</h3>
                                 
                                 <div className="mt-4">
                                     <InputLabel htmlFor="contact_person" value="Contact Person *" />
@@ -282,8 +274,8 @@ export default function Edit({ inquiry, performanceTypes, bandSizes }: Props) {
                             </div>
 
                             {/* Price */}
-                            <div className="border-b border-gray-200 pb-6">
-                                <h3 className="text-lg font-medium text-gray-900">Price</h3>
+                            <div className="border-b border-plutz-tan/10 pb-6">
+                                <h3 className="text-lg font-medium text-plutz-cream">Price</h3>
                                 
                                 <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
                                     <div>
@@ -318,7 +310,7 @@ export default function Edit({ inquiry, performanceTypes, bandSizes }: Props) {
                                 <InputLabel htmlFor="notes" value="Notes" />
                                 <textarea
                                     id="notes"
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                    className="mt-1 block w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
                                     rows={4}
                                     value={data.notes}
                                     onChange={(e) => setData('notes', e.target.value)}
@@ -330,7 +322,7 @@ export default function Edit({ inquiry, performanceTypes, bandSizes }: Props) {
                             <div className="flex items-center justify-end gap-4">
                                 <Link
                                     href={route('inquiries.show', inquiry.id)}
-                                    className="text-sm text-gray-600 hover:text-gray-900"
+                                    className="text-sm text-stone-400 hover:text-plutz-cream"
                                 >
                                     Cancel
                                 </Link>
@@ -341,7 +333,6 @@ export default function Edit({ inquiry, performanceTypes, bandSizes }: Props) {
                         </form>
                     </div>
                 </div>
-            </div>
         </AuthenticatedLayout>
     );
 }

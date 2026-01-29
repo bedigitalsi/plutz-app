@@ -57,34 +57,19 @@ export default function Show({ inquiry }: Props) {
     };
 
     return (
-        <AuthenticatedLayout
-            header={
-                <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                        Inquiry Details
-                    </h2>
-                    <Link
-                        href={route('inquiries.index')}
-                        className="text-sm text-gray-600 hover:text-gray-900"
-                    >
-                        ← Back to List
-                    </Link>
-                </div>
-            }
-        >
+        <AuthenticatedLayout className="bg-plutz-dark">
             <Head title={`Inquiry - ${inquiry.location_name}`} />
 
-            <div className="py-12">
-                <div className="mx-auto max-w-4xl sm:px-6 lg:px-8">
+            <div className="max-w-[1200px] mx-auto w-full p-6">
                     {/* Header with Status */}
-                    <div className="mb-6 overflow-hidden rounded-lg bg-white shadow-sm">
+                    <div className="mb-6 overflow-hidden rounded-lg bg-plutz-surface shadow-sm">
                         <div className="p-6">
                             <div className="flex items-start justify-between">
                                 <div>
-                                    <h3 className="text-2xl font-bold text-gray-900">
+                                    <h3 className="text-2xl font-bold text-plutz-cream">
                                         {inquiry.location_name}
                                     </h3>
-                                    <p className="mt-1 text-gray-600">{inquiry.contact_person}</p>
+                                    <p className="mt-1 text-stone-400">{inquiry.contact_person}</p>
                                 </div>
                                 <StatusBadge status={inquiry.status} />
                             </div>
@@ -93,7 +78,7 @@ export default function Show({ inquiry }: Props) {
                             <div className="mt-6 flex flex-wrap gap-2">
                                 <Link
                                     href={route('inquiries.edit', inquiry.id)}
-                                    className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+                                    className="rounded-md bg-plutz-tan px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-plutz-tan/90"
                                 >
                                     Edit
                                 </Link>
@@ -102,13 +87,13 @@ export default function Show({ inquiry }: Props) {
                                     <>
                                         <button
                                             onClick={() => handleStatusChange('confirmed')}
-                                            className="rounded-md bg-green-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500"
+                                            className="rounded-md bg-green-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500/100"
                                         >
                                             Confirm
                                         </button>
                                         <button
                                             onClick={() => handleStatusChange('rejected')}
-                                            className="rounded-md bg-gray-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-500"
+                                            className="rounded-md bg-stone-700 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-stone-900/500"
                                         >
                                             Reject
                                         </button>
@@ -135,7 +120,7 @@ export default function Show({ inquiry }: Props) {
 
                                 <button
                                     onClick={handleDelete}
-                                    className="ml-auto rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500"
+                                    className="ml-auto rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500/100"
                                 >
                                     Delete
                                 </button>
@@ -146,38 +131,38 @@ export default function Show({ inquiry }: Props) {
                     {/* Details */}
                     <div className="space-y-6">
                         {/* Performance Details */}
-                        <div className="overflow-hidden rounded-lg bg-white shadow-sm">
-                            <div className="border-b border-gray-200 px-6 py-4">
-                                <h4 className="text-lg font-medium text-gray-900">Performance Details</h4>
+                        <div className="overflow-hidden rounded-lg bg-plutz-surface shadow-sm">
+                            <div className="border-b border-plutz-tan/10 px-6 py-4">
+                                <h4 className="text-lg font-medium text-plutz-cream">Performance Details</h4>
                             </div>
                             <div className="p-6">
                                 <dl className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                     <div>
-                                        <dt className="text-sm font-medium text-gray-500">Date</dt>
-                                        <dd className="mt-1 text-sm text-gray-900">{formatDate(inquiry.performance_date)}</dd>
+                                        <dt className="text-sm font-medium text-stone-500">Date</dt>
+                                        <dd className="mt-1 text-sm text-plutz-cream">{formatDate(inquiry.performance_date)}</dd>
                                     </div>
                                     <div>
-                                        <dt className="text-sm font-medium text-gray-500">Time</dt>
-                                        <dd className="mt-1 text-sm text-gray-900">
+                                        <dt className="text-sm font-medium text-stone-500">Time</dt>
+                                        <dd className="mt-1 text-sm text-plutz-cream">
                                             {inquiry.performance_time_mode === 'exact_time' 
                                                 ? inquiry.performance_time_exact 
                                                 : inquiry.performance_time_text || 'Not specified'}
                                         </dd>
                                     </div>
                                     <div>
-                                        <dt className="text-sm font-medium text-gray-500">Duration</dt>
-                                        <dd className="mt-1 text-sm text-gray-900">{inquiry.duration_minutes} minutes</dd>
+                                        <dt className="text-sm font-medium text-stone-500">Duration</dt>
+                                        <dd className="mt-1 text-sm text-plutz-cream">{inquiry.duration_minutes} minutes</dd>
                                     </div>
                                     {inquiry.performance_type && (
                                         <div>
-                                            <dt className="text-sm font-medium text-gray-500">Type</dt>
-                                            <dd className="mt-1 text-sm text-gray-900">{inquiry.performance_type.name}</dd>
+                                            <dt className="text-sm font-medium text-stone-500">Type</dt>
+                                            <dd className="mt-1 text-sm text-plutz-cream">{inquiry.performance_type.name}</dd>
                                         </div>
                                     )}
                                     {inquiry.band_size && (
                                         <div>
-                                            <dt className="text-sm font-medium text-gray-500">Band Size</dt>
-                                            <dd className="mt-1 text-sm text-gray-900">{inquiry.band_size.label}</dd>
+                                            <dt className="text-sm font-medium text-stone-500">Band Size</dt>
+                                            <dd className="mt-1 text-sm text-plutz-cream">{inquiry.band_size.label}</dd>
                                         </div>
                                     )}
                                 </dl>
@@ -185,34 +170,34 @@ export default function Show({ inquiry }: Props) {
                         </div>
 
                         {/* Location */}
-                        <div className="overflow-hidden rounded-lg bg-white shadow-sm">
-                            <div className="border-b border-gray-200 px-6 py-4">
-                                <h4 className="text-lg font-medium text-gray-900">Location</h4>
+                        <div className="overflow-hidden rounded-lg bg-plutz-surface shadow-sm">
+                            <div className="border-b border-plutz-tan/10 px-6 py-4">
+                                <h4 className="text-lg font-medium text-plutz-cream">Location</h4>
                             </div>
                             <div className="p-6">
-                                <p className="text-sm text-gray-900">{inquiry.location_name}</p>
+                                <p className="text-sm text-plutz-cream">{inquiry.location_name}</p>
                                 {inquiry.location_address && (
-                                    <p className="mt-1 text-sm text-gray-600">{inquiry.location_address}</p>
+                                    <p className="mt-1 text-sm text-stone-400">{inquiry.location_address}</p>
                                 )}
                             </div>
                         </div>
 
                         {/* Contact */}
-                        <div className="overflow-hidden rounded-lg bg-white shadow-sm">
-                            <div className="border-b border-gray-200 px-6 py-4">
-                                <h4 className="text-lg font-medium text-gray-900">Contact Information</h4>
+                        <div className="overflow-hidden rounded-lg bg-plutz-surface shadow-sm">
+                            <div className="border-b border-plutz-tan/10 px-6 py-4">
+                                <h4 className="text-lg font-medium text-plutz-cream">Contact Information</h4>
                             </div>
                             <div className="p-6">
                                 <dl className="space-y-2">
                                     <div>
-                                        <dt className="text-sm font-medium text-gray-500">Name</dt>
-                                        <dd className="mt-1 text-sm text-gray-900">{inquiry.contact_person}</dd>
+                                        <dt className="text-sm font-medium text-stone-500">Name</dt>
+                                        <dd className="mt-1 text-sm text-plutz-cream">{inquiry.contact_person}</dd>
                                     </div>
                                     {inquiry.contact_email && (
                                         <div>
-                                            <dt className="text-sm font-medium text-gray-500">Email</dt>
-                                            <dd className="mt-1 text-sm text-gray-900">
-                                                <a href={`mailto:${inquiry.contact_email}`} className="text-indigo-600 hover:text-indigo-500">
+                                            <dt className="text-sm font-medium text-stone-500">Email</dt>
+                                            <dd className="mt-1 text-sm text-plutz-cream">
+                                                <a href={`mailto:${inquiry.contact_email}`} className="text-plutz-tan hover:text-plutz-tan">
                                                     {inquiry.contact_email}
                                                 </a>
                                             </dd>
@@ -220,9 +205,9 @@ export default function Show({ inquiry }: Props) {
                                     )}
                                     {inquiry.contact_phone && (
                                         <div>
-                                            <dt className="text-sm font-medium text-gray-500">Phone</dt>
-                                            <dd className="mt-1 text-sm text-gray-900">
-                                                <a href={`tel:${inquiry.contact_phone}`} className="text-indigo-600 hover:text-indigo-500">
+                                            <dt className="text-sm font-medium text-stone-500">Phone</dt>
+                                            <dd className="mt-1 text-sm text-plutz-cream">
+                                                <a href={`tel:${inquiry.contact_phone}`} className="text-plutz-tan hover:text-plutz-tan">
                                                     {inquiry.contact_phone}
                                                 </a>
                                             </dd>
@@ -234,16 +219,16 @@ export default function Show({ inquiry }: Props) {
 
                         {/* Price */}
                         {inquiry.price_amount && (
-                            <div className="overflow-hidden rounded-lg bg-white shadow-sm">
-                                <div className="border-b border-gray-200 px-6 py-4">
-                                    <h4 className="text-lg font-medium text-gray-900">Price</h4>
+                            <div className="overflow-hidden rounded-lg bg-plutz-surface shadow-sm">
+                                <div className="border-b border-plutz-tan/10 px-6 py-4">
+                                    <h4 className="text-lg font-medium text-plutz-cream">Price</h4>
                                 </div>
                                 <div className="p-6">
-                                    <p className="text-2xl font-bold text-gray-900">
+                                    <p className="text-2xl font-bold text-plutz-cream">
                                         {inquiry.price_amount} {inquiry.currency}
                                     </p>
                                     {inquiry.income && (
-                                        <p className="mt-2 text-sm text-green-600">✓ Payment received</p>
+                                        <p className="mt-2 text-sm text-green-400">✓ Payment received</p>
                                     )}
                                 </div>
                             </div>
@@ -251,18 +236,17 @@ export default function Show({ inquiry }: Props) {
 
                         {/* Notes */}
                         {inquiry.notes && (
-                            <div className="overflow-hidden rounded-lg bg-white shadow-sm">
-                                <div className="border-b border-gray-200 px-6 py-4">
-                                    <h4 className="text-lg font-medium text-gray-900">Notes</h4>
+                            <div className="overflow-hidden rounded-lg bg-plutz-surface shadow-sm">
+                                <div className="border-b border-plutz-tan/10 px-6 py-4">
+                                    <h4 className="text-lg font-medium text-plutz-cream">Notes</h4>
                                 </div>
                                 <div className="p-6">
-                                    <p className="whitespace-pre-wrap text-sm text-gray-700">{inquiry.notes}</p>
+                                    <p className="whitespace-pre-wrap text-sm text-stone-400">{inquiry.notes}</p>
                                 </div>
                             </div>
                         )}
                     </div>
                 </div>
-            </div>
         </AuthenticatedLayout>
     );
 }

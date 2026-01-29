@@ -73,37 +73,36 @@ export default function Index() {
     ];
 
     return (
-        <AuthenticatedLayout
-            header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                    Settings
-                </h2>
-            }
-        >
+        <AuthenticatedLayout className="bg-plutz-dark">
             <Head title="Settings" />
+            <div className="max-w-[1200px] mx-auto w-full p-6 pb-0">
+                <div className="flex items-center justify-between mb-2">
+                    <h2 className="text-2xl font-serif text-plutz-cream">Settings</h2>
+                </div>
+            </div>
 
-            <div className="py-12">
-                <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+
+            <div className="max-w-[1200px] mx-auto w-full p-6">
                     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                         {settingsCards.map((card) => (
                             <Link
                                 key={card.title}
                                 href={card.href}
-                                className={`block rounded-lg bg-white p-6 shadow-sm transition-all hover:shadow-md ${
-                                    card.current ? 'ring-2 ring-indigo-500' : ''
+                                className={`block rounded-lg bg-plutz-surface p-6 shadow-sm transition-all hover:border-plutz-tan/30 ${
+                                    card.current ? 'ring-2 ring-plutz-tan' : ''
                                 }`}
                             >
                                 <div className="flex items-center space-x-3">
                                     <div className={`flex-shrink-0 rounded-lg p-3 ${
-                                        card.current ? 'bg-indigo-100 text-indigo-600' : 'bg-gray-100 text-gray-600'
+                                        card.current ? 'bg-plutz-tan/20 text-plutz-tan' : 'bg-stone-800 text-stone-400'
                                     }`}>
                                         {card.icon}
                                     </div>
                                     <div className="flex-1">
-                                        <h3 className="text-lg font-semibold text-gray-900">
+                                        <h3 className="text-lg font-semibold text-plutz-cream">
                                             {card.title}
                                         </h3>
-                                        <p className="mt-1 text-sm text-gray-500">
+                                        <p className="mt-1 text-sm text-stone-500">
                                             {card.description}
                                         </p>
                                     </div>
@@ -112,7 +111,6 @@ export default function Index() {
                         ))}
                     </div>
                 </div>
-            </div>
         </AuthenticatedLayout>
     );
 }

@@ -36,7 +36,7 @@ export default function Welcome({
 
     if (auth.user) {
         return (
-            <div className="flex min-h-screen flex-col items-center justify-center bg-plutz-dark selection:bg-plutz-teal selection:text-white">
+            <div className="flex min-h-screen flex-col items-center justify-center bg-plutz-dark selection:bg-plutz-tan selection:text-white">
                 <Head title="Welcome" />
                 <div className="mb-8">
                      <img 
@@ -45,9 +45,9 @@ export default function Welcome({
                         className="h-24 w-auto" 
                     />
                 </div>
-                <div className="w-full max-w-md space-y-8 rounded-xl bg-plutz-cream px-8 py-8 shadow-warm-lg sm:rounded-xl">
+                <div className="w-full max-w-md space-y-8 rounded-xl bg-plutz-dark px-8 py-8 shadow-sm-lg sm:rounded-xl">
                     <div className="text-center">
-                        <h2 className="font-serif text-2xl font-bold tracking-tight text-plutz-brown">
+                        <h2 className="font-serif text-2xl font-bold tracking-tight text-plutz-cream">
                             Welcome back, {auth.user.name}!
                         </h2>
                         <p className="mt-2 text-sm text-plutz-warm-gray">
@@ -57,7 +57,7 @@ export default function Welcome({
                     <div className="mt-6 flex justify-center">
                         <Link
                             href={route('dashboard')}
-                            className="rounded-xl bg-plutz-teal px-6 py-2.5 text-sm font-semibold text-white shadow-warm hover:bg-plutz-teal-dark focus:outline-none focus:ring-2 focus:ring-plutz-teal focus:ring-offset-2 transition duration-150"
+                            className="rounded-xl bg-plutz-tan px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-plutz-tan-dark focus:outline-none focus:ring-2 focus:ring-plutz-tan focus:ring-offset-2 transition duration-150"
                         >
                             Go to Dashboard
                         </Link>
@@ -75,7 +75,7 @@ export default function Welcome({
             <Head title="Welcome" />
 
             {status && (
-                <div className="mb-4 text-sm font-medium text-emerald-600">
+                <div className="mb-4 text-sm font-medium text-emerald-400">
                     {status}
                 </div>
             )}
@@ -89,7 +89,7 @@ export default function Welcome({
                         type="email"
                         name="email"
                         value={data.email}
-                        className="mt-1 block w-full rounded-lg border-plutz-cream-dark bg-white focus:border-plutz-teal focus:ring-plutz-teal"
+                        className="mt-1 block w-full rounded-lg border-plutz-tan/10 bg-plutz-surface focus:border-plutz-tan focus:ring-plutz-tan"
                         autoComplete="username"
                         isFocused={true}
                         onChange={(e) => setData('email', e.target.value)}
@@ -106,7 +106,7 @@ export default function Welcome({
                         type="password"
                         name="password"
                         value={data.password}
-                        className="mt-1 block w-full rounded-lg border-plutz-cream-dark bg-white focus:border-plutz-teal focus:ring-plutz-teal"
+                        className="mt-1 block w-full rounded-lg border-plutz-tan/10 bg-plutz-surface focus:border-plutz-tan focus:ring-plutz-tan"
                         autoComplete="current-password"
                         onChange={(e) => setData('password', e.target.value)}
                     />
@@ -126,7 +126,7 @@ export default function Welcome({
                                 )
                             }
                         />
-                        <span className="ms-2 text-sm text-plutz-brown">
+                        <span className="ms-2 text-sm text-plutz-cream">
                             Remember me
                         </span>
                     </label>
@@ -136,7 +136,7 @@ export default function Welcome({
                     {canResetPassword && (
                         <Link
                             href={route('password.request')}
-                            className="rounded-md text-sm text-plutz-warm-gray underline hover:text-plutz-brown focus:outline-none focus:ring-2 focus:ring-plutz-teal focus:ring-offset-2 transition duration-150"
+                            className="rounded-md text-sm text-plutz-warm-gray underline hover:text-plutz-cream focus:outline-none focus:ring-2 focus:ring-plutz-tan focus:ring-offset-2 transition duration-150"
                         >
                             Forgot your password?
                         </Link>

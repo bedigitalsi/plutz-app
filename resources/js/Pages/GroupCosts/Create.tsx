@@ -32,30 +32,22 @@ export default function Create({ costTypes }: Props) {
     };
 
     return (
-        <AuthenticatedLayout
-            header={
-                <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                        New Group Cost
-                    </h2>
-                    <Link
-                        href={route('group-costs.index')}
-                        className="text-sm text-gray-600 hover:text-gray-900"
-                    >
-                        ← Back to List
-                    </Link>
-                </div>
-            }
-        >
+        <AuthenticatedLayout className="bg-plutz-dark">
             <Head title="New Group Cost" />
+            <div className="max-w-[1200px] mx-auto w-full p-6 pb-0">
+                <div className="flex items-center justify-between mb-2">
+                    <h2 className="text-2xl font-serif text-plutz-cream">New Group Cost</h2>
+                    <Link href={route('group-costs.index')} className="text-plutz-tan hover:text-plutz-tan-light text-sm font-medium">Back to List</Link>
+                </div>
+            </div>
 
-            <div className="py-12">
-                <div className="mx-auto max-w-3xl sm:px-6 lg:px-8">
-                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+
+            <div className="max-w-[1200px] mx-auto w-full p-6">
+                    <div className="overflow-hidden bg-plutz-surface shadow-sm sm:rounded-lg">
                         <form onSubmit={submit} className="space-y-6 p-6">
-                            <div className="border-b border-gray-200 pb-6">
-                                <h3 className="text-lg font-medium text-gray-900">Cost Details</h3>
-                                <p className="mt-1 text-sm text-gray-600">
+                            <div className="border-b border-plutz-tan/10 pb-6">
+                                <h3 className="text-lg font-medium text-plutz-cream">Cost Details</h3>
+                                <p className="mt-1 text-sm text-stone-400">
                                     Track expenses paid from the mutual fund
                                 </p>
                                 
@@ -76,7 +68,7 @@ export default function Create({ costTypes }: Props) {
                                         <InputLabel htmlFor="cost_type_id" value="Cost Type *" />
                                         <select
                                             id="cost_type_id"
-                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                            className="mt-1 block w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
                                             value={data.cost_type_id}
                                             onChange={(e) => setData('cost_type_id', e.target.value)}
                                             required
@@ -109,11 +101,11 @@ export default function Create({ costTypes }: Props) {
                                             type="checkbox"
                                             checked={data.is_paid}
                                             onChange={(e) => setData('is_paid', e.target.checked)}
-                                            className="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
+                                            className="rounded border-plutz-tan/20 text-plutz-tan shadow-sm focus:ring-plutz-tan"
                                         />
-                                        <span className="ml-2 text-sm text-gray-700">Mark as Paid</span>
+                                        <span className="ml-2 text-sm text-stone-400">Mark as Paid</span>
                                     </label>
-                                    <p className="mt-1 text-xs text-gray-500">
+                                    <p className="mt-1 text-xs text-stone-500">
                                         Paid costs are deducted from the mutual fund balance
                                     </p>
                                 </div>
@@ -123,7 +115,7 @@ export default function Create({ costTypes }: Props) {
                                 <InputLabel htmlFor="notes" value="Notes" />
                                 <textarea
                                     id="notes"
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                    className="mt-1 block w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
                                     rows={4}
                                     value={data.notes}
                                     onChange={(e) => setData('notes', e.target.value)}
@@ -134,7 +126,7 @@ export default function Create({ costTypes }: Props) {
                             <div className="flex items-center justify-end gap-4">
                                 <Link
                                     href={route('group-costs.index')}
-                                    className="text-sm text-gray-600 hover:text-gray-900"
+                                    className="text-sm text-stone-400 hover:text-plutz-cream"
                                 >
                                     Cancel
                                 </Link>
@@ -145,7 +137,6 @@ export default function Create({ costTypes }: Props) {
                         </form>
                     </div>
                 </div>
-            </div>
         </AuthenticatedLayout>
     );
 }

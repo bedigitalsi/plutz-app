@@ -31,29 +31,21 @@ export default function Create({ roles }: Props) {
     };
 
     return (
-        <AuthenticatedLayout
-            header={
-                <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                        Add New User
-                    </h2>
-                    <Link
-                        href={route('users.index')}
-                        className="text-sm text-gray-600 hover:text-gray-900"
-                    >
-                        ← Back to List
-                    </Link>
-                </div>
-            }
-        >
+        <AuthenticatedLayout className="bg-plutz-dark">
             <Head title="Add User" />
+            <div className="max-w-[1200px] mx-auto w-full p-6 pb-0">
+                <div className="flex items-center justify-between mb-2">
+                    <h2 className="text-2xl font-serif text-plutz-cream">Add New User</h2>
+                    <Link href={route('users.index')} className="text-plutz-tan hover:text-plutz-tan-light text-sm font-medium">Back to List</Link>
+                </div>
+            </div>
 
-            <div className="py-12">
-                <div className="mx-auto max-w-3xl sm:px-6 lg:px-8">
-                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+
+            <div className="max-w-[1200px] mx-auto w-full p-6">
+                    <div className="overflow-hidden bg-plutz-surface shadow-sm sm:rounded-lg">
                         <form onSubmit={submit} className="space-y-6 p-6">
-                            <div className="border-b border-gray-200 pb-6">
-                                <h3 className="text-lg font-medium text-gray-900">User Details</h3>
+                            <div className="border-b border-plutz-tan/10 pb-6">
+                                <h3 className="text-lg font-medium text-plutz-cream">User Details</h3>
                                 
                                 <div className="mt-4">
                                     <InputLabel htmlFor="name" value="Name *" />
@@ -112,7 +104,7 @@ export default function Create({ roles }: Props) {
                                     <InputLabel htmlFor="role" value="Role *" />
                                     <select
                                         id="role"
-                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                        className="mt-1 block w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
                                         value={data.role}
                                         onChange={(e) => setData('role', e.target.value)}
                                         required
@@ -133,11 +125,11 @@ export default function Create({ roles }: Props) {
                                             type="checkbox"
                                             checked={data.is_band_member}
                                             onChange={(e) => setData('is_band_member', e.target.checked)}
-                                            className="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
+                                            className="rounded border-plutz-tan/20 text-plutz-tan shadow-sm focus:ring-plutz-tan"
                                         />
-                                        <span className="ml-2 text-sm text-gray-700">Is Band Member</span>
+                                        <span className="ml-2 text-sm text-stone-400">Is Band Member</span>
                                     </label>
-                                    <p className="mt-1 text-xs text-gray-500">
+                                    <p className="mt-1 text-xs text-stone-500">
                                         Band members can receive income distributions
                                     </p>
                                 </div>
@@ -146,7 +138,7 @@ export default function Create({ roles }: Props) {
                             <div className="flex items-center justify-end gap-4">
                                 <Link
                                     href={route('users.index')}
-                                    className="text-sm text-gray-600 hover:text-gray-900"
+                                    className="text-sm text-stone-400 hover:text-plutz-cream"
                                 >
                                     Cancel
                                 </Link>
@@ -157,7 +149,6 @@ export default function Create({ roles }: Props) {
                         </form>
                     </div>
                 </div>
-            </div>
         </AuthenticatedLayout>
     );
 }

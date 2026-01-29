@@ -88,19 +88,19 @@ export default function Sign({ contract, markdown, token }: Props) {
 
     if (success) {
         return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+            <div className="min-h-screen bg-plutz-dark flex items-center justify-center p-4">
                 <Head title="Contract Signed" />
-                <div className="max-w-md w-full bg-white shadow-lg rounded-lg p-8 text-center">
+                <div className="max-w-md w-full bg-plutz-surface shadow-lg rounded-lg p-8 text-center">
                     <div className="mb-4">
                         <svg className="mx-auto h-16 w-16 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
-                    <h1 className="text-2xl font-bold text-gray-900 mb-2">Contract Signed Successfully!</h1>
-                    <p className="text-gray-600 mb-6">
+                    <h1 className="text-2xl font-bold text-plutz-cream mb-2">Contract Signed Successfully!</h1>
+                    <p className="text-stone-400 mb-6">
                         Thank you for signing the contract. You will receive a copy via email shortly.
                     </p>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-stone-500">
                         You can now close this window.
                     </p>
                 </div>
@@ -109,27 +109,27 @@ export default function Sign({ contract, markdown, token }: Props) {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-plutz-dark py-12 px-4 sm:px-6 lg:px-8">
             <Head title="Sign Contract" />
             
             <div className="max-w-4xl mx-auto">
                 {/* Header */}
-                <div className="bg-white shadow-sm rounded-lg p-6 mb-6">
-                    <h1 className="text-2xl font-bold text-gray-900 mb-2">Contract Signing</h1>
-                    <p className="text-gray-600">
+                <div className="bg-plutz-surface shadow-sm rounded-lg p-6 mb-6">
+                    <h1 className="text-2xl font-bold text-plutz-cream mb-2">Contract Signing</h1>
+                    <p className="text-stone-400">
                         Please review the contract below and provide your signature to proceed.
                     </p>
                 </div>
 
                 {/* Contract Preview - PDF Style */}
-                <div className="bg-white shadow-lg rounded-lg overflow-hidden mb-6">
+                <div className="bg-plutz-surface shadow-lg rounded-lg overflow-hidden mb-6">
                     {/* PDF-like header bar */}
-                    <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-8 py-4">
-                        <h2 className="text-xl font-bold text-white">Contract Document</h2>
+                    <div className="bg-plutz-tan/20 border-b border-plutz-tan/10 px-8 py-4">
+                        <h2 className="text-xl font-bold text-plutz-cream">Contract Document</h2>
                     </div>
                     
                     {/* PDF-like content area with margins */}
-                    <div className="px-12 py-10 bg-white" style={{ minHeight: '800px' }}>
+                    <div className="px-12 py-10 bg-plutz-surface" style={{ minHeight: '800px' }}>
                         {/* Contract content with PDF-like styling */}
                         <div 
                             className="contract-content"
@@ -145,75 +145,75 @@ export default function Sign({ contract, markdown, token }: Props) {
                 </div>
 
                 {/* Signing Form */}
-                <div className="bg-white shadow-sm rounded-lg p-8">
-                    <h2 className="text-xl font-semibold text-gray-900 mb-6">Your Information</h2>
+                <div className="bg-plutz-surface shadow-sm rounded-lg p-8">
+                    <h2 className="text-xl font-semibold text-plutz-cream mb-6">Your Information</h2>
                     
                     <form onSubmit={submit} className="space-y-6">
                         {/* Signer Information */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                <label className="block text-sm font-medium text-stone-400 mb-2">
                                     Full Name *
                                 </label>
                                 <input
                                     type="text"
                                     value={data.signer_name}
                                     onChange={(e) => setData('signer_name', e.target.value)}
-                                    className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                    className="w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
                                     required
                                 />
                                 {errors.signer_name && (
-                                    <div className="text-red-600 text-sm mt-1">{errors.signer_name}</div>
+                                    <div className="text-red-400 text-sm mt-1">{errors.signer_name}</div>
                                 )}
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                <label className="block text-sm font-medium text-stone-400 mb-2">
                                     Email Address *
                                 </label>
                                 <input
                                     type="email"
                                     value={data.signer_email}
                                     onChange={(e) => setData('signer_email', e.target.value)}
-                                    className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                    className="w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
                                     required
                                 />
                                 {errors.signer_email && (
-                                    <div className="text-red-600 text-sm mt-1">{errors.signer_email}</div>
+                                    <div className="text-red-400 text-sm mt-1">{errors.signer_email}</div>
                                 )}
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                <label className="block text-sm font-medium text-stone-400 mb-2">
                                     Company (Optional)
                                 </label>
                                 <input
                                     type="text"
                                     value={data.signer_company}
                                     onChange={(e) => setData('signer_company', e.target.value)}
-                                    className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                    className="w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
                                 />
                             </div>
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-stone-400 mb-2">
                                 Address (Optional)
                             </label>
                             <textarea
                                 value={data.signer_address}
                                 onChange={(e) => setData('signer_address', e.target.value)}
                                 rows={3}
-                                className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                className="w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
                             />
                         </div>
 
                         {/* Signature Pad */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-stone-400 mb-2">
                                 Signature *
                             </label>
-                            <div className="border-2 border-gray-300 rounded-md bg-white">
+                            <div className="border-2 border-plutz-tan/20 rounded-md bg-plutz-surface">
                                 <SignatureCanvas
                                     ref={signaturePad}
                                     canvasProps={{
@@ -223,15 +223,15 @@ export default function Sign({ contract, markdown, token }: Props) {
                                 />
                             </div>
                             {signatureError && (
-                                <div className="text-red-600 text-sm mt-1">{signatureError}</div>
+                                <div className="text-red-400 text-sm mt-1">{signatureError}</div>
                             )}
                             {errors.signature_data && (
-                                <div className="text-red-600 text-sm mt-1">{errors.signature_data}</div>
+                                <div className="text-red-400 text-sm mt-1">{errors.signature_data}</div>
                             )}
                             <button
                                 type="button"
                                 onClick={clearSignature}
-                                className="mt-2 text-sm text-gray-600 hover:text-gray-900"
+                                className="mt-2 text-sm text-stone-400 hover:text-plutz-cream"
                             >
                                 Clear Signature
                             </button>
@@ -243,17 +243,17 @@ export default function Sign({ contract, markdown, token }: Props) {
                                 type="checkbox"
                                 checked={data.consented}
                                 onChange={(e) => setData('consented', e.target.checked)}
-                                className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                                className="mt-1 h-4 w-4 text-plutz-tan focus:ring-plutz-tan border-plutz-tan/20 rounded"
                                 required
                             />
-                            <label className="ml-2 block text-sm text-gray-700">
+                            <label className="ml-2 block text-sm text-stone-400">
                                 I have read and agree to the terms of this contract. I understand that by signing this 
                                 document electronically, I am providing my legal signature with the same effect as if 
                                 I had signed a paper document. *
                             </label>
                         </div>
                         {errors.consented && (
-                            <div className="text-red-600 text-sm">{errors.consented}</div>
+                            <div className="text-red-400 text-sm">{errors.consented}</div>
                         )}
 
                         {/* Submit Button */}
@@ -261,7 +261,7 @@ export default function Sign({ contract, markdown, token }: Props) {
                             <button
                                 type="submit"
                                 disabled={processing}
-                                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-plutz-tan hover:bg-plutz-tan/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-plutz-tan disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 {processing ? 'Signing Contract...' : 'Sign Contract'}
                             </button>
@@ -270,7 +270,7 @@ export default function Sign({ contract, markdown, token }: Props) {
                 </div>
 
                 {/* Footer */}
-                <div className="mt-6 text-center text-sm text-gray-500">
+                <div className="mt-6 text-center text-sm text-stone-500">
                     <p>
                         This is a legally binding electronic signature. A copy will be sent to your email address.
                     </p>

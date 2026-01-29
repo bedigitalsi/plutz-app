@@ -36,52 +36,44 @@ export default function Index({ performanceTypes }: Props) {
     };
 
     return (
-        <AuthenticatedLayout
-            header={
-                <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                        Performance Types
-                    </h2>
-                    <Link
-                        href={route('performance-types.create')}
-                        className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
-                    >
-                        New Performance Type
-                    </Link>
-                </div>
-            }
-        >
+        <AuthenticatedLayout className="bg-plutz-dark">
             <Head title="Performance Types" />
+            <div className="max-w-[1200px] mx-auto w-full p-6 pb-0">
+                <div className="flex items-center justify-between mb-2">
+                    <h2 className="text-2xl font-serif text-plutz-cream">Performance Types</h2>
+                    <Link href={route('performance-types.create')} className="text-plutz-tan hover:text-plutz-tan-light text-sm font-medium">New Performance Type</Link>
+                </div>
+            </div>
 
-            <div className="py-12">
-                <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+
+            <div className="max-w-[1200px] mx-auto w-full p-6">
                     {performanceTypes.length === 0 ? (
-                        <div className="rounded-lg bg-white p-8 text-center shadow-sm">
-                            <p className="text-gray-500">No performance types found.</p>
+                        <div className="rounded-lg bg-plutz-surface p-8 text-center shadow-sm">
+                            <p className="text-stone-500">No performance types found.</p>
                         </div>
                     ) : (
-                        <div className="overflow-hidden rounded-lg bg-white shadow-sm">
-                            <table className="min-w-full divide-y divide-gray-200">
-                                <thead className="bg-gray-50">
+                        <div className="overflow-hidden rounded-lg bg-plutz-surface shadow-sm">
+                            <table className="min-w-full divide-y divide-plutz-tan/10">
+                                <thead className="bg-stone-900/50">
                                     <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500">
                                             Name
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500">
                                             Status
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500">
                                             Usage
                                         </th>
-                                        <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
+                                        <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-stone-500">
                                             Actions
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-gray-200 bg-white">
+                                <tbody className="divide-y divide-plutz-tan/10 bg-plutz-surface">
                                     {performanceTypes.map((performanceType) => (
-                                        <tr key={performanceType.id} className="hover:bg-gray-50">
-                                            <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">
+                                        <tr key={performanceType.id} className="hover:bg-stone-900/50">
+                                            <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-plutz-cream">
                                                 {performanceType.name}
                                             </td>
                                             <td className="whitespace-nowrap px-6 py-4 text-sm">
@@ -89,27 +81,27 @@ export default function Index({ performanceTypes }: Props) {
                                                     onClick={() => toggleActive(performanceType)}
                                                     className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${
                                                         performanceType.is_active
-                                                            ? 'bg-green-100 text-green-800 hover:bg-green-200'
-                                                            : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                                                            ? 'bg-green-500/100/10 text-green-400 hover:bg-green-500/100/20'
+                                                            : 'bg-stone-800 text-plutz-cream hover:bg-plutz-tan/20'
                                                     }`}
                                                 >
                                                     {performanceType.is_active ? 'Active' : 'Inactive'}
                                                 </button>
                                             </td>
-                                            <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+                                            <td className="whitespace-nowrap px-6 py-4 text-sm text-stone-500">
                                                 {performanceType.inquiries_count + performanceType.incomes_count > 0 ? (
                                                     <span>
                                                         {performanceType.inquiries_count} inquiries, {performanceType.incomes_count} incomes
                                                     </span>
                                                 ) : (
-                                                    <span className="text-gray-400">Not used</span>
+                                                    <span className="text-stone-500">Not used</span>
                                                 )}
                                             </td>
                                             <td className="whitespace-nowrap px-6 py-4 text-right text-sm">
                                                 <div className="flex items-center justify-end gap-3">
                                                     <Link
                                                         href={route('performance-types.edit', performanceType.id)}
-                                                        className="text-indigo-600 hover:text-indigo-900"
+                                                        className="text-plutz-tan hover:text-plutz-tan"
                                                     >
                                                         Edit
                                                     </Link>
@@ -120,8 +112,8 @@ export default function Index({ performanceTypes }: Props) {
                                                         )}
                                                         className={`${
                                                             performanceType.inquiries_count + performanceType.incomes_count > 0
-                                                                ? 'text-gray-400 cursor-not-allowed'
-                                                                : 'text-red-600 hover:text-red-900'
+                                                                ? 'text-stone-500 cursor-not-allowed'
+                                                                : 'text-red-400 hover:text-red-300'
                                                         }`}
                                                         disabled={performanceType.inquiries_count + performanceType.incomes_count > 0}
                                                     >
@@ -136,7 +128,6 @@ export default function Index({ performanceTypes }: Props) {
                         </div>
                     )}
                 </div>
-            </div>
         </AuthenticatedLayout>
     );
 }

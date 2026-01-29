@@ -28,7 +28,6 @@ export default function FileUpload({
         if (file) {
             setFileName(file.name);
             
-            // Show preview for images
             if (file.type.startsWith('image/')) {
                 const reader = new FileReader();
                 reader.onloadend = () => {
@@ -71,62 +70,38 @@ export default function FileUpload({
                     <button
                         type="button"
                         onClick={() => fileInputRef.current?.click()}
-                        className="w-full rounded-md border-2 border-dashed border-gray-300 p-6 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        className="w-full rounded-xl border-2 border-dashed border-plutz-tan/20 p-6 text-center hover:border-plutz-tan/40 focus:outline-none focus:ring-2 focus:ring-plutz-tan focus:ring-offset-2 focus:ring-offset-plutz-dark bg-plutz-dark transition-colors"
                     >
-                        <svg
-                            className="mx-auto h-12 w-12 text-gray-400"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M12 4v16m8-8H4"
-                            />
-                        </svg>
-                        <p className="mt-2 text-sm text-gray-600">
+                        <span className="material-symbols-outlined text-stone-500 text-4xl mx-auto block">upload_file</span>
+                        <p className="mt-2 text-sm text-stone-400">
                             Click to upload or take a photo
                         </p>
-                        <p className="mt-1 text-xs text-gray-500">
+                        <p className="mt-1 text-xs text-stone-500">
                             PNG, JPG, PDF up to 10MB
                         </p>
                     </button>
                 ) : (
-                    <div className="rounded-md border border-gray-300 p-4">
+                    <div className="rounded-xl border border-plutz-tan/10 bg-plutz-surface p-4">
                         {preview ? (
                             <div className="mb-4">
                                 <img
                                     src={preview}
                                     alt="Preview"
-                                    className="mx-auto max-h-48 rounded"
+                                    className="mx-auto max-h-48 rounded-lg"
                                 />
                             </div>
                         ) : (
                             <div className="mb-4 flex items-center justify-center">
-                                <svg
-                                    className="h-12 w-12 text-gray-400"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
-                                    />
-                                </svg>
+                                <span className="material-symbols-outlined text-stone-500 text-4xl">description</span>
                             </div>
                         )}
                         
                         <div className="flex items-center justify-between">
-                            <p className="text-sm text-gray-900 truncate">{fileName}</p>
+                            <p className="text-sm text-plutz-cream truncate">{fileName}</p>
                             <button
                                 type="button"
                                 onClick={clearFile}
-                                className="ml-4 text-sm text-red-600 hover:text-red-500"
+                                className="ml-4 text-sm text-red-400 hover:text-red-300"
                             >
                                 Remove
                             </button>

@@ -79,30 +79,22 @@ export default function Edit({ expense }: Props) {
     );
 
     return (
-        <AuthenticatedLayout
-            header={
-                <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                        Edit Expense
-                    </h2>
-                    <Link
-                        href={route('expenses.show', expense.id)}
-                        className="text-sm text-gray-600 hover:text-gray-900"
-                    >
-                        ← Back to Details
-                    </Link>
-                </div>
-            }
-        >
+        <AuthenticatedLayout className="bg-plutz-dark">
             <Head title="Edit Expense" />
+            <div className="max-w-[1200px] mx-auto w-full p-6 pb-0">
+                <div className="flex items-center justify-between mb-2">
+                    <h2 className="text-2xl font-serif text-plutz-cream">Edit Expense</h2>
+                    <Link href={route('expenses.show', expense.id)} className="text-plutz-tan hover:text-plutz-tan-light text-sm font-medium">Back to Details</Link>
+                </div>
+            </div>
 
-            <div className="py-12">
-                <div className="mx-auto max-w-3xl sm:px-6 lg:px-8">
-                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+
+            <div className="max-w-[1200px] mx-auto w-full p-6">
+                    <div className="overflow-hidden bg-plutz-surface shadow-sm sm:rounded-lg">
                         <form onSubmit={submit} className="space-y-6 p-6">
                             {/* Invoice Details */}
-                            <div className="border-b border-gray-200 pb-6">
-                                <h3 className="text-lg font-medium text-gray-900">Invoice Details</h3>
+                            <div className="border-b border-plutz-tan/10 pb-6">
+                                <h3 className="text-lg font-medium text-plutz-cream">Invoice Details</h3>
 
                                 <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
                                     <div>
@@ -147,7 +139,7 @@ export default function Edit({ expense }: Props) {
                                     <InputLabel htmlFor="status" value="Status" />
                                     <select
                                         id="status"
-                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                        className="mt-1 block w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
                                         value={data.status}
                                         onChange={(e) => setData('status', e.target.value)}
                                     >
@@ -160,9 +152,9 @@ export default function Edit({ expense }: Props) {
 
                             {/* Existing Attachments */}
                             {expense.attachments.length > 0 && (
-                                <div className="border-b border-gray-200 pb-6">
-                                    <h3 className="text-lg font-medium text-gray-900">Current Attachments</h3>
-                                    <p className="mt-1 text-sm text-gray-600">
+                                <div className="border-b border-plutz-tan/10 pb-6">
+                                    <h3 className="text-lg font-medium text-plutz-cream">Current Attachments</h3>
+                                    <p className="mt-1 text-sm text-stone-400">
                                         Click to mark attachments for deletion
                                     </p>
 
@@ -172,13 +164,13 @@ export default function Edit({ expense }: Props) {
                                                 key={attachment.id}
                                                 className={`flex items-center justify-between rounded-lg border p-4 ${
                                                     attachmentsToDelete.includes(attachment.id)
-                                                        ? 'border-red-300 bg-red-50'
-                                                        : 'border-gray-200'
+                                                        ? 'border-red-500/20 bg-red-500/10'
+                                                        : 'border-plutz-tan/10'
                                                 }`}
                                             >
                                                 <div className="flex items-center">
                                                     <svg
-                                                        className="h-8 w-8 text-gray-400"
+                                                        className="h-8 w-8 text-stone-500"
                                                         fill="none"
                                                         viewBox="0 0 24 24"
                                                         stroke="currentColor"
@@ -193,12 +185,12 @@ export default function Edit({ expense }: Props) {
                                                     <div className="ml-4">
                                                         <p className={`text-sm font-medium ${
                                                             attachmentsToDelete.includes(attachment.id)
-                                                                ? 'text-red-600 line-through'
-                                                                : 'text-gray-900'
+                                                                ? 'text-red-400 line-through'
+                                                                : 'text-plutz-cream'
                                                         }`}>
                                                             {attachment.original_name}
                                                         </p>
-                                                        <p className="text-sm text-gray-500">
+                                                        <p className="text-sm text-stone-500">
                                                             {formatFileSize(attachment.size)}
                                                         </p>
                                                     </div>
@@ -208,8 +200,8 @@ export default function Edit({ expense }: Props) {
                                                     onClick={() => toggleDeleteAttachment(attachment.id)}
                                                     className={`rounded-md px-3 py-2 text-sm font-semibold ${
                                                         attachmentsToDelete.includes(attachment.id)
-                                                            ? 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                                                            : 'bg-red-100 text-red-700 hover:bg-red-200'
+                                                            ? 'bg-plutz-tan/20 text-stone-400 hover:bg-plutz-tan/30'
+                                                            : 'bg-red-500/10 text-red-400 hover:bg-red-500/20'
                                                     }`}
                                                 >
                                                     {attachmentsToDelete.includes(attachment.id) ? 'Keep' : 'Delete'}
@@ -221,9 +213,9 @@ export default function Edit({ expense }: Props) {
                             )}
 
                             {/* New Attachment */}
-                            <div className="border-b border-gray-200 pb-6">
-                                <h3 className="text-lg font-medium text-gray-900">Add New Attachment</h3>
-                                <p className="mt-1 text-sm text-gray-600">
+                            <div className="border-b border-plutz-tan/10 pb-6">
+                                <h3 className="text-lg font-medium text-plutz-cream">Add New Attachment</h3>
+                                <p className="mt-1 text-sm text-stone-400">
                                     Upload a photo or PDF of the invoice
                                 </p>
 
@@ -242,7 +234,7 @@ export default function Edit({ expense }: Props) {
                                 <InputLabel htmlFor="notes" value="Notes" />
                                 <textarea
                                     id="notes"
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                    className="mt-1 block w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
                                     rows={4}
                                     value={data.notes}
                                     onChange={(e) => setData('notes', e.target.value)}
@@ -254,7 +246,7 @@ export default function Edit({ expense }: Props) {
                             <div className="flex items-center justify-end gap-4">
                                 <Link
                                     href={route('expenses.show', expense.id)}
-                                    className="text-sm text-gray-600 hover:text-gray-900"
+                                    className="text-sm text-stone-400 hover:text-plutz-cream"
                                 >
                                     Cancel
                                 </Link>
@@ -265,7 +257,6 @@ export default function Edit({ expense }: Props) {
                         </form>
                     </div>
                 </div>
-            </div>
         </AuthenticatedLayout>
     );
 }

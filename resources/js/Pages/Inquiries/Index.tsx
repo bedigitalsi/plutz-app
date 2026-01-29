@@ -59,30 +59,22 @@ export default function Index({ inquiries, filters }: Props) {
     };
 
     return (
-        <AuthenticatedLayout
-            header={
-                <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                        Inquiries
-                    </h2>
-                    <Link
-                        href={route('inquiries.create')}
-                        className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
-                    >
-                        New Inquiry
-                    </Link>
-                </div>
-            }
-        >
+        <AuthenticatedLayout className="bg-plutz-dark">
             <Head title="Inquiries" />
+            <div className="max-w-[1200px] mx-auto w-full p-6 pb-0">
+                <div className="flex items-center justify-between mb-2">
+                    <h2 className="text-2xl font-serif text-plutz-cream">Inquiries</h2>
+                    <Link href={route('inquiries.create')} className="text-plutz-tan hover:text-plutz-tan-light text-sm font-medium">New Inquiry</Link>
+                </div>
+            </div>
 
-            <div className="py-12">
-                <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+
+            <div className="max-w-[1200px] mx-auto w-full p-6">
                     {/* Filters */}
-                    <div className="mb-6 rounded-lg bg-white p-4 shadow-sm">
+                    <div className="mb-6 rounded-lg bg-plutz-surface p-4 shadow-sm">
                         <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">
+                                <label className="block text-sm font-medium text-stone-400">
                                     Search
                                 </label>
                                 <input
@@ -90,18 +82,18 @@ export default function Index({ inquiries, filters }: Props) {
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
                                     placeholder="Location, contact..."
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                    className="mt-1 block w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan sm:text-sm"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">
+                                <label className="block text-sm font-medium text-stone-400">
                                     Status
                                 </label>
                                 <select
                                     value={status}
                                     onChange={(e) => setStatus(e.target.value)}
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                    className="mt-1 block w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan sm:text-sm"
                                 >
                                     <option value="">All</option>
                                     <option value="pending">Pending</option>
@@ -111,26 +103,26 @@ export default function Index({ inquiries, filters }: Props) {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">
+                                <label className="block text-sm font-medium text-stone-400">
                                     From Date
                                 </label>
                                 <input
                                     type="date"
                                     value={dateFrom}
                                     onChange={(e) => setDateFrom(e.target.value)}
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                    className="mt-1 block w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan sm:text-sm"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">
+                                <label className="block text-sm font-medium text-stone-400">
                                     To Date
                                 </label>
                                 <input
                                     type="date"
                                     value={dateTo}
                                     onChange={(e) => setDateTo(e.target.value)}
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                    className="mt-1 block w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan sm:text-sm"
                                 />
                             </div>
                         </div>
@@ -138,13 +130,13 @@ export default function Index({ inquiries, filters }: Props) {
                         <div className="mt-4 flex gap-2">
                             <button
                                 onClick={handleFilter}
-                                className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+                                className="rounded-md bg-plutz-tan px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-plutz-tan/90"
                             >
                                 Apply Filters
                             </button>
                             <button
                                 onClick={handleReset}
-                                className="rounded-md bg-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-300"
+                                className="rounded-md bg-plutz-tan/20 px-4 py-2 text-sm font-semibold text-stone-400 hover:bg-plutz-tan/30"
                             >
                                 Reset
                             </button>
@@ -153,11 +145,11 @@ export default function Index({ inquiries, filters }: Props) {
 
                     {/* Inquiries List */}
                     {inquiries.data.length === 0 ? (
-                        <div className="rounded-lg bg-white p-8 text-center shadow-sm">
-                            <p className="text-gray-500">No inquiries found.</p>
+                        <div className="rounded-lg bg-plutz-surface p-8 text-center shadow-sm">
+                            <p className="text-stone-500">No inquiries found.</p>
                             <Link
                                 href={route('inquiries.create')}
-                                className="mt-4 inline-block text-indigo-600 hover:text-indigo-500"
+                                className="mt-4 inline-block text-plutz-tan hover:text-plutz-tan"
                             >
                                 Create your first inquiry
                             </Link>
@@ -180,9 +172,9 @@ export default function Index({ inquiries, filters }: Props) {
                                                 href={link.url || '#'}
                                                 className={`rounded-md px-3 py-2 text-sm ${
                                                     link.active
-                                                        ? 'bg-indigo-600 text-white'
-                                                        : 'bg-white text-gray-700 hover:bg-gray-50'
-                                                } ${!link.url ? 'cursor-not-allowed opacity-50' : ''}`}
+                                                        ? 'bg-plutz-tan text-plutz-dark'
+                                                        : 'bg-plutz-surface text-stone-400 hover:bg-stone-900/50'
+                                                } ${!link.url ? 'cursor-not-allowed opacity-40' : ''}`}
                                                 dangerouslySetInnerHTML={{ __html: link.label }}
                                             />
                                         ))}
@@ -192,7 +184,6 @@ export default function Index({ inquiries, filters }: Props) {
                         </>
                     )}
                 </div>
-            </div>
         </AuthenticatedLayout>
     );
 }

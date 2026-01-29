@@ -32,35 +32,27 @@ export default function Edit({ performanceType }: Props) {
     const totalUsage = performanceType.inquiries_count + performanceType.incomes_count;
 
     return (
-        <AuthenticatedLayout
-            header={
-                <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                        Edit Performance Type
-                    </h2>
-                    <Link
-                        href={route('performance-types.index')}
-                        className="text-sm text-gray-600 hover:text-gray-900"
-                    >
-                        ← Back to List
-                    </Link>
-                </div>
-            }
-        >
+        <AuthenticatedLayout className="bg-plutz-dark">
             <Head title="Edit Performance Type" />
+            <div className="max-w-[1200px] mx-auto w-full p-6 pb-0">
+                <div className="flex items-center justify-between mb-2">
+                    <h2 className="text-2xl font-serif text-plutz-cream">Edit Performance Type</h2>
+                    <Link href={route('performance-types.index')} className="text-plutz-tan hover:text-plutz-tan-light text-sm font-medium">Back to List</Link>
+                </div>
+            </div>
 
-            <div className="py-12">
-                <div className="mx-auto max-w-3xl sm:px-6 lg:px-8">
-                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+
+            <div className="max-w-[1200px] mx-auto w-full p-6">
+                    <div className="overflow-hidden bg-plutz-surface shadow-sm sm:rounded-lg">
                         <form onSubmit={submit} className="space-y-6 p-6">
-                            <div className="border-b border-gray-200 pb-6">
-                                <h3 className="text-lg font-medium text-gray-900">Performance Type Details</h3>
-                                <p className="mt-1 text-sm text-gray-600">
+                            <div className="border-b border-plutz-tan/10 pb-6">
+                                <h3 className="text-lg font-medium text-plutz-cream">Performance Type Details</h3>
+                                <p className="mt-1 text-sm text-stone-400">
                                     Update performance type information
                                 </p>
 
                                 {totalUsage > 0 && (
-                                    <div className="mt-4 rounded-md bg-blue-50 p-4">
+                                    <div className="mt-4 rounded-md bg-plutz-tan/10 p-4">
                                         <div className="flex">
                                             <div className="flex-shrink-0">
                                                 <svg className="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
@@ -68,7 +60,7 @@ export default function Edit({ performanceType }: Props) {
                                                 </svg>
                                             </div>
                                             <div className="ml-3 flex-1 md:flex md:justify-between">
-                                                <p className="text-sm text-blue-700">
+                                                <p className="text-sm text-plutz-tan">
                                                     This performance type is used in {performanceType.inquiries_count} inquiry/inquiries and {performanceType.incomes_count} income(s).
                                                     You can deactivate it but cannot delete it.
                                                 </p>
@@ -98,11 +90,11 @@ export default function Edit({ performanceType }: Props) {
                                             type="checkbox"
                                             checked={data.is_active}
                                             onChange={(e) => setData('is_active', e.target.checked)}
-                                            className="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
+                                            className="rounded border-plutz-tan/20 text-plutz-tan shadow-sm focus:ring-plutz-tan"
                                         />
-                                        <span className="ml-2 text-sm text-gray-700">Active</span>
+                                        <span className="ml-2 text-sm text-stone-400">Active</span>
                                     </label>
-                                    <p className="mt-1 text-xs text-gray-500">
+                                    <p className="mt-1 text-xs text-stone-500">
                                         Only active performance types appear in dropdown lists
                                     </p>
                                 </div>
@@ -111,7 +103,7 @@ export default function Edit({ performanceType }: Props) {
                             <div className="flex items-center justify-end gap-4">
                                 <Link
                                     href={route('performance-types.index')}
-                                    className="text-sm text-gray-600 hover:text-gray-900"
+                                    className="text-sm text-stone-400 hover:text-plutz-cream"
                                 >
                                     Cancel
                                 </Link>
@@ -122,7 +114,6 @@ export default function Edit({ performanceType }: Props) {
                         </form>
                     </div>
                 </div>
-            </div>
         </AuthenticatedLayout>
     );
 }

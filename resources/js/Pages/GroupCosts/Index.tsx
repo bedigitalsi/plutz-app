@@ -75,52 +75,44 @@ export default function Index({ groupCosts, costTypes, filters }: Props) {
     };
 
     return (
-        <AuthenticatedLayout
-            header={
-                <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                        Group Costs
-                    </h2>
-                    <Link
-                        href={route('group-costs.create')}
-                        className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
-                    >
-                        New Cost
-                    </Link>
-                </div>
-            }
-        >
+        <AuthenticatedLayout className="bg-plutz-dark">
             <Head title="Group Costs" />
+            <div className="max-w-[1200px] mx-auto w-full p-6 pb-0">
+                <div className="flex items-center justify-between mb-2">
+                    <h2 className="text-2xl font-serif text-plutz-cream">Group Costs</h2>
+                    <Link href={route('group-costs.create')} className="text-plutz-tan hover:text-plutz-tan-light text-sm font-medium">New Cost</Link>
+                </div>
+            </div>
 
-            <div className="py-12">
-                <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+
+            <div className="max-w-[1200px] mx-auto w-full p-6">
                     {/* Filters */}
-                    <div className="mb-6 rounded-lg bg-white p-4 shadow-sm">
+                    <div className="mb-6 rounded-lg bg-plutz-surface p-4 shadow-sm">
                         <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">From Date</label>
+                                <label className="block text-sm font-medium text-stone-400">From Date</label>
                                 <input
                                     type="date"
                                     value={dateFrom}
                                     onChange={(e) => setDateFrom(e.target.value)}
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                    className="mt-1 block w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan sm:text-sm"
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">To Date</label>
+                                <label className="block text-sm font-medium text-stone-400">To Date</label>
                                 <input
                                     type="date"
                                     value={dateTo}
                                     onChange={(e) => setDateTo(e.target.value)}
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                    className="mt-1 block w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan sm:text-sm"
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Cost Type</label>
+                                <label className="block text-sm font-medium text-stone-400">Cost Type</label>
                                 <select
                                     value={costTypeId}
                                     onChange={(e) => setCostTypeId(e.target.value)}
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                    className="mt-1 block w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan sm:text-sm"
                                 >
                                     <option value="">All</option>
                                     {costTypes.map((type) => (
@@ -129,11 +121,11 @@ export default function Index({ groupCosts, costTypes, filters }: Props) {
                                 </select>
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Status</label>
+                                <label className="block text-sm font-medium text-stone-400">Status</label>
                                 <select
                                     value={isPaid}
                                     onChange={(e) => setIsPaid(e.target.value)}
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                    className="mt-1 block w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan sm:text-sm"
                                 >
                                     <option value="">All</option>
                                     <option value="yes">Paid</option>
@@ -144,7 +136,7 @@ export default function Index({ groupCosts, costTypes, filters }: Props) {
                         <div className="mt-4">
                             <button
                                 onClick={handleFilter}
-                                className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+                                className="rounded-md bg-plutz-tan px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-plutz-tan/90"
                             >
                                 Apply Filters
                             </button>
@@ -154,52 +146,52 @@ export default function Index({ groupCosts, costTypes, filters }: Props) {
                     {/* Summary */}
                     {groupCosts.data.length > 0 && (
                         <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
-                            <div className="rounded-lg bg-white p-4 shadow-sm">
-                                <p className="text-sm text-gray-600">Total Costs</p>
-                                <p className="text-2xl font-bold text-gray-900">{getTotalCosts()} EUR</p>
+                            <div className="rounded-lg bg-plutz-surface p-4 shadow-sm">
+                                <p className="text-sm text-stone-400">Total Costs</p>
+                                <p className="text-2xl font-bold text-plutz-cream">{getTotalCosts()} EUR</p>
                             </div>
-                            <div className="rounded-lg bg-white p-4 shadow-sm">
-                                <p className="text-sm text-gray-600">Paid</p>
-                                <p className="text-2xl font-bold text-green-600">{getTotalCosts(true)} EUR</p>
+                            <div className="rounded-lg bg-plutz-surface p-4 shadow-sm">
+                                <p className="text-sm text-stone-400">Paid</p>
+                                <p className="text-2xl font-bold text-green-400">{getTotalCosts(true)} EUR</p>
                             </div>
-                            <div className="rounded-lg bg-white p-4 shadow-sm">
-                                <p className="text-sm text-gray-600">Unpaid</p>
-                                <p className="text-2xl font-bold text-yellow-600">{getTotalCosts(false)} EUR</p>
+                            <div className="rounded-lg bg-plutz-surface p-4 shadow-sm">
+                                <p className="text-sm text-stone-400">Unpaid</p>
+                                <p className="text-2xl font-bold text-amber-400">{getTotalCosts(false)} EUR</p>
                             </div>
                         </div>
                     )}
 
                     {/* Costs List */}
                     {groupCosts.data.length === 0 ? (
-                        <div className="rounded-lg bg-white p-8 text-center shadow-sm">
-                            <p className="text-gray-500">No group costs found.</p>
+                        <div className="rounded-lg bg-plutz-surface p-8 text-center shadow-sm">
+                            <p className="text-stone-500">No group costs found.</p>
                         </div>
                     ) : (
-                        <div className="overflow-hidden rounded-lg bg-white shadow-sm">
-                            <table className="min-w-full divide-y divide-gray-200">
-                                <thead className="bg-gray-50">
+                        <div className="overflow-hidden rounded-lg bg-plutz-surface shadow-sm">
+                            <table className="min-w-full divide-y divide-plutz-tan/10">
+                                <thead className="bg-stone-900/50">
                                     <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Date</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Type</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Amount</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Notes</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Status</th>
-                                        <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">Actions</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500">Date</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500">Type</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500">Amount</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500">Notes</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500">Status</th>
+                                        <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-stone-500">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-gray-200 bg-white">
+                                <tbody className="divide-y divide-plutz-tan/10 bg-plutz-surface">
                                     {groupCosts.data.map((cost) => (
-                                        <tr key={cost.id} className="hover:bg-gray-50">
-                                            <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
+                                        <tr key={cost.id} className="hover:bg-stone-900/50">
+                                            <td className="whitespace-nowrap px-6 py-4 text-sm text-plutz-cream">
                                                 {formatDate(cost.cost_date)}
                                             </td>
-                                            <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
+                                            <td className="whitespace-nowrap px-6 py-4 text-sm text-plutz-cream">
                                                 {cost.cost_type.name}
                                             </td>
-                                            <td className="whitespace-nowrap px-6 py-4 text-sm font-semibold text-gray-900">
+                                            <td className="whitespace-nowrap px-6 py-4 text-sm font-semibold text-plutz-cream">
                                                 {parseFloat(cost.amount.toString()).toFixed(2)} {cost.currency}
                                             </td>
-                                            <td className="px-6 py-4 text-sm text-gray-500">
+                                            <td className="px-6 py-4 text-sm text-stone-500">
                                                 {cost.notes && cost.notes.substring(0, 50)}
                                                 {cost.notes && cost.notes.length > 50 && '...'}
                                             </td>
@@ -208,8 +200,8 @@ export default function Index({ groupCosts, costTypes, filters }: Props) {
                                                     onClick={() => togglePaid(cost.id, cost.is_paid)}
                                                     className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${
                                                         cost.is_paid
-                                                            ? 'bg-green-100 text-green-800 hover:bg-green-200'
-                                                            : 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200'
+                                                            ? 'bg-green-500/100/10 text-green-400 hover:bg-green-500/100/20'
+                                                            : 'bg-amber-500/10 text-amber-400 hover:bg-amber-500/20'
                                                     }`}
                                                 >
                                                     {cost.is_paid ? 'Paid' : 'Unpaid'}
@@ -219,13 +211,13 @@ export default function Index({ groupCosts, costTypes, filters }: Props) {
                                                 <div className="flex items-center justify-end gap-3">
                                                     <Link
                                                         href={route('group-costs.edit', cost.id)}
-                                                        className="text-indigo-600 hover:text-indigo-900"
+                                                        className="text-plutz-tan hover:text-plutz-tan"
                                                     >
                                                         Edit
                                                     </Link>
                                                     <button
                                                         onClick={() => handleDelete(cost.id)}
-                                                        className="text-red-600 hover:text-red-900"
+                                                        className="text-red-400 hover:text-red-300"
                                                     >
                                                         Delete
                                                     </button>
@@ -238,7 +230,6 @@ export default function Index({ groupCosts, costTypes, filters }: Props) {
                         </div>
                     )}
                 </div>
-            </div>
         </AuthenticatedLayout>
     );
 }

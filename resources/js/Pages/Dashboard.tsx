@@ -461,28 +461,34 @@ export default function Dashboard({ inquiryStats, inquiryTotals, incomeStats, ex
             </main>
 
             {/* Fixed Bottom Quick Actions */}
-            <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-full max-w-[1200px] px-6 z-50">
-                <div className="bg-plutz-surface/80 backdrop-blur-xl border border-plutz-tan/20 p-3 rounded-2xl shadow-2xl flex items-center justify-center gap-4 flex-wrap">
+            <div className="fixed bottom-0 sm:bottom-8 left-1/2 -translate-x-1/2 w-full max-w-[1200px] px-0 sm:px-6 z-50">
+                <div className="bg-plutz-surface/95 sm:bg-plutz-surface/80 backdrop-blur-xl border-t sm:border border-plutz-tan/20 p-2 sm:p-3 sm:rounded-2xl shadow-2xl flex items-center justify-center gap-2 sm:gap-4">
                     <Link
                         href={route('inquiries.create')}
-                        className="flex items-center gap-2 bg-plutz-tan hover:bg-plutz-tan/90 transition-all text-plutz-dark px-6 py-3 rounded-xl font-bold text-sm uppercase tracking-widest"
+                        className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 sm:gap-2 bg-plutz-tan hover:bg-plutz-tan/90 transition-all text-plutz-dark px-3 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider sm:tracking-widest"
                     >
-                        <span className="material-symbols-outlined text-lg">add_circle</span>
+                        <span className="material-symbols-outlined text-base sm:text-lg">add_circle</span>
                         New Inquiry
                     </Link>
                     <Link
                         href={route('expenses.create')}
-                        className="flex items-center gap-2 bg-plutz-tan/20 hover:bg-plutz-tan/30 transition-all text-plutz-tan px-6 py-3 rounded-xl font-bold text-sm uppercase tracking-widest border border-plutz-tan/20"
+                        className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 sm:gap-2 bg-plutz-tan/20 hover:bg-plutz-tan/30 transition-all text-plutz-tan px-3 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider sm:tracking-widest border border-plutz-tan/20"
                     >
-                        <span className="material-symbols-outlined text-lg">receipt_long</span>
+                        <span className="material-symbols-outlined text-base sm:text-lg">receipt_long</span>
                         Add Expense
                     </Link>
                     <Link
                         href={route('incomes.create')}
-                        className="flex items-center gap-2 bg-plutz-tan/20 hover:bg-plutz-tan/30 transition-all text-plutz-tan px-6 py-3 rounded-xl font-bold text-sm uppercase tracking-widest border border-plutz-tan/20"
+                        className="hidden sm:flex items-center gap-2 bg-plutz-tan/20 hover:bg-plutz-tan/30 transition-all text-plutz-tan px-6 py-3 rounded-xl font-bold text-sm uppercase tracking-widest border border-plutz-tan/20"
                     >
                         <span className="material-symbols-outlined text-lg">account_balance</span>
                         Add Income
+                    </Link>
+                    <Link
+                        href={route('calendar.index')}
+                        className="sm:hidden flex-shrink-0 flex items-center justify-center bg-plutz-tan/20 hover:bg-plutz-tan/30 transition-all text-plutz-tan p-2.5 rounded-lg border border-plutz-tan/20"
+                    >
+                        <span className="material-symbols-outlined text-base">calendar_month</span>
                     </Link>
                 </div>
             </div>

@@ -1,0 +1,1 @@
+import{j as o}from"./app-CkM1-WLA.js";function r({value:t,className:e="",children:s,...n}){return o.jsx("label",{...n,className:"block text-sm font-medium text-stone-400 "+e,children:t||s})}export{r as I};

@@ -1,6 +1,4 @@
 import Dropdown from '@/Components/Dropdown';
-import NavLink from '@/Components/NavLink';
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link, usePage } from '@inertiajs/react';
 import { PropsWithChildren, ReactNode, useState } from 'react';
 
@@ -10,267 +8,131 @@ export default function Authenticated({
     className,
 }: PropsWithChildren<{ header?: ReactNode; className?: string }>) {
     const user = usePage().props.auth.user;
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-    const [showingNavigationDropdown, setShowingNavigationDropdown] =
-        useState(false);
+    const navLinks = [
+        { label: 'Dashboard', route: 'dashboard', match: 'dashboard' },
+        { label: 'Calendar', route: 'calendar.index', match: 'calendar.*' },
+        { label: 'Finances', route: 'incomes.index', match: ['incomes.*', 'expenses.*', 'group-costs.*'] },
+        { label: 'Inquiries', route: 'inquiries.index', match: 'inquiries.*' },
+        { label: 'Contracts', route: 'contracts.index', match: 'contracts.*' },
+        { label: 'Users', route: 'users.index', match: 'users.*' },
+        { label: 'Settings', route: 'settings.index', match: ['settings.*', 'ical-feeds.*', 'cost-types.*', 'performance-types.*', 'contract-templates.*'] },
+    ];
+
+    const isActive = (match: string | string[]) => {
+        if (Array.isArray(match)) return match.some(m => route().current(m));
+        return route().current(match);
+    };
 
     return (
         <div className={`min-h-screen ${className || 'bg-plutz-cream'}`}>
-            <nav className="bg-plutz-dark shadow-warm-md">
-                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <div className="flex h-16 justify-between">
-                        <div className="flex">
-                            <div className="flex shrink-0 items-center">
-                                <Link href="/">
-                                    <img 
-                                        src="/images/logo-plutz-25.svg" 
-                                        alt="Plutz Logo" 
-                                        className="h-9 w-auto" 
-                                    />
+            {/* Top Navigation */}
+            <header className="border-b border-plutz-tan/20 bg-plutz-dark/80 backdrop-blur-md sticky top-0 z-50">
+                <div className="max-w-[1200px] mx-auto px-6 py-4 flex items-center justify-between">
+                    {/* Logo */}
+                    <div className="flex items-center gap-3">
+                        <Link href="/" className="flex items-center gap-3">
+                            <div className="p-2 bg-plutz-tan rounded-lg flex items-center justify-center">
+                                <span className="material-symbols-outlined text-plutz-dark text-xl">music_note</span>
+                            </div>
+                            <h1 className="text-3xl font-serif text-plutz-tan tracking-tight">Plutz</h1>
+                        </Link>
+                    </div>
+
+                    {/* Desktop Nav */}
+                    <div className="flex items-center gap-6">
+                        <nav className="hidden lg:flex items-center gap-8 text-sm font-medium uppercase tracking-widest text-stone-500">
+                            {navLinks.map((link) => (
+                                <Link
+                                    key={link.route}
+                                    href={route(link.route)}
+                                    className={`hover:text-plutz-tan transition-colors ${
+                                        isActive(link.match) 
+                                            ? 'text-plutz-tan border-b-2 border-plutz-tan pb-1' 
+                                            : ''
+                                    }`}
+                                >
+                                    {link.label}
                                 </Link>
-                            </div>
+                            ))}
+                        </nav>
 
-                            <div className="hidden space-x-6 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink
-                                    href={route('dashboard')}
-                                    active={route().current('dashboard')}
-                                >
-                                    Dashboard
-                                </NavLink>
-                                <NavLink
-                                    href={route('inquiries.index')}
-                                    active={route().current('inquiries.*')}
-                                >
-                                    Inquiries
-                                </NavLink>
-                                <NavLink
-                                    href={route('calendar.index')}
-                                    active={route().current('calendar.*')}
-                                >
-                                    Calendar
-                                </NavLink>
-                                <NavLink
-                                    href={route('incomes.index')}
-                                    active={route().current('incomes.*')}
-                                >
-                                    Income
-                                </NavLink>
-                                <NavLink
-                                    href={route('expenses.index')}
-                                    active={route().current('expenses.*')}
-                                >
-                                    Expenses
-                                </NavLink>
-                                <NavLink
-                                    href={route('group-costs.index')}
-                                    active={route().current('group-costs.*')}
-                                >
-                                    Group Costs
-                                </NavLink>
-                                <NavLink
-                                    href={route('contracts.index')}
-                                    active={route().current('contracts.*')}
-                                >
-                                    Contracts
-                                </NavLink>
-                                <NavLink
-                                    href={route('users.index')}
-                                    active={route().current('users.*')}
-                                >
-                                    Users
-                                </NavLink>
-                                <NavLink
-                                    href={route('settings.index')}
-                                    active={route().current('settings.*') || route().current('ical-feeds.*') || route().current('cost-types.*') || route().current('performance-types.*') || route().current('contract-templates.*')}
-                                >
-                                    Settings
-                                </NavLink>
-                            </div>
-                        </div>
-
-                        <div className="hidden sm:ms-6 sm:flex sm:items-center">
-                            <div className="relative ms-3">
+                        {/* Right side: notification + avatar */}
+                        <div className="flex items-center gap-3 pl-6 border-l border-plutz-tan/20">
+                            {/* User dropdown */}
+                            <div className="relative">
                                 <Dropdown>
                                     <Dropdown.Trigger>
-                                        <span className="inline-flex rounded-md">
-                                            <button
-                                                type="button"
-                                                className="inline-flex items-center rounded-lg border border-plutz-accent-light/30 bg-plutz-brown/50 px-3 py-2 text-sm font-medium leading-4 text-plutz-cream transition duration-150 ease-in-out hover:bg-plutz-brown/70 focus:outline-none"
-                                            >
-                                                {user.name}
-
-                                                <svg
-                                                    className="-me-0.5 ms-2 h-4 w-4"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20"
-                                                    fill="currentColor"
-                                                >
-                                                    <path
-                                                        fillRule="evenodd"
-                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                        clipRule="evenodd"
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </span>
+                                        <button className="flex items-center gap-2 text-stone-400 hover:text-plutz-tan transition-colors">
+                                            <div className="size-10 rounded-full border-2 border-plutz-tan p-0.5 overflow-hidden flex items-center justify-center bg-plutz-surface">
+                                                <span className="text-sm font-semibold text-plutz-tan">
+                                                    {user.name?.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2)}
+                                                </span>
+                                            </div>
+                                        </button>
                                     </Dropdown.Trigger>
-
                                     <Dropdown.Content>
-                                        <Dropdown.Link
-                                            href={route('profile.edit')}
-                                        >
-                                            Profile
-                                        </Dropdown.Link>
-                                        <Dropdown.Link
-                                            href={route('logout')}
-                                            method="post"
-                                            as="button"
-                                        >
-                                            Log Out
-                                        </Dropdown.Link>
+                                        <div className="px-4 py-2 border-b border-stone-100">
+                                            <p className="text-sm font-medium text-stone-900">{user.name}</p>
+                                            <p className="text-xs text-stone-500">{user.email}</p>
+                                        </div>
+                                        <Dropdown.Link href={route('profile.edit')}>Profile</Dropdown.Link>
+                                        <Dropdown.Link href={route('logout')} method="post" as="button">Log Out</Dropdown.Link>
                                     </Dropdown.Content>
                                 </Dropdown>
                             </div>
                         </div>
 
-                        <div className="-me-2 flex items-center sm:hidden">
-                            <button
-                                onClick={() =>
-                                    setShowingNavigationDropdown(
-                                        (previousState) => !previousState,
-                                    )
-                                }
-                                className="inline-flex items-center justify-center rounded-lg p-2 text-plutz-cream/70 transition duration-150 ease-in-out hover:bg-plutz-brown/50 hover:text-plutz-cream focus:bg-plutz-brown/50 focus:text-plutz-cream focus:outline-none"
-                            >
-                                <svg
-                                    className="h-6 w-6"
-                                    stroke="currentColor"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
+                        {/* Mobile hamburger */}
+                        <button
+                            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                            className="lg:hidden p-2 text-stone-400 hover:text-plutz-tan transition-colors"
+                        >
+                            <svg className="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                                {!mobileMenuOpen ? (
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                                ) : (
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                                )}
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                {/* Mobile menu */}
+                {mobileMenuOpen && (
+                    <div className="lg:hidden border-t border-plutz-tan/10 bg-plutz-dark">
+                        <div className="px-6 py-4 space-y-2">
+                            {navLinks.map((link) => (
+                                <Link
+                                    key={link.route}
+                                    href={route(link.route)}
+                                    className={`block py-2 text-sm font-medium uppercase tracking-widest transition-colors ${
+                                        isActive(link.match) ? 'text-plutz-tan' : 'text-stone-500 hover:text-plutz-tan'
+                                    }`}
                                 >
-                                    <path
-                                        className={
-                                            !showingNavigationDropdown
-                                                ? 'inline-flex'
-                                                : 'hidden'
-                                        }
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M4 6h16M4 12h16M4 18h16"
-                                    />
-                                    <path
-                                        className={
-                                            showingNavigationDropdown
-                                                ? 'inline-flex'
-                                                : 'hidden'
-                                        }
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M6 18L18 6M6 6l12 12"
-                                    />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div
-                    className={
-                        (showingNavigationDropdown ? 'block' : 'hidden') +
-                        ' sm:hidden'
-                    }
-                >
-                    <div className="space-y-1 pb-3 pt-2">
-                        <ResponsiveNavLink
-                            href={route('dashboard')}
-                            active={route().current('dashboard')}
-                        >
-                            Dashboard
-                        </ResponsiveNavLink>
-                        <ResponsiveNavLink
-                            href={route('inquiries.index')}
-                            active={route().current('inquiries.*')}
-                        >
-                            Inquiries
-                        </ResponsiveNavLink>
-                        <ResponsiveNavLink
-                            href={route('calendar.index')}
-                            active={route().current('calendar.*')}
-                        >
-                            Calendar
-                        </ResponsiveNavLink>
-                        <ResponsiveNavLink
-                            href={route('incomes.index')}
-                            active={route().current('incomes.*')}
-                        >
-                            Income
-                        </ResponsiveNavLink>
-                        <ResponsiveNavLink
-                            href={route('expenses.index')}
-                            active={route().current('expenses.*')}
-                        >
-                            Expenses
-                        </ResponsiveNavLink>
-                        <ResponsiveNavLink
-                            href={route('group-costs.index')}
-                            active={route().current('group-costs.*')}
-                        >
-                            Group Costs
-                        </ResponsiveNavLink>
-                        <ResponsiveNavLink
-                            href={route('contracts.index')}
-                            active={route().current('contracts.*')}
-                        >
-                            Contracts
-                        </ResponsiveNavLink>
-                        <ResponsiveNavLink
-                            href={route('users.index')}
-                            active={route().current('users.*')}
-                        >
-                            Users
-                        </ResponsiveNavLink>
-                        <ResponsiveNavLink
-                            href={route('settings.index')}
-                            active={route().current('settings.*') || route().current('ical-feeds.*') || route().current('cost-types.*') || route().current('performance-types.*') || route().current('contract-templates.*')}
-                        >
-                            Settings
-                        </ResponsiveNavLink>
-                    </div>
-
-                    <div className="border-t border-plutz-brown/30 pb-1 pt-4">
-                        <div className="px-4">
-                            <div className="text-base font-medium text-plutz-cream">
-                                {user.name}
-                            </div>
-                            <div className="text-sm font-medium text-plutz-cream/60">
-                                {user.email}
+                                    {link.label}
+                                </Link>
+                            ))}
+                            <div className="pt-4 border-t border-plutz-tan/10 mt-4">
+                                <p className="text-sm text-stone-400">{user.name}</p>
+                                <div className="mt-2 space-y-2">
+                                    <Link href={route('profile.edit')} className="block py-1 text-sm text-stone-500 hover:text-plutz-tan">Profile</Link>
+                                    <Link href={route('logout')} method="post" as="button" className="block py-1 text-sm text-stone-500 hover:text-plutz-tan">Log Out</Link>
+                                </div>
                             </div>
                         </div>
-
-                        <div className="mt-3 space-y-1">
-                            <ResponsiveNavLink href={route('profile.edit')}>
-                                Profile
-                            </ResponsiveNavLink>
-                            <ResponsiveNavLink
-                                method="post"
-                                href={route('logout')}
-                                as="button"
-                            >
-                                Log Out
-                            </ResponsiveNavLink>
-                        </div>
                     </div>
-                </div>
-            </nav>
+                )}
+            </header>
 
             {header && (
-                <header className="bg-white shadow-warm">
+                <div className="bg-white shadow-warm">
                     <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                         {header}
                     </div>
-                </header>
+                </div>
             )}
 
             <main>{children}</main>

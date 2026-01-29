@@ -13,7 +13,7 @@ export default {
     theme: {
         extend: {
             colors: {
-                'plutz-cream': '#fbfaf7',
+                'plutz-cream': '#F5F5F0',
                 'plutz-cream-dark': '#f3f1eb',
                 'plutz-brown': '#3D3328',
                 'plutz-dark': '#181513',
@@ -22,12 +22,12 @@ export default {
                 'plutz-accent': '#2c5a71',
                 'plutz-accent-light': '#3e606f',
                 'plutz-warm-gray': '#8a7e72',
-                'plutz-tan': '#A3886E',
+                'plutz-tan': '#a48970',
                 'plutz-tan-light': '#b89d85',
-                'plutz-surface': '#1f1d1a',
+                'plutz-surface': '#1f1c1a',
             },
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['Work Sans', ...defaultTheme.fontFamily.sans],
                 serif: ['Playfair Display', 'Georgia', ...defaultTheme.fontFamily.serif],
             },
             boxShadow: {

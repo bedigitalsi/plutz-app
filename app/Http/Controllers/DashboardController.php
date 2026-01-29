@@ -162,6 +162,14 @@ class DashboardController extends Controller
             $userStats['monthly'] = $monthlyQuery->get();
         }
 
+        // Upcoming gigs (confirmed inquiries with future performance dates)
+        $upcomingGigs = Inquiry::with(['performanceType', 'bandSize'])
+            ->where('status', '!=', 'rejected')
+            ->where('performance_date', '>=', now()->toDateString())
+            ->orderBy('performance_date', 'asc')
+            ->limit(8)
+            ->get();
+
         // Recent activities
         $recentInquiries = Inquiry::with(['performanceType', 'bandSize'])
             ->orderBy('created_at', 'desc')
@@ -185,6 +193,7 @@ class DashboardController extends Controller
             ],
             'groupCostStats' => $groupCostStats,
             'userStats' => $userStats,
+            'upcomingGigs' => $upcomingGigs,
             'recentInquiries' => $recentInquiries,
             'recentIncomes' => $recentIncomes,
             'filters' => [

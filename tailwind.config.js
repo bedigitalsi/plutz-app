@@ -22,6 +22,9 @@ export default {
                 'plutz-accent': '#2c5a71',
                 'plutz-accent-light': '#3e606f',
                 'plutz-warm-gray': '#8a7e72',
+                'plutz-tan': '#A3886E',
+                'plutz-tan-light': '#b89d85',
+                'plutz-surface': '#1f1d1a',
             },
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],

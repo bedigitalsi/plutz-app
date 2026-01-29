@@ -7,14 +7,15 @@ import { PropsWithChildren, ReactNode, useState } from 'react';
 export default function Authenticated({
     header,
     children,
-}: PropsWithChildren<{ header?: ReactNode }>) {
+    className,
+}: PropsWithChildren<{ header?: ReactNode; className?: string }>) {
     const user = usePage().props.auth.user;
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
 
     return (
-        <div className="min-h-screen bg-plutz-cream">
+        <div className={`min-h-screen ${className || 'bg-plutz-cream'}`}>
             <nav className="bg-plutz-dark shadow-warm-md">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="flex h-16 justify-between">

@@ -31,12 +31,9 @@ export default function Authenticated({
             <header className="border-b border-plutz-tan/20 bg-plutz-dark/80 backdrop-blur-md sticky top-0 z-50">
                 <div className="max-w-[1200px] mx-auto px-6 py-4 flex items-center justify-between">
                     {/* Logo */}
-                    <div className="flex items-center gap-3">
-                        <Link href="/" className="flex items-center gap-3">
-                            <div className="p-2 bg-plutz-tan rounded-lg flex items-center justify-center">
-                                <span className="material-symbols-outlined text-plutz-dark text-xl">music_note</span>
-                            </div>
-                            <h1 className="text-3xl font-serif text-plutz-tan tracking-tight">Plutz</h1>
+                    <div className="flex items-center">
+                        <Link href={route('dashboard')}>
+                            <img src="/images/logo-plutz-25.svg" alt="Plutz Logo" className="h-9 w-auto" />
                         </Link>
                     </div>
 

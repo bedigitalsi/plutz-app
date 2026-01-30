@@ -23,11 +23,11 @@ class InquiryController extends Controller
             $query->where('status', $request->status);
         }
         
-        if ($request->has('date_from')) {
+        if ($request->filled('date_from')) {
             $query->where('performance_date', '>=', $request->date_from);
         }
-        
-        if ($request->has('date_to')) {
+
+        if ($request->filled('date_to')) {
             $query->where('performance_date', '<=', $request->date_to);
         }
 

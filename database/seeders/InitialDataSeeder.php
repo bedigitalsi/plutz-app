@@ -50,11 +50,33 @@ class InitialDataSeeder extends Seeder
 
         // Create roles
         $adminRole = Role::firstOrCreate(['name' => 'Admin', 'guard_name' => 'web']);
+        $bandBossRole = Role::firstOrCreate(['name' => 'BandBoss', 'guard_name' => 'web']);
         $bandMemberRole = Role::firstOrCreate(['name' => 'BandMember', 'guard_name' => 'web']);
         $viewerRole = Role::firstOrCreate(['name' => 'Viewer', 'guard_name' => 'web']);
 
         // Assign all permissions to Admin
         $adminRole->givePermissionTo(Permission::all());
+
+        // BandBoss permissions - everything except users.manage and settings.manage
+        $bandBossRole->givePermissionTo([
+            'inquiries.view',
+            'inquiries.create',
+            'inquiries.edit',
+            'inquiries.change_status',
+            'income.view',
+            'income.create',
+            'income.edit',
+            'income.distribute',
+            'expenses.view',
+            'expenses.create',
+            'group_costs.view',
+            'group_costs.create',
+            'group_costs.edit',
+            'contracts.manage',
+            'contracts.send',
+            'contracts.delete',
+            'calendar.integrations.manage',
+        ]);
 
         // Band member permissions
         $bandMemberRole->givePermissionTo([

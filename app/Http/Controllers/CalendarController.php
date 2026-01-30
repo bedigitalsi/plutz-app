@@ -51,8 +51,8 @@ class CalendarController extends Controller
                 return [
                     'id' => $inquiry->id,
                     'date' => $inquiry->performance_date->format('Y-m-d'),
-                    'day_label' => $inquiry->performance_date->format('M d'),
-                    'day_name' => $inquiry->performance_date->format('l'),
+                    'day_label' => $inquiry->performance_date->locale(app()->getLocale())->isoFormat('MMM DD'),
+                    'day_name' => $inquiry->performance_date->locale(app()->getLocale())->isoFormat('dddd'),
                     'title' => $inquiry->location_name ?? $inquiry->contact_person ?? 'Event',
                     'location_address' => $inquiry->location_address,
                     'status' => $inquiry->status,
@@ -66,7 +66,7 @@ class CalendarController extends Controller
 
         return Inertia::render('Calendar/Index', [
             'currentMonth' => $date->format('Y-m'),
-            'monthLabel' => $date->format('F Y'),
+            'monthLabel' => $date->locale(app()->getLocale())->isoFormat('MMMM YYYY'),
             'events' => $events,
             'upcoming' => $upcoming,
             'calendarStart' => $calendarStart->format('Y-m-d'),

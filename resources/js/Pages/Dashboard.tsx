@@ -61,7 +61,7 @@ interface Props {
 }
 
 export default function Dashboard({ inquiryStats, inquiryTotals, incomeStats, expenseStats, mutualFund, groupCostStats, userStats, upcomingGigs, filters }: Props) {
-    const { t } = useTranslation();
+    const { t, locale } = useTranslation();
     const [dateFrom, setDateFrom] = useState<string>(filters.date_from || '');
     const [dateTo, setDateTo] = useState<string>(filters.date_to || '');
     const [showFilters, setShowFilters] = useState(false);
@@ -77,7 +77,7 @@ export default function Dashboard({ inquiryStats, inquiryTotals, incomeStats, ex
 
     const formatDate = (dateStr: string) => {
         const date = new Date(dateStr + 'T00:00:00');
-        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        return date.toLocaleDateString(locale === 'sl' ? 'sl-SI' : 'en-US', { month: 'short', day: 'numeric' });
     };
 
     const buildDateParams = (from: string, to: string) => {

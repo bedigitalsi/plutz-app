@@ -14,6 +14,7 @@ use App\Http\Controllers\HelpController;
 use App\Http\Controllers\IcalFeedController;
 use App\Http\Controllers\IncomeController;
 use App\Http\Controllers\InquiryController;
+use App\Http\Controllers\LanguageSettingsController;
 use App\Http\Controllers\MailSettingsController;
 use App\Http\Controllers\PerformanceTypeController;
 use App\Http\Controllers\ProfileController;
@@ -108,6 +109,10 @@ Route::middleware(['auth', 'permission:settings.manage'])->group(function () {
     Route::get('/settings/contracts', [ContractSettingsController::class, 'show'])->name('settings.contracts');
     Route::post('/settings/contracts', [ContractSettingsController::class, 'update'])->name('settings.contracts.update');
     
+    // Language settings
+    Route::get('/settings/language', [LanguageSettingsController::class, 'show'])->name('settings.language');
+    Route::post('/settings/language', [LanguageSettingsController::class, 'update'])->name('settings.language.update');
+
     // Contract Templates
     Route::get('/settings/contract-templates', [ContractTemplateController::class, 'index'])->name('contract-templates.index');
     Route::get('/settings/contract-templates/create', [ContractTemplateController::class, 'create'])->name('contract-templates.create');

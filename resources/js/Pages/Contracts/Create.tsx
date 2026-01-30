@@ -2,6 +2,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, useForm, Link } from '@inertiajs/react';
 import { PageProps } from '@/types';
 import { FormEventHandler, useState, useEffect, useRef } from 'react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface Template {
     id: number;
@@ -16,6 +17,7 @@ interface Props extends PageProps {
 }
 
 export default function Create({ auth, templates, activeTemplate }: Props) {
+    const { t } = useTranslation();
     const [selectedTemplateId, setSelectedTemplateId] = useState<number | null>(
         activeTemplate?.id || null
     );
@@ -93,11 +95,11 @@ export default function Create({ auth, templates, activeTemplate }: Props) {
 
     return (
         <AuthenticatedLayout className="bg-plutz-dark">
-            <Head title="Create Contract" />
+            <Head title={t('contracts.create_contract')} />
             <div className="max-w-[1200px] mx-auto w-full p-6 pb-0">
                 <div className="flex items-center justify-between mb-2">
-                    <h2 className="text-2xl font-serif text-plutz-cream">Create Contract</h2>
-                    <Link href={route('contracts.index')} className="text-plutz-tan hover:text-plutz-tan-light text-sm font-medium">Back to Contracts</Link>
+                    <h2 className="text-2xl font-serif text-plutz-cream">{t('contracts.create_contract')}</h2>
+                    <Link href={route('contracts.index')} className="text-plutz-tan hover:text-plutz-tan-light text-sm font-medium">{t('contracts.back')}</Link>
                 </div>
             </div>
 
@@ -107,12 +109,12 @@ export default function Create({ auth, templates, activeTemplate }: Props) {
                         <form onSubmit={submit} className="p-6 space-y-6">
                             {/* Client Information */}
                             <div>
-                                <h3 className="text-lg font-medium text-plutz-cream mb-4">Client Information</h3>
+                                <h3 className="text-lg font-medium text-plutz-cream mb-4">{t('contracts.client_information')}</h3>
                                 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
                                         <label className="block text-sm font-medium text-stone-400 mb-2">
-                                            Client Name *
+                                            {t('contracts.client_name_field')}
                                         </label>
                                         <input
                                             type="text"
@@ -128,7 +130,7 @@ export default function Create({ auth, templates, activeTemplate }: Props) {
 
                                     <div>
                                         <label className="block text-sm font-medium text-stone-400 mb-2">
-                                            Client Email *
+                                            {t('contracts.client_email_field')}
                                         </label>
                                         <input
                                             type="email"
@@ -144,7 +146,7 @@ export default function Create({ auth, templates, activeTemplate }: Props) {
 
                                     <div>
                                         <label className="block text-sm font-medium text-stone-400 mb-2">
-                                            Company (Optional)
+                                            {t('contracts.company_optional')}
                                         </label>
                                         <input
                                             type="text"
@@ -156,7 +158,7 @@ export default function Create({ auth, templates, activeTemplate }: Props) {
 
                                     <div>
                                         <label className="block text-sm font-medium text-stone-400 mb-2">
-                                            Performance Date *
+                                            {t('contracts.performance_date_field')}
                                         </label>
                                         <input
                                             type="date"
@@ -173,7 +175,7 @@ export default function Create({ auth, templates, activeTemplate }: Props) {
 
                                 <div className="mt-4">
                                     <label className="block text-sm font-medium text-stone-400 mb-2">
-                                        Address (Optional)
+                                        {t('contracts.address_optional')}
                                     </label>
                                     <textarea
                                         value={data.client_address}
@@ -186,12 +188,12 @@ export default function Create({ auth, templates, activeTemplate }: Props) {
 
                             {/* Financial Information */}
                             <div>
-                                <h3 className="text-lg font-medium text-plutz-cream mb-4">Financial Details</h3>
+                                <h3 className="text-lg font-medium text-plutz-cream mb-4">{t('contracts.financial_details')}</h3>
                                 
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     <div>
                                         <label className="block text-sm font-medium text-stone-400 mb-2">
-                                            Total Price *
+                                            {t('contracts.total_price_field')}
                                         </label>
                                         <input
                                             type="number"
@@ -208,7 +210,7 @@ export default function Create({ auth, templates, activeTemplate }: Props) {
 
                                     <div>
                                         <label className="block text-sm font-medium text-stone-400 mb-2">
-                                            Deposit Amount
+                                            {t('contracts.deposit_amount')}
                                         </label>
                                         <input
                                             type="number"
@@ -221,7 +223,7 @@ export default function Create({ auth, templates, activeTemplate }: Props) {
 
                                     <div>
                                         <label className="block text-sm font-medium text-stone-400 mb-2">
-                                            Currency
+                                            {t('contracts.currency')}
                                         </label>
                                         <select
                                             value={data.currency}
@@ -239,20 +241,20 @@ export default function Create({ auth, templates, activeTemplate }: Props) {
                             {/* Contract Content */}
                             <div>
                                 <div className="flex justify-between items-center mb-4">
-                                    <h3 className="text-lg font-medium text-plutz-cream">Contract Content</h3>
+                                    <h3 className="text-lg font-medium text-plutz-cream">{t('contracts.contract_content')}</h3>
                                     <div className="flex space-x-3">
                                         <Link
                                             href={route('contract-templates.index')}
                                             className="text-sm text-stone-400 hover:text-plutz-cream"
                                         >
-                                            Manage Templates
+                                            {t('contracts.manage_templates')}
                                         </Link>
                                         <button
                                             type="button"
                                             onClick={() => setShowPreview(!showPreview)}
                                             className="text-sm text-plutz-tan hover:text-plutz-tan"
                                         >
-                                            {showPreview ? 'Hide Preview' : 'Show Preview'}
+                                            {showPreview ? t('contracts.hide_preview') : t('contracts.show_preview')}
                                         </button>
                                     </div>
                                 </div>
@@ -260,14 +262,14 @@ export default function Create({ auth, templates, activeTemplate }: Props) {
                                 {templates.length > 0 && (
                                     <div className="mb-4">
                                         <label className="block text-sm font-medium text-stone-400 mb-2">
-                                            Template
+                                            {t('contracts.template')}
                                         </label>
                                         <select
                                             value={selectedTemplateId || ''}
                                             onChange={(e) => handleTemplateChange(e.target.value)}
                                             className="w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
                                         >
-                                            <option value="">Select a template...</option>
+                                            <option value="">{t('contracts.select_template')}</option>
                                             {templates.map((template) => (
                                                 <option key={template.id} value={template.id}>
                                                     {template.name} {template.is_active ? '(Active)' : ''}
@@ -278,7 +280,7 @@ export default function Create({ auth, templates, activeTemplate }: Props) {
                                 )}
 
                                 <div className="text-sm text-stone-400 mb-2">
-                                    You can use these placeholders: [NAROČNIK], [EMAIL], [PODJETJE], [NASLOV], [DATUM_NASTOPA], [SKUPNI_ZNESEK], [AVANS], [PLUTZ_ADDRESS]
+                                    {t('contracts.placeholders_hint')} [NAROČNIK], [EMAIL], [PODJETJE], [NASLOV], [DATUM_NASTOPA], [SKUPNI_ZNESEK], [AVANS], [PLUTZ_ADDRESS]
                                 </div>
 
                                 <textarea
@@ -294,7 +296,7 @@ export default function Create({ auth, templates, activeTemplate }: Props) {
 
                                 {showPreview && (
                                     <div className="mt-4 p-4 border border-plutz-tan/20 rounded-md bg-stone-900/50">
-                                        <h4 className="font-medium mb-2">Preview:</h4>
+                                        <h4 className="font-medium mb-2">{t('contracts.preview')}</h4>
                                         <div className="prose max-w-none">
                                             {getPreviewContent().split('\n').map((line, i) => (
                                                 <p key={i}>{line}</p>
@@ -310,14 +312,14 @@ export default function Create({ auth, templates, activeTemplate }: Props) {
                                     href={route('contracts.index')}
                                     className="px-4 py-2 bg-plutz-tan/20 text-stone-400 rounded-md hover:bg-plutz-tan/30"
                                 >
-                                    Cancel
+                                    {t('common.cancel')}
                                 </Link>
                                 <button
                                     type="submit"
                                     disabled={processing}
                                     className="px-4 py-2 bg-plutz-tan text-plutz-dark rounded-md hover:bg-plutz-tan/90 disabled:opacity-50"
                                 >
-                                    {processing ? 'Creating...' : 'Create Contract'}
+                                    {processing ? t('contracts.creating') : t('contracts.create_contract')}
                                 </button>
                             </div>
                         </form>

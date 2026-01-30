@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router } from '@inertiajs/react';
 import InquiryCard from '@/Components/InquiryCard';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface Inquiry {
     id: number;
@@ -37,6 +38,7 @@ interface Props {
 }
 
 export default function Index({ inquiries, filters }: Props) {
+    const { t } = useTranslation();
     const [search, setSearch] = useState(filters.search || '');
     const [status, setStatus] = useState(filters.status || '');
     const [dateFrom, setDateFrom] = useState(filters.date_from || '');
@@ -60,11 +62,11 @@ export default function Index({ inquiries, filters }: Props) {
 
     return (
         <AuthenticatedLayout className="bg-plutz-dark">
-            <Head title="Inquiries" />
+            <Head title={t('inquiries.title')} />
             <div className="max-w-[1200px] mx-auto w-full p-6 pb-0">
                 <div className="flex items-center justify-between mb-2">
-                    <h2 className="text-2xl font-serif text-plutz-cream">Inquiries</h2>
-                    <Link href={route('inquiries.create')} className="text-plutz-tan hover:text-plutz-tan-light text-sm font-medium">New Inquiry</Link>
+                    <h2 className="text-2xl font-serif text-plutz-cream">{t('inquiries.title')}</h2>
+                    <Link href={route('inquiries.create')} className="text-plutz-tan hover:text-plutz-tan-light text-sm font-medium">{t('inquiries.new_inquiry')}</Link>
                 </div>
             </div>
 
@@ -75,36 +77,36 @@ export default function Index({ inquiries, filters }: Props) {
                         <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
                             <div>
                                 <label className="block text-sm font-medium text-stone-400">
-                                    Search
+                                    {t('common.search')}
                                 </label>
                                 <input
                                     type="text"
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
-                                    placeholder="Location, contact..."
+                                    placeholder={t('inquiries.search_placeholder')}
                                     className="mt-1 block w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan sm:text-sm"
                                 />
                             </div>
 
                             <div>
                                 <label className="block text-sm font-medium text-stone-400">
-                                    Status
+                                    {t('common.status')}
                                 </label>
                                 <select
                                     value={status}
                                     onChange={(e) => setStatus(e.target.value)}
                                     className="mt-1 block w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan sm:text-sm"
                                 >
-                                    <option value="">All</option>
-                                    <option value="pending">Pending</option>
-                                    <option value="confirmed">Confirmed</option>
-                                    <option value="rejected">Rejected</option>
+                                    <option value="">{t('inquiries.all')}</option>
+                                    <option value="pending">{t('inquiries.pending')}</option>
+                                    <option value="confirmed">{t('inquiries.confirmed')}</option>
+                                    <option value="rejected">{t('inquiries.rejected')}</option>
                                 </select>
                             </div>
 
                             <div>
                                 <label className="block text-sm font-medium text-stone-400">
-                                    From Date
+                                    {t('inquiries.from_date')}
                                 </label>
                                 <input
                                     type="date"
@@ -116,7 +118,7 @@ export default function Index({ inquiries, filters }: Props) {
 
                             <div>
                                 <label className="block text-sm font-medium text-stone-400">
-                                    To Date
+                                    {t('inquiries.to_date')}
                                 </label>
                                 <input
                                     type="date"
@@ -132,13 +134,13 @@ export default function Index({ inquiries, filters }: Props) {
                                 onClick={handleFilter}
                                 className="rounded-md bg-plutz-tan px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-plutz-tan/90"
                             >
-                                Apply Filters
+                                {t('inquiries.apply_filters')}
                             </button>
                             <button
                                 onClick={handleReset}
                                 className="rounded-md bg-plutz-tan/20 px-4 py-2 text-sm font-semibold text-stone-400 hover:bg-plutz-tan/30"
                             >
-                                Reset
+                                {t('common.reset')}
                             </button>
                         </div>
                     </div>
@@ -146,12 +148,12 @@ export default function Index({ inquiries, filters }: Props) {
                     {/* Inquiries List */}
                     {inquiries.data.length === 0 ? (
                         <div className="rounded-lg bg-plutz-surface p-8 text-center shadow-sm">
-                            <p className="text-stone-500">No inquiries found.</p>
+                            <p className="text-stone-500">{t('inquiries.no_inquiries')}</p>
                             <Link
                                 href={route('inquiries.create')}
                                 className="mt-4 inline-block text-plutz-tan hover:text-plutz-tan"
                             >
-                                Create your first inquiry
+                                {t('inquiries.create_first')}
                             </Link>
                         </div>
                     ) : (

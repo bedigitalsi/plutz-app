@@ -1,4 +1,5 @@
 import Dropdown from '@/Components/Dropdown';
+import { useTranslation } from '@/hooks/useTranslation';
 import { Link, usePage } from '@inertiajs/react';
 import { PropsWithChildren, ReactNode, useState } from 'react';
 
@@ -8,16 +9,17 @@ export default function Authenticated({
     className,
 }: PropsWithChildren<{ header?: ReactNode; className?: string }>) {
     const user = usePage().props.auth.user;
+    const { t } = useTranslation();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     const navLinks = [
-        { label: 'Dashboard', route: 'dashboard', match: 'dashboard' },
-        { label: 'Calendar', route: 'calendar.index', match: 'calendar.*' },
-        { label: 'Finances', route: 'incomes.index', match: ['incomes.*', 'expenses.*', 'group-costs.*'] },
-        { label: 'Inquiries', route: 'inquiries.index', match: 'inquiries.*' },
-        { label: 'Contracts', route: 'contracts.index', match: 'contracts.*' },
-        { label: 'Users', route: 'users.index', match: 'users.*' },
-        { label: 'Settings', route: 'settings.index', match: ['settings.*', 'ical-feeds.*', 'cost-types.*', 'performance-types.*', 'contract-templates.*'] },
+        { label: t('nav.dashboard'), route: 'dashboard', match: 'dashboard' },
+        { label: t('nav.calendar'), route: 'calendar.index', match: 'calendar.*' },
+        { label: t('nav.finances'), route: 'incomes.index', match: ['incomes.*', 'expenses.*', 'group-costs.*'] },
+        { label: t('nav.inquiries'), route: 'inquiries.index', match: 'inquiries.*' },
+        { label: t('nav.contracts'), route: 'contracts.index', match: 'contracts.*' },
+        { label: t('nav.users'), route: 'users.index', match: 'users.*' },
+        { label: t('nav.settings'), route: 'settings.index', match: ['settings.*', 'ical-feeds.*', 'cost-types.*', 'performance-types.*', 'contract-templates.*'] },
     ];
 
     const isActive = (match: string | string[]) => {
@@ -74,8 +76,8 @@ export default function Authenticated({
                                             <p className="text-sm font-medium text-plutz-cream">{user.name}</p>
                                             <p className="text-xs text-stone-500">{user.email}</p>
                                         </div>
-                                        <Dropdown.Link href={route('profile.edit')}>Profile</Dropdown.Link>
-                                        <Dropdown.Link href={route('logout')} method="post" as="button">Log Out</Dropdown.Link>
+                                        <Dropdown.Link href={route('profile.edit')}>{t('nav.profile')}</Dropdown.Link>
+                                        <Dropdown.Link href={route('logout')} method="post" as="button">{t('nav.logout')}</Dropdown.Link>
                                     </Dropdown.Content>
                                 </Dropdown>
                             </div>
@@ -115,8 +117,8 @@ export default function Authenticated({
                             <div className="pt-4 border-t border-plutz-tan/10 mt-4">
                                 <p className="text-sm text-stone-400">{user.name}</p>
                                 <div className="mt-2 space-y-2">
-                                    <Link href={route('profile.edit')} className="block py-1 text-sm text-stone-500 hover:text-plutz-tan">Profile</Link>
-                                    <Link href={route('logout')} method="post" as="button" className="block py-1 text-sm text-stone-500 hover:text-plutz-tan">Log Out</Link>
+                                    <Link href={route('profile.edit')} className="block py-1 text-sm text-stone-500 hover:text-plutz-tan">{t('nav.profile')}</Link>
+                                    <Link href={route('logout')} method="post" as="button" className="block py-1 text-sm text-stone-500 hover:text-plutz-tan">{t('nav.logout')}</Link>
                                 </div>
                             </div>
                         </div>

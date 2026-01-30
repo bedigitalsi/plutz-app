@@ -7,6 +7,7 @@ import GuestLayout from '@/Layouts/GuestLayout';
 import { PageProps } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function Welcome({
     auth,
@@ -20,6 +21,7 @@ export default function Welcome({
     status?: string;
     canResetPassword: boolean;
 }>) {
+    const { t } = useTranslation();
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
@@ -37,21 +39,21 @@ export default function Welcome({
     if (auth.user) {
         return (
             <div className="flex min-h-screen flex-col items-center justify-center bg-plutz-dark selection:bg-plutz-tan selection:text-white">
-                <Head title="Welcome" />
+                <Head title={t('welcome.title')} />
                 <div className="mb-8">
-                     <img 
-                        src="/images/logo-plutz-25.svg" 
-                        alt="Plutz Logo" 
-                        className="h-24 w-auto" 
+                     <img
+                        src="/images/logo-plutz-25.svg"
+                        alt="Plutz Logo"
+                        className="h-24 w-auto"
                     />
                 </div>
                 <div className="w-full max-w-md space-y-8 rounded-xl bg-plutz-dark px-8 py-8 shadow-sm-lg sm:rounded-xl">
                     <div className="text-center">
                         <h2 className="font-serif text-2xl font-bold tracking-tight text-plutz-cream">
-                            Welcome back, {auth.user.name}!
+                            {t('welcome.already_logged')}
                         </h2>
                         <p className="mt-2 text-sm text-plutz-warm-gray">
-                            You are already logged in.
+                            {t('welcome.logged_in')}
                         </p>
                     </div>
                     <div className="mt-6 flex justify-center">
@@ -59,7 +61,7 @@ export default function Welcome({
                             href={route('dashboard')}
                             className="rounded-xl bg-plutz-tan px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-plutz-tan-dark focus:outline-none focus:ring-2 focus:ring-plutz-tan focus:ring-offset-2 transition duration-150"
                         >
-                            Go to Dashboard
+                            {t('welcome.go_dashboard')}
                         </Link>
                     </div>
                 </div>
@@ -72,7 +74,7 @@ export default function Welcome({
 
     return (
         <GuestLayout>
-            <Head title="Welcome" />
+            <Head title={t('welcome.title')} />
 
             {status && (
                 <div className="mb-4 text-sm font-medium text-emerald-400">
@@ -82,7 +84,7 @@ export default function Welcome({
 
             <form onSubmit={submit}>
                 <div>
-                    <InputLabel htmlFor="email" value="Email" />
+                    <InputLabel htmlFor="email" value={t('auth.login.email')} />
 
                     <TextInput
                         id="email"
@@ -99,7 +101,7 @@ export default function Welcome({
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
+                    <InputLabel htmlFor="password" value={t('auth.login.password')} />
 
                     <TextInput
                         id="password"
@@ -127,7 +129,7 @@ export default function Welcome({
                             }
                         />
                         <span className="ms-2 text-sm text-plutz-cream">
-                            Remember me
+                            {t('auth.login.remember')}
                         </span>
                     </label>
                 </div>
@@ -138,12 +140,12 @@ export default function Welcome({
                             href={route('password.request')}
                             className="rounded-md text-sm text-plutz-warm-gray underline hover:text-plutz-cream focus:outline-none focus:ring-2 focus:ring-plutz-tan focus:ring-offset-2 transition duration-150"
                         >
-                            Forgot your password?
+                            {t('auth.login.forgot')}
                         </Link>
                     )}
 
                     <PrimaryButton className="ms-4" disabled={processing}>
-                        Log in
+                        {t('auth.login')}
                     </PrimaryButton>
                 </div>
             </form>

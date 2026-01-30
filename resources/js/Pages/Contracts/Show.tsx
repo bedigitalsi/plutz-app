@@ -1,6 +1,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router } from '@inertiajs/react';
 import { PageProps } from '@/types';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface Contract {
     id: number;
@@ -31,14 +32,15 @@ interface Props extends PageProps {
 }
 
 export default function Show({ auth, contract, flash }: Props & { flash?: any }) {
+    const { t } = useTranslation();
     const handleSend = () => {
-        if (confirm('Send contract invitation to ' + contract.client_email + '?')) {
+        if (confirm(t('contracts.send_confirmation').replace(':email', contract.client_email))) {
             router.post(route('contracts.send', contract.id));
         }
     };
 
     const handleDelete = () => {
-        if (confirm('Are you sure you want to delete this contract?')) {
+        if (confirm(t('contracts.confirm_delete'))) {
             router.delete(route('contracts.destroy', contract.id));
         }
     };
@@ -58,11 +60,11 @@ export default function Show({ auth, contract, flash }: Props & { flash?: any })
 
     return (
         <AuthenticatedLayout className="bg-plutz-dark">
-            <Head title="Contract Details" />
+            <Head title={t('contracts.contract_details')} />
             <div className="max-w-[1200px] mx-auto w-full p-6 pb-0">
                 <div className="flex items-center justify-between mb-2">
-                    <h2 className="text-2xl font-serif text-plutz-cream">Contract Details</h2>
-                    <Link href={route('contracts.index')} className="text-plutz-tan hover:text-plutz-tan-light text-sm font-medium">Back to Contracts</Link>
+                    <h2 className="text-2xl font-serif text-plutz-cream">{t('contracts.contract_details')}</h2>
+                    <Link href={route('contracts.index')} className="text-plutz-tan hover:text-plutz-tan-light text-sm font-medium">{t('contracts.back_to_contracts')}</Link>
                 </div>
             </div>
 
@@ -76,7 +78,7 @@ export default function Show({ auth, contract, flash }: Props & { flash?: any })
                     )}
                     {flash?.signing_url && (
                         <div className="bg-plutz-tan/20 border border-plutz-tan/30 text-plutz-tan px-4 py-3 rounded">
-                            <strong>Signing URL (for testing):</strong><br />
+                            <strong>{t('contracts.signing_url')}</strong><br />
                             <a href={flash.signing_url} target="_blank" className="underline">
                                 {flash.signing_url}
                             </a>
@@ -87,7 +89,7 @@ export default function Show({ auth, contract, flash }: Props & { flash?: any })
                     <div className="bg-plutz-surface overflow-hidden shadow-sm sm:rounded-lg p-6">
                         <div className="flex justify-between items-center">
                             <div>
-                                <h3 className="text-lg font-medium text-plutz-cream">Status</h3>
+                                <h3 className="text-lg font-medium text-plutz-cream">{t('common.status')}</h3>
                                 <div className="mt-2">{getStatusBadge(contract.status)}</div>
                             </div>
                             <div className="space-x-2">
@@ -97,19 +99,19 @@ export default function Show({ auth, contract, flash }: Props & { flash?: any })
                                             href={route('contracts.edit', contract.id)}
                                             className="inline-flex items-center px-4 py-2 bg-stone-700 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-stone-700"
                                         >
-                                            Edit
+                                            {t('common.edit')}
                                         </Link>
                                         <button
                                             onClick={handleSend}
                                             className="inline-flex items-center px-4 py-2 bg-plutz-tan border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-plutz-tan/90"
                                         >
-                                            Send Invitation
+                                            {t('contracts.send_invitation')}
                                         </button>
                                         <button
                                             onClick={handleDelete}
                                             className="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700"
                                         >
-                                            Delete
+                                            {t('common.delete')}
                                         </button>
                                     </>
                                 )}
@@ -118,7 +120,7 @@ export default function Show({ auth, contract, flash }: Props & { flash?: any })
                                         onClick={handleSend}
                                         className="inline-flex items-center px-4 py-2 bg-plutz-tan border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-plutz-tan/90"
                                     >
-                                        Resend Invitation
+                                        {t('contracts.resend_invitation')}
                                     </button>
                                 )}
                             </div>
@@ -127,25 +129,25 @@ export default function Show({ auth, contract, flash }: Props & { flash?: any })
 
                     {/* Client Information */}
                     <div className="bg-plutz-surface overflow-hidden shadow-sm sm:rounded-lg p-6">
-                        <h3 className="text-lg font-medium text-plutz-cream mb-4">Client Information</h3>
+                        <h3 className="text-lg font-medium text-plutz-cream mb-4">{t('contracts.client_information')}</h3>
                         <dl className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <dt className="text-sm font-medium text-stone-500">Name</dt>
+                                <dt className="text-sm font-medium text-stone-500">{t('common.name')}</dt>
                                 <dd className="mt-1 text-sm text-plutz-cream">{contract.client_name}</dd>
                             </div>
                             <div>
-                                <dt className="text-sm font-medium text-stone-500">Email</dt>
+                                <dt className="text-sm font-medium text-stone-500">{t('common.email')}</dt>
                                 <dd className="mt-1 text-sm text-plutz-cream">{contract.client_email}</dd>
                             </div>
                             {contract.client_company && (
                                 <div>
-                                    <dt className="text-sm font-medium text-stone-500">Company</dt>
+                                    <dt className="text-sm font-medium text-stone-500">{t('contracts.client_company')}</dt>
                                     <dd className="mt-1 text-sm text-plutz-cream">{contract.client_company}</dd>
                                 </div>
                             )}
                             {contract.client_address && (
                                 <div className="md:col-span-2">
-                                    <dt className="text-sm font-medium text-stone-500">Address</dt>
+                                    <dt className="text-sm font-medium text-stone-500">{t('contracts.client_address')}</dt>
                                     <dd className="mt-1 text-sm text-plutz-cream whitespace-pre-line">{contract.client_address}</dd>
                                 </div>
                             )}
@@ -154,23 +156,23 @@ export default function Show({ auth, contract, flash }: Props & { flash?: any })
 
                     {/* Financial Details */}
                     <div className="bg-plutz-surface overflow-hidden shadow-sm sm:rounded-lg p-6">
-                        <h3 className="text-lg font-medium text-plutz-cream mb-4">Financial Details</h3>
+                        <h3 className="text-lg font-medium text-plutz-cream mb-4">{t('contracts.financial_details')}</h3>
                         <dl className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
-                                <dt className="text-sm font-medium text-stone-500">Performance Date</dt>
+                                <dt className="text-sm font-medium text-stone-500">{t('contracts.performance_date')}</dt>
                                 <dd className="mt-1 text-sm text-plutz-cream">
                                     {new Date(contract.performance_date).toLocaleDateString()}
                                 </dd>
                             </div>
                             <div>
-                                <dt className="text-sm font-medium text-stone-500">Total Price</dt>
+                                <dt className="text-sm font-medium text-stone-500">{t('contracts.total_price')}</dt>
                                 <dd className="mt-1 text-sm text-plutz-cream font-semibold">
                                     {contract.currency} {parseFloat(contract.total_price).toFixed(2)}
                                 </dd>
                             </div>
                             {contract.deposit_amount && (
                                 <div>
-                                    <dt className="text-sm font-medium text-stone-500">Deposit</dt>
+                                    <dt className="text-sm font-medium text-stone-500">{t('contracts.deposit')}</dt>
                                     <dd className="mt-1 text-sm text-plutz-cream">
                                         {contract.currency} {parseFloat(contract.deposit_amount).toFixed(2)}
                                     </dd>
@@ -181,7 +183,7 @@ export default function Show({ auth, contract, flash }: Props & { flash?: any })
 
                     {/* Contract Content */}
                     <div className="bg-plutz-surface overflow-hidden shadow-sm sm:rounded-lg p-6">
-                        <h3 className="text-lg font-medium text-plutz-cream mb-4">Contract Content</h3>
+                        <h3 className="text-lg font-medium text-plutz-cream mb-4">{t('contracts.contract_content')}</h3>
                         <div className="prose max-w-none text-sm whitespace-pre-line">
                             {contract.markdown_snapshot}
                         </div>
@@ -190,18 +192,18 @@ export default function Show({ auth, contract, flash }: Props & { flash?: any })
                     {/* Signing Information */}
                     {contract.status === 'signed' && contract.signer_name && (
                         <div className="bg-green-500/10 overflow-hidden shadow-sm sm:rounded-lg p-6 border border-green-500/20">
-                            <h3 className="text-lg font-medium text-green-400 mb-4">Signature Information</h3>
+                            <h3 className="text-lg font-medium text-green-400 mb-4">{t('contracts.signature_information')}</h3>
                             <dl className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <dt className="text-sm font-medium text-green-400">Signed by</dt>
+                                    <dt className="text-sm font-medium text-green-400">{t('contracts.signed_by')}</dt>
                                     <dd className="mt-1 text-sm text-plutz-cream">{contract.signer_name}</dd>
                                 </div>
                                 <div>
-                                    <dt className="text-sm font-medium text-green-400">Email</dt>
+                                    <dt className="text-sm font-medium text-green-400">{t('common.email')}</dt>
                                     <dd className="mt-1 text-sm text-plutz-cream">{contract.signer_email}</dd>
                                 </div>
                                 <div>
-                                    <dt className="text-sm font-medium text-green-400">Signed at</dt>
+                                    <dt className="text-sm font-medium text-green-400">{t('contracts.signed_at')}</dt>
                                     <dd className="mt-1 text-sm text-plutz-cream">
                                         {contract.signed_at && new Date(contract.signed_at).toLocaleString()}
                                     </dd>
@@ -213,7 +215,7 @@ export default function Show({ auth, contract, flash }: Props & { flash?: any })
                     {/* Attachments */}
                     {contract.attachments && contract.attachments.length > 0 && (
                         <div className="bg-plutz-surface overflow-hidden shadow-sm sm:rounded-lg p-6">
-                            <h3 className="text-lg font-medium text-plutz-cream mb-4">Attachments</h3>
+                            <h3 className="text-lg font-medium text-plutz-cream mb-4">{t('expenses.attachments')}</h3>
                             <ul className="space-y-2">
                                 {contract.attachments.map((attachment: any) => (
                                     <li key={attachment.id} className="flex justify-between items-center">
@@ -222,7 +224,7 @@ export default function Show({ auth, contract, flash }: Props & { flash?: any })
                                             href={route('attachments.download', attachment.id)}
                                             className="text-plutz-tan hover:text-plutz-tan text-sm"
                                         >
-                                            Download
+                                            {t('expenses.download')}
                                         </a>
                                     </li>
                                 ))}
@@ -232,19 +234,19 @@ export default function Show({ auth, contract, flash }: Props & { flash?: any })
 
                     {/* Metadata */}
                     <div className="bg-stone-900/50 overflow-hidden shadow-sm sm:rounded-lg p-6">
-                        <h3 className="text-lg font-medium text-plutz-cream mb-4">Metadata</h3>
+                        <h3 className="text-lg font-medium text-plutz-cream mb-4">{t('contracts.metadata')}</h3>
                         <dl className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                             <div>
-                                <dt className="text-stone-500">Created by</dt>
+                                <dt className="text-stone-500">{t('contracts.created_by')}</dt>
                                 <dd className="mt-1 text-plutz-cream">{contract.creator.name}</dd>
                             </div>
                             <div>
-                                <dt className="text-stone-500">Contract ID</dt>
+                                <dt className="text-stone-500">{t('contracts.contract_id')}</dt>
                                 <dd className="mt-1 text-plutz-cream font-mono">{contract.public_id}</dd>
                             </div>
                             {contract.sent_at && (
                                 <div>
-                                    <dt className="text-stone-500">Sent at</dt>
+                                    <dt className="text-stone-500">{t('contracts.sent_at')}</dt>
                                     <dd className="mt-1 text-plutz-cream">
                                         {new Date(contract.sent_at).toLocaleString()}
                                     </dd>

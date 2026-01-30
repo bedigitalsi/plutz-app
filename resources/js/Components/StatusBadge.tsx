@@ -1,10 +1,13 @@
 import React from 'react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface StatusBadgeProps {
     status: 'pending' | 'confirmed' | 'rejected';
 }
 
 export default function StatusBadge({ status }: StatusBadgeProps) {
+    const { t } = useTranslation();
+
     const colors = {
         pending: 'bg-stone-800 text-stone-400 border border-stone-700',
         confirmed: 'bg-plutz-tan text-plutz-dark',
@@ -12,9 +15,9 @@ export default function StatusBadge({ status }: StatusBadgeProps) {
     };
 
     const labels = {
-        pending: 'Pending',
-        confirmed: 'Confirmed',
-        rejected: 'Rejected',
+        pending: t('component.status_pending'),
+        confirmed: t('component.status_confirmed'),
+        rejected: t('component.status_rejected'),
     };
 
     return (

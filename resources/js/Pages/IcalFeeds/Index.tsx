@@ -5,6 +5,7 @@ import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface IcalFeed {
     id: number;
@@ -22,6 +23,7 @@ interface Props {
 }
 
 export default function Index({ feeds, baseUrl }: Props) {
+    const { t } = useTranslation();
     const { flash } = usePage().props as any;
     const [showCreateForm, setShowCreateForm] = useState(false);
     const [showTokenModal, setShowTokenModal] = useState(false);
@@ -50,7 +52,7 @@ export default function Index({ feeds, baseUrl }: Props) {
     };
 
     const handleDelete = (feedId: number) => {
-        if (confirm('Are you sure you want to delete this feed? The subscription URL will stop working.')) {
+        if (confirm(t('ical.confirm_delete'))) {
             router.delete(route('ical-feeds.destroy', feedId));
         }
     };
@@ -74,10 +76,10 @@ export default function Index({ feeds, baseUrl }: Props) {
 
     return (
         <AuthenticatedLayout className="bg-plutz-dark">
-            <Head title="iCal Feeds" />
+            <Head title={t('ical.title')} />
             <div className="max-w-[1200px] mx-auto w-full p-6 pb-0">
                 <div className="flex items-center justify-between mb-2">
-                    <h2 className="text-2xl font-serif text-plutz-cream">iCal Feeds</h2>
+                    <h2 className="text-2xl font-serif text-plutz-cream">{t('ical.title')}</h2>
                 </div>
             </div>
 
@@ -92,11 +94,10 @@ export default function Index({ feeds, baseUrl }: Props) {
                                 </svg>
                             </div>
                             <div className="ml-3">
-                                <h3 className="text-sm font-medium text-plutz-tan">About iCal Feeds</h3>
+                                <h3 className="text-sm font-medium text-plutz-tan">{t('ical.about_title')}</h3>
                                 <div className="mt-2 text-sm text-plutz-tan">
                                     <p>
-                                        Create feeds to subscribe to your confirmed inquiries in Apple Calendar or other calendar apps.
-                                        Each feed generates a unique URL that you can copy and use in your calendar app.
+                                        {t('ical.about_description')}
                                     </p>
                                 </div>
                             </div>
@@ -108,14 +109,14 @@ export default function Index({ feeds, baseUrl }: Props) {
                         <div className="mb-6 overflow-hidden rounded-lg bg-plutz-surface shadow-sm">
                             <form onSubmit={submit} className="p-6">
                                 <div>
-                                    <InputLabel htmlFor="name" value="Feed Name *" />
+                                    <InputLabel htmlFor="name" value={t('ical.feed_name')} />
                                     <TextInput
                                         id="name"
                                         type="text"
                                         className="mt-1 block w-full"
                                         value={data.name}
                                         onChange={(e) => setData('name', e.target.value)}
-                                        placeholder="e.g. My Calendar"
+                                        placeholder={t('ical.feed_placeholder')}
                                         required
                                         autoFocus
                                     />
@@ -128,10 +129,10 @@ export default function Index({ feeds, baseUrl }: Props) {
                                         onClick={() => setShowCreateForm(false)}
                                         className="rounded-md bg-plutz-tan/20 px-4 py-2 text-sm font-semibold text-stone-400 hover:bg-plutz-tan/30"
                                     >
-                                        Cancel
+                                        {t('common.cancel')}
                                     </button>
                                     <PrimaryButton disabled={processing}>
-                                        Create Feed
+                                        {t('ical.create_feed')}
                                     </PrimaryButton>
                                 </div>
                             </form>
@@ -156,11 +157,11 @@ export default function Index({ feeds, baseUrl }: Props) {
                                             </div>
                                             <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                                                 <h3 className="text-lg font-medium leading-6 text-plutz-cream">
-                                                    Feed Created Successfully!
+                                                    {t('ical.success_title')}
                                                 </h3>
                                                 <div className="mt-4">
                                                     <p className="text-sm text-stone-500 mb-2">
-                                                        Copy this URL to subscribe in your calendar app. This token will only be shown once!
+                                                        {t('ical.success_message')}
                                                     </p>
                                                     <div className="mt-2 rounded-md bg-stone-800 p-3">
                                                         <code className="text-xs break-all">
@@ -171,7 +172,7 @@ export default function Index({ feeds, baseUrl }: Props) {
                                                         onClick={() => copyToClipboard(`${baseUrl}/${generatedToken}.ics`)}
                                                         className="mt-3 w-full rounded-md bg-plutz-tan px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-plutz-tan/90"
                                                     >
-                                                        {copiedToken ? '✓ Copied!' : 'Copy URL'}
+                                                        {copiedToken ? t('ical.copied') : t('ical.copy_url')}
                                                     </button>
                                                 </div>
                                             </div>
@@ -182,7 +183,7 @@ export default function Index({ feeds, baseUrl }: Props) {
                                             onClick={() => setShowTokenModal(false)}
                                             className="inline-flex w-full justify-center rounded-md border border-transparent bg-stone-700 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-stone-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm"
                                         >
-                                            Close
+                                            {t('ical.close')}
                                         </button>
                                     </div>
                                 </div>
@@ -193,12 +194,12 @@ export default function Index({ feeds, baseUrl }: Props) {
                     {/* Feeds List */}
                     {feeds.length === 0 ? (
                         <div className="rounded-lg bg-plutz-surface p-8 text-center shadow-sm">
-                            <p className="text-stone-500">No feeds created yet.</p>
+                            <p className="text-stone-500">{t('ical.no_feeds')}</p>
                             <button
                                 onClick={() => setShowCreateForm(true)}
                                 className="mt-4 inline-block text-plutz-tan hover:text-plutz-tan"
                             >
-                                Create your first feed
+                                {t('ical.create_first')}
                             </button>
                         </div>
                     ) : (
@@ -218,7 +219,7 @@ export default function Index({ feeds, baseUrl }: Props) {
                                                     Created by {feed.creator.name} on {formatDate(feed.created_at)}
                                                 </p>
                                                 <p className="mt-2 text-xs text-stone-500">
-                                                    This feed shows all confirmed inquiries.
+                                                    {t('ical.feed_info')}
                                                 </p>
                                             </div>
 
@@ -226,7 +227,7 @@ export default function Index({ feeds, baseUrl }: Props) {
                                                 onClick={() => handleDelete(feed.id)}
                                                 className="ml-4 rounded-md bg-red-600 px-3 py-1 text-sm font-semibold text-white shadow-sm hover:bg-red-500/100"
                                             >
-                                                Delete
+                                                {t('common.delete')}
                                             </button>
                                         </div>
                                     </div>

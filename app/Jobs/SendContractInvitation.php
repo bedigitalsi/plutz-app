@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Contract;
+use App\Models\Setting;
 use App\Support\MailSettings;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -22,15 +23,28 @@ class SendContractInvitation implements ShouldQueue
 
     public function handle(): void
     {
+        // Set locale to app default for emails
+        $locale = Setting::getString('default_locale', 'en');
+        if (!in_array($locale, ['en', 'sl'])) {
+            $locale = 'en';
+        }
+        app()->setLocale($locale);
+
         // Apply mail settings from database
         MailSettings::apply();
-        
+
         $signingUrl = route('contracts.sign', $this->token);
 
-        Mail::raw("Dear {$this->contract->client_name},\n\nPlease sign the contract by visiting:\n{$signingUrl}\n\nThank you,\nPlutz", function ($message) {
+        $body = __('email.contract_invitation_body', [
+            'name' => $this->contract->client_name,
+            'url' => $signingUrl,
+        ]);
+        $subject = __('email.contract_invitation_subject') . ' - Plutz';
+
+        Mail::raw($body, function ($message) use ($subject) {
             $message->to($this->contract->client_email)
-                ->subject('Contract Signing Request - Plutz');
-            
+                ->subject($subject);
+
             // Apply from overrides if enabled
             if (MailSettings::shouldForceFrom() || MailSettings::shouldForceFromName()) {
                 $message->from(
@@ -38,7 +52,7 @@ class SendContractInvitation implements ShouldQueue
                     MailSettings::getFromName()
                 );
             }
-            
+
             // Apply return path if enabled
             if (MailSettings::shouldSetReturnPath()) {
                 $message->returnPath(MailSettings::getFromAddress());

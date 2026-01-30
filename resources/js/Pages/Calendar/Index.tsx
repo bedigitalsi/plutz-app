@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router } from '@inertiajs/react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface CalendarEvent {
     id: number;
@@ -39,6 +40,7 @@ interface Props {
 }
 
 export default function Index({ currentMonth, monthLabel, events, upcoming, calendarStart, calendarEnd, today }: Props) {
+    const { t } = useTranslation();
 
     // Build calendar grid
     const calendarDays = useMemo(() => {
@@ -72,11 +74,11 @@ export default function Index({ currentMonth, monthLabel, events, upcoming, cale
         return new Intl.NumberFormat('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(price) + ' ' + currency;
     };
 
-    const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const weekDays = [t('calendar.mon'), t('calendar.tue'), t('calendar.wed'), t('calendar.thu'), t('calendar.fri'), t('calendar.sat'), t('calendar.sun')];
 
     return (
         <AuthenticatedLayout className="bg-plutz-dark">
-            <Head title="Calendar" />
+            <Head title={t('calendar.title')} />
 
             <main className="flex-grow w-full max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-full">
@@ -132,7 +134,7 @@ export default function Index({ currentMonth, monthLabel, events, upcoming, cale
                                         {day.isToday ? (
                                             <div className="flex justify-between items-start">
                                                 <span className="text-sm font-bold text-plutz-tan">{day.day}</span>
-                                                <span className="hidden lg:inline text-[10px] uppercase font-bold text-plutz-tan tracking-wide">Today</span>
+                                                <span className="hidden lg:inline text-[10px] uppercase font-bold text-plutz-tan tracking-wide">{t('calendar.today')}</span>
                                             </div>
                                         ) : (
                                             <span className={`text-sm font-medium ${day.isCurrentMonth ? 'text-plutz-cream group-hover:text-plutz-tan transition-colors' : ''}`}>
@@ -174,12 +176,12 @@ export default function Index({ currentMonth, monthLabel, events, upcoming, cale
                     <aside className="lg:col-span-1">
                         <div className="bg-plutz-surface rounded-xl p-6 h-full border border-[#2d2a28] flex flex-col">
                             <div className="flex items-center justify-between mb-6">
-                                <h3 className="font-serif text-xl font-semibold text-white">Upcoming Events</h3>
+                                <h3 className="font-serif text-xl font-semibold text-white">{t('calendar.upcoming_events')}</h3>
                                 <Link
                                     href={route('inquiries.index')}
                                     className="text-xs text-plutz-tan font-medium hover:text-white transition-colors uppercase tracking-wider"
                                 >
-                                    View All
+                                    {t('calendar.view_all')}
                                 </Link>
                             </div>
 
@@ -202,11 +204,11 @@ export default function Index({ currentMonth, monthLabel, events, upcoming, cale
                                             </div>
                                             {event.status === 'confirmed' ? (
                                                 <span className="px-2.5 py-1 rounded bg-plutz-tan text-plutz-dark text-[11px] font-bold uppercase tracking-wide">
-                                                    Confirmed
+                                                    {t('calendar.confirmed')}
                                                 </span>
                                             ) : (
                                                 <span className="px-2.5 py-1 rounded border border-stone-600 bg-stone-800 text-stone-300 text-[11px] font-bold uppercase tracking-wide">
-                                                    Pending
+                                                    {t('calendar.pending')}
                                                 </span>
                                             )}
                                         </div>
@@ -223,7 +225,7 @@ export default function Index({ currentMonth, monthLabel, events, upcoming, cale
                                         <div className="flex items-center gap-4 mt-3 pt-3 border-t border-[#3a3633]">
                                             <div className="flex items-center gap-1.5 text-stone-400 text-xs">
                                                 <span className="material-symbols-outlined text-[16px]">schedule</span>
-                                                <span>{event.time || 'TBD'}</span>
+                                                <span>{event.time || t('calendar.tbd')}</span>
                                             </div>
                                             {event.status === 'confirmed' && event.price ? (
                                                 <div className="flex items-center gap-1.5 text-stone-400 text-xs">
@@ -233,7 +235,7 @@ export default function Index({ currentMonth, monthLabel, events, upcoming, cale
                                             ) : event.status === 'pending' ? (
                                                 <div className="flex items-center gap-1.5 text-stone-400 text-xs">
                                                     <span className="material-symbols-outlined text-[16px]">mail</span>
-                                                    <span>Awaiting Reply</span>
+                                                    <span>{t('calendar.awaiting_reply')}</span>
                                                 </div>
                                             ) : null}
                                         </div>
@@ -243,7 +245,7 @@ export default function Index({ currentMonth, monthLabel, events, upcoming, cale
                                 {upcoming.length === 0 && (
                                     <div className="text-center py-8">
                                         <span className="material-symbols-outlined text-stone-600 text-4xl block mb-2">event_busy</span>
-                                        <p className="text-stone-500 text-sm">No upcoming events</p>
+                                        <p className="text-stone-500 text-sm">{t('calendar.no_upcoming_events')}</p>
                                     </div>
                                 )}
 
@@ -254,7 +256,7 @@ export default function Index({ currentMonth, monthLabel, events, upcoming, cale
                                         className="w-full py-3 rounded border border-dashed border-stone-600 text-stone-400 hover:text-white hover:border-stone-400 hover:bg-[#252220] transition-all text-sm font-medium flex items-center justify-center gap-2"
                                     >
                                         <span className="material-symbols-outlined text-lg">add</span>
-                                        Add Event Request
+                                        {t('calendar.add_event_request')}
                                     </Link>
                                 </div>
                             </div>

@@ -2,6 +2,7 @@ import React from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import DistributionForm from '@/Components/DistributionForm';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface Income {
     id: number;
@@ -47,6 +48,7 @@ interface Props {
 }
 
 export default function Show({ income, bandMembers, totalDistributed, remaining }: Props) {
+    const { t } = useTranslation();
     const { data, setData, post, processing, errors } = useForm({
         distributions: [],
     });
@@ -66,7 +68,7 @@ export default function Show({ income, bandMembers, totalDistributed, remaining 
     };
 
     const handleDelete = () => {
-        if (confirm('Are you sure you want to delete this income? All distributions will also be deleted.')) {
+        if (confirm(t('incomes.confirm_delete'))) {
             router.delete(route('incomes.destroy', income.id));
         }
     };
@@ -89,14 +91,14 @@ export default function Show({ income, bandMembers, totalDistributed, remaining 
                                     </p>
                                     {income.inquiry && (
                                         <p className="mt-1 text-sm text-stone-400">
-                                            From: {income.inquiry.location_name}
+                                            {t('incomes.from')} {income.inquiry.location_name}
                                         </p>
                                     )}
                                 </div>
                                 <div className="flex gap-2">
                                     {income.invoice_issued && (
                                         <span className="inline-flex rounded-full bg-plutz-tan/20 px-3 py-1 text-xs font-semibold text-plutz-tan">
-                                            Invoice Issued
+                                            {t('incomes.invoice_issued')}
                                         </span>
                                     )}
                                 </div>
@@ -107,7 +109,7 @@ export default function Show({ income, bandMembers, totalDistributed, remaining 
                                     onClick={handleDelete}
                                     className="rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500/100"
                                 >
-                                    Delete
+                                    {t('common.delete')}
                                 </button>
                             </div>
                         </div>
@@ -116,26 +118,26 @@ export default function Show({ income, bandMembers, totalDistributed, remaining 
                     {/* Details */}
                     <div className="mb-6 overflow-hidden rounded-lg bg-plutz-surface shadow-sm">
                         <div className="border-b border-plutz-tan/10 px-6 py-4">
-                            <h4 className="text-lg font-medium text-plutz-cream">Income Details</h4>
+                            <h4 className="text-lg font-medium text-plutz-cream">{t('incomes.income_details')}</h4>
                         </div>
                         <div className="p-6">
                             <dl className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                 <div>
-                                    <dt className="text-sm font-medium text-stone-500">Date</dt>
+                                    <dt className="text-sm font-medium text-stone-500">{t('incomes.date')}</dt>
                                     <dd className="mt-1 text-sm text-plutz-cream">{formatDate(income.income_date)}</dd>
                                 </div>
                                 <div>
-                                    <dt className="text-sm font-medium text-stone-500">Performance Type</dt>
+                                    <dt className="text-sm font-medium text-stone-500">{t('incomes.performance_type')}</dt>
                                     <dd className="mt-1 text-sm text-plutz-cream">{income.performance_type.name}</dd>
                                 </div>
                                 <div>
-                                    <dt className="text-sm font-medium text-stone-500">Created By</dt>
+                                    <dt className="text-sm font-medium text-stone-500">{t('incomes.created_by')}</dt>
                                     <dd className="mt-1 text-sm text-plutz-cream">{income.creator.name}</dd>
                                 </div>
                             </dl>
                             {income.notes && (
                                 <div className="mt-4">
-                                    <dt className="text-sm font-medium text-stone-500">Notes</dt>
+                                    <dt className="text-sm font-medium text-stone-500">{t('common.notes')}</dt>
                                     <dd className="mt-1 whitespace-pre-wrap text-sm text-plutz-cream">{income.notes}</dd>
                                 </div>
                             )}
@@ -145,7 +147,7 @@ export default function Show({ income, bandMembers, totalDistributed, remaining 
                     {/* Distribution */}
                     <div className="overflow-hidden rounded-lg bg-plutz-surface shadow-sm">
                         <div className="border-b border-plutz-tan/10 px-6 py-4">
-                            <h4 className="text-lg font-medium text-plutz-cream">Distribution</h4>
+                            <h4 className="text-lg font-medium text-plutz-cream">{t('incomes.distribution')}</h4>
                         </div>
                         <div className="p-6">
                             <DistributionForm

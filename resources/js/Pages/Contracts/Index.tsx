@@ -2,6 +2,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router } from '@inertiajs/react';
 import { PageProps } from '@/types';
 import { useState } from 'react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface Contract {
     id: number;
@@ -31,6 +32,7 @@ interface Props extends PageProps {
 }
 
 export default function Index({ auth, contracts, filters }: Props) {
+    const { t } = useTranslation();
     const [search, setSearch] = useState(filters.search || '');
     const [status, setStatus] = useState(filters.status || '');
 
@@ -39,7 +41,7 @@ export default function Index({ auth, contracts, filters }: Props) {
     };
 
     const handleDelete = (contract: Contract) => {
-        if (confirm('Are you sure you want to delete this contract?')) {
+        if (confirm(t('contracts.confirm_delete'))) {
             router.delete(route('contracts.destroy', contract.id));
         }
     };
@@ -59,11 +61,11 @@ export default function Index({ auth, contracts, filters }: Props) {
 
     return (
         <AuthenticatedLayout className="bg-plutz-dark">
-            <Head title="Contracts" />
+            <Head title={t('contracts.title')} />
             <div className="max-w-[1200px] mx-auto w-full p-6 pb-0">
                 <div className="flex items-center justify-between mb-2">
-                    <h2 className="text-2xl font-serif text-plutz-cream">Contracts</h2>
-                    <Link href={route('contracts.create')} className="text-plutz-tan hover:text-plutz-tan-light text-sm font-medium">+ New Contract</Link>
+                    <h2 className="text-2xl font-serif text-plutz-cream">{t('contracts.title')}</h2>
+                    <Link href={route('contracts.create')} className="text-plutz-tan hover:text-plutz-tan-light text-sm font-medium">{t('contracts.new_contract')}</Link>
                 </div>
             </div>
 
@@ -74,29 +76,29 @@ export default function Index({ auth, contracts, filters }: Props) {
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
                                 <label className="block text-sm font-medium text-stone-400 mb-2">
-                                    Search
+                                    {t('common.search')}
                                 </label>
                                 <input
                                     type="text"
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
-                                    placeholder="Search by client name, email..."
+                                    placeholder={t('contracts.search_placeholder')}
                                     className="w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
                                 />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-stone-400 mb-2">
-                                    Status
+                                    {t('common.status')}
                                 </label>
                                 <select
                                     value={status}
                                     onChange={(e) => setStatus(e.target.value)}
                                     className="w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
                                 >
-                                    <option value="">All Statuses</option>
-                                    <option value="draft">Draft</option>
-                                    <option value="sent">Sent</option>
-                                    <option value="signed">Signed</option>
+                                    <option value="">{t('contracts.all_statuses')}</option>
+                                    <option value="draft">{t('contracts.draft')}</option>
+                                    <option value="sent">{t('contracts.sent')}</option>
+                                    <option value="signed">{t('contracts.signed')}</option>
                                 </select>
                             </div>
                             <div className="flex items-end">
@@ -104,7 +106,7 @@ export default function Index({ auth, contracts, filters }: Props) {
                                     onClick={handleFilter}
                                     className="w-full px-4 py-2 bg-stone-700 text-white rounded-md hover:bg-stone-700"
                                 >
-                                    Apply Filters
+                                    {t('inquiries.apply_filters')}
                                 </button>
                             </div>
                         </div>
@@ -117,19 +119,19 @@ export default function Index({ auth, contracts, filters }: Props) {
                                 <thead className="bg-stone-900/50">
                                     <tr>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">
-                                            Client
+                                            {t('contracts.client')}
                                         </th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">
-                                            Performance Date
+                                            {t('contracts.performance_date')}
                                         </th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">
-                                            Total Price
+                                            {t('contracts.total_price')}
                                         </th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">
-                                            Status
+                                            {t('common.status')}
                                         </th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">
-                                            Actions
+                                            {t('common.actions')}
                                         </th>
                                     </tr>
                                 </thead>
@@ -137,7 +139,7 @@ export default function Index({ auth, contracts, filters }: Props) {
                                     {contracts.data.length === 0 ? (
                                         <tr>
                                             <td colSpan={5} className="px-6 py-4 text-center text-stone-500">
-                                                No contracts found. Create your first contract!
+                                                {t('contracts.no_contracts')}
                                             </td>
                                         </tr>
                                     ) : (
@@ -170,7 +172,7 @@ export default function Index({ auth, contracts, filters }: Props) {
                                                         href={route('contracts.show', contract.id)}
                                                         className="text-plutz-tan hover:text-plutz-tan"
                                                     >
-                                                        View
+                                                        {t('common.view')}
                                                     </Link>
                                                     {contract.status === 'draft' && (
                                                         <>
@@ -178,13 +180,13 @@ export default function Index({ auth, contracts, filters }: Props) {
                                                                 href={route('contracts.edit', contract.id)}
                                                                 className="text-plutz-tan hover:text-plutz-tan"
                                                             >
-                                                                Edit
+                                                                {t('common.edit')}
                                                             </Link>
                                                             <button
                                                                 onClick={() => handleDelete(contract)}
                                                                 className="text-red-400 hover:text-red-300"
                                                             >
-                                                                Delete
+                                                                {t('common.delete')}
                                                             </button>
                                                         </>
                                                     )}

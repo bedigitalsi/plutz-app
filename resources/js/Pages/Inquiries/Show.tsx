@@ -2,6 +2,7 @@ import React from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router } from '@inertiajs/react';
 import StatusBadge from '@/Components/StatusBadge';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface Inquiry {
     id: number;
@@ -36,6 +37,7 @@ interface Props {
 }
 
 export default function Show({ inquiry }: Props) {
+    const { t } = useTranslation();
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString('sl-SI', {
             year: 'numeric',
@@ -45,13 +47,13 @@ export default function Show({ inquiry }: Props) {
     };
 
     const handleStatusChange = (status: 'pending' | 'confirmed' | 'rejected') => {
-        if (confirm(`Are you sure you want to mark this inquiry as ${status}?`)) {
+        if (confirm(`${t('inquiries.confirm_status_change')} ${status}?`)) {
             router.patch(route('inquiries.update-status', inquiry.id), { status });
         }
     };
 
     const handleDelete = () => {
-        if (confirm('Are you sure you want to delete this inquiry?')) {
+        if (confirm(t('inquiries.confirm_delete'))) {
             router.delete(route('inquiries.destroy', inquiry.id));
         }
     };
@@ -80,7 +82,7 @@ export default function Show({ inquiry }: Props) {
                                     href={route('inquiries.edit', inquiry.id)}
                                     className="rounded-md bg-plutz-tan px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-plutz-tan/90"
                                 >
-                                    Edit
+                                    {t('common.edit')}
                                 </Link>
 
                                 {inquiry.status === 'pending' && (
@@ -89,13 +91,13 @@ export default function Show({ inquiry }: Props) {
                                             onClick={() => handleStatusChange('confirmed')}
                                             className="rounded-md bg-green-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500/100"
                                         >
-                                            Confirm
+                                            {t('inquiries.confirm_action')}
                                         </button>
                                         <button
                                             onClick={() => handleStatusChange('rejected')}
                                             className="rounded-md bg-stone-700 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-stone-900/500"
                                         >
-                                            Reject
+                                            {t('inquiries.reject')}
                                         </button>
                                     </>
                                 )}
@@ -105,7 +107,7 @@ export default function Show({ inquiry }: Props) {
                                         href={`/incomes/create?inquiry_id=${inquiry.id}`}
                                         className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500"
                                     >
-                                        Create Income
+                                        {t('inquiries.create_income')}
                                     </Link>
                                 )}
 
@@ -114,7 +116,7 @@ export default function Show({ inquiry }: Props) {
                                         onClick={() => handleStatusChange('pending')}
                                         className="rounded-md bg-amber-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-amber-500"
                                     >
-                                        Set to Pending
+                                        {t('inquiries.set_pending')}
                                     </button>
                                 )}
 
@@ -122,7 +124,7 @@ export default function Show({ inquiry }: Props) {
                                     onClick={handleDelete}
                                     className="ml-auto rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500/100"
                                 >
-                                    Delete
+                                    {t('common.delete')}
                                 </button>
                             </div>
                         </div>
@@ -133,35 +135,35 @@ export default function Show({ inquiry }: Props) {
                         {/* Performance Details */}
                         <div className="overflow-hidden rounded-lg bg-plutz-surface shadow-sm">
                             <div className="border-b border-plutz-tan/10 px-6 py-4">
-                                <h4 className="text-lg font-medium text-plutz-cream">Performance Details</h4>
+                                <h4 className="text-lg font-medium text-plutz-cream">{t('inquiries.performance_details')}</h4>
                             </div>
                             <div className="p-6">
                                 <dl className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                     <div>
-                                        <dt className="text-sm font-medium text-stone-500">Date</dt>
+                                        <dt className="text-sm font-medium text-stone-500">{t('common.date')}</dt>
                                         <dd className="mt-1 text-sm text-plutz-cream">{formatDate(inquiry.performance_date)}</dd>
                                     </div>
                                     <div>
-                                        <dt className="text-sm font-medium text-stone-500">Time</dt>
+                                        <dt className="text-sm font-medium text-stone-500">{t('inquiries.time')}</dt>
                                         <dd className="mt-1 text-sm text-plutz-cream">
                                             {inquiry.performance_time_mode === 'exact_time' 
                                                 ? inquiry.performance_time_exact 
-                                                : inquiry.performance_time_text || 'Not specified'}
+                                                : inquiry.performance_time_text || t('inquiries.not_specified')}
                                         </dd>
                                     </div>
                                     <div>
-                                        <dt className="text-sm font-medium text-stone-500">Duration</dt>
-                                        <dd className="mt-1 text-sm text-plutz-cream">{inquiry.duration_minutes} minutes</dd>
+                                        <dt className="text-sm font-medium text-stone-500">{t('inquiries.duration')}</dt>
+                                        <dd className="mt-1 text-sm text-plutz-cream">{inquiry.duration_minutes} {t('inquiries.minutes')}</dd>
                                     </div>
                                     {inquiry.performance_type && (
                                         <div>
-                                            <dt className="text-sm font-medium text-stone-500">Type</dt>
+                                            <dt className="text-sm font-medium text-stone-500">{t('common.type')}</dt>
                                             <dd className="mt-1 text-sm text-plutz-cream">{inquiry.performance_type.name}</dd>
                                         </div>
                                     )}
                                     {inquiry.band_size && (
                                         <div>
-                                            <dt className="text-sm font-medium text-stone-500">Band Size</dt>
+                                            <dt className="text-sm font-medium text-stone-500">{t('inquiries.band_size')}</dt>
                                             <dd className="mt-1 text-sm text-plutz-cream">{inquiry.band_size.label}</dd>
                                         </div>
                                     )}
@@ -172,7 +174,7 @@ export default function Show({ inquiry }: Props) {
                         {/* Location */}
                         <div className="overflow-hidden rounded-lg bg-plutz-surface shadow-sm">
                             <div className="border-b border-plutz-tan/10 px-6 py-4">
-                                <h4 className="text-lg font-medium text-plutz-cream">Location</h4>
+                                <h4 className="text-lg font-medium text-plutz-cream">{t('inquiries.location')}</h4>
                             </div>
                             <div className="p-6">
                                 <p className="text-sm text-plutz-cream">{inquiry.location_name}</p>
@@ -185,17 +187,17 @@ export default function Show({ inquiry }: Props) {
                         {/* Contact */}
                         <div className="overflow-hidden rounded-lg bg-plutz-surface shadow-sm">
                             <div className="border-b border-plutz-tan/10 px-6 py-4">
-                                <h4 className="text-lg font-medium text-plutz-cream">Contact Information</h4>
+                                <h4 className="text-lg font-medium text-plutz-cream">{t('inquiries.contact_information')}</h4>
                             </div>
                             <div className="p-6">
                                 <dl className="space-y-2">
                                     <div>
-                                        <dt className="text-sm font-medium text-stone-500">Name</dt>
+                                        <dt className="text-sm font-medium text-stone-500">{t('common.name')}</dt>
                                         <dd className="mt-1 text-sm text-plutz-cream">{inquiry.contact_person}</dd>
                                     </div>
                                     {inquiry.contact_email && (
                                         <div>
-                                            <dt className="text-sm font-medium text-stone-500">Email</dt>
+                                            <dt className="text-sm font-medium text-stone-500">{t('common.email')}</dt>
                                             <dd className="mt-1 text-sm text-plutz-cream">
                                                 <a href={`mailto:${inquiry.contact_email}`} className="text-plutz-tan hover:text-plutz-tan">
                                                     {inquiry.contact_email}
@@ -205,7 +207,7 @@ export default function Show({ inquiry }: Props) {
                                     )}
                                     {inquiry.contact_phone && (
                                         <div>
-                                            <dt className="text-sm font-medium text-stone-500">Phone</dt>
+                                            <dt className="text-sm font-medium text-stone-500">{t('inquiries.phone')}</dt>
                                             <dd className="mt-1 text-sm text-plutz-cream">
                                                 <a href={`tel:${inquiry.contact_phone}`} className="text-plutz-tan hover:text-plutz-tan">
                                                     {inquiry.contact_phone}
@@ -221,14 +223,14 @@ export default function Show({ inquiry }: Props) {
                         {inquiry.price_amount && (
                             <div className="overflow-hidden rounded-lg bg-plutz-surface shadow-sm">
                                 <div className="border-b border-plutz-tan/10 px-6 py-4">
-                                    <h4 className="text-lg font-medium text-plutz-cream">Price</h4>
+                                    <h4 className="text-lg font-medium text-plutz-cream">{t('inquiries.price')}</h4>
                                 </div>
                                 <div className="p-6">
                                     <p className="text-2xl font-bold text-plutz-cream">
                                         {inquiry.price_amount} {inquiry.currency}
                                     </p>
                                     {inquiry.income && (
-                                        <p className="mt-2 text-sm text-green-400">✓ Payment received</p>
+                                        <p className="mt-2 text-sm text-green-400">✓ {t('inquiries.payment_received')}</p>
                                     )}
                                 </div>
                             </div>
@@ -238,7 +240,7 @@ export default function Show({ inquiry }: Props) {
                         {inquiry.notes && (
                             <div className="overflow-hidden rounded-lg bg-plutz-surface shadow-sm">
                                 <div className="border-b border-plutz-tan/10 px-6 py-4">
-                                    <h4 className="text-lg font-medium text-plutz-cream">Notes</h4>
+                                    <h4 className="text-lg font-medium text-plutz-cream">{t('common.notes')}</h4>
                                 </div>
                                 <div className="p-6">
                                     <p className="whitespace-pre-wrap text-sm text-stone-400">{inquiry.notes}</p>

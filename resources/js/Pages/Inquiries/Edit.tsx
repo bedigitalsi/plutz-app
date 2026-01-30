@@ -5,6 +5,7 @@ import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface PerformanceType {
     id: number;
@@ -42,6 +43,7 @@ interface Props {
 }
 
 export default function Edit({ inquiry, performanceTypes, bandSizes }: Props) {
+    const { t } = useTranslation();
     const [timeMode, setTimeMode] = useState<'exact_time' | 'text_time'>(inquiry.performance_time_mode);
 
     const { data, setData, patch, processing, errors } = useForm({
@@ -74,11 +76,11 @@ export default function Edit({ inquiry, performanceTypes, bandSizes }: Props) {
 
     return (
         <AuthenticatedLayout className="bg-plutz-dark">
-            <Head title="Edit Inquiry" />
+            <Head title={t('inquiries.edit_inquiry')} />
             <div className="max-w-[1200px] mx-auto w-full p-6 pb-0">
                 <div className="flex items-center justify-between mb-2">
-                    <h2 className="text-2xl font-serif text-plutz-cream">Edit Inquiry</h2>
-                    <Link href={route('inquiries.show', inquiry.id)} className="text-plutz-tan hover:text-plutz-tan-light text-sm font-medium">Back to Details</Link>
+                    <h2 className="text-2xl font-serif text-plutz-cream">{t('inquiries.edit_inquiry')}</h2>
+                    <Link href={route('inquiries.show', inquiry.id)} className="text-plutz-tan hover:text-plutz-tan-light text-sm font-medium">{t('inquiries.back_to_details')}</Link>
                 </div>
             </div>
 
@@ -88,11 +90,11 @@ export default function Edit({ inquiry, performanceTypes, bandSizes }: Props) {
                         <form onSubmit={submit} className="space-y-6 p-6">
                             {/* Performance Details */}
                             <div className="border-b border-plutz-tan/10 pb-6">
-                                <h3 className="text-lg font-medium text-plutz-cream">Performance Details</h3>
+                                <h3 className="text-lg font-medium text-plutz-cream">{t('inquiries.performance_details')}</h3>
                                 
                                 <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
                                     <div>
-                                        <InputLabel htmlFor="performance_date" value="Performance Date *" />
+                                        <InputLabel htmlFor="performance_date" value={t('inquiries.performance_date')} />
                                         <TextInput
                                             id="performance_date"
                                             type="date"
@@ -105,7 +107,7 @@ export default function Edit({ inquiry, performanceTypes, bandSizes }: Props) {
                                     </div>
 
                                     <div>
-                                        <InputLabel htmlFor="performance_type_id" value="Performance Type *" />
+                                        <InputLabel htmlFor="performance_type_id" value={t('inquiries.performance_type')} />
                                         <select
                                             id="performance_type_id"
                                             className="mt-1 block w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
@@ -125,7 +127,7 @@ export default function Edit({ inquiry, performanceTypes, bandSizes }: Props) {
 
                                 {/* Time Mode */}
                                 <div className="mt-4">
-                                    <InputLabel value="Performance Time *" />
+                                    <InputLabel value={t('inquiries.performance_time')} />
                                     <div className="mt-2 flex gap-4">
                                         <label className="flex items-center">
                                             <input
@@ -134,7 +136,7 @@ export default function Edit({ inquiry, performanceTypes, bandSizes }: Props) {
                                                 onChange={() => handleTimeModeChange('exact_time')}
                                                 className="h-4 w-4 border-plutz-tan/20 text-plutz-tan focus:ring-plutz-tan"
                                             />
-                                            <span className="ml-2 text-sm text-stone-400">Exact time</span>
+                                            <span className="ml-2 text-sm text-stone-400">{t('inquiries.exact_time')}</span>
                                         </label>
                                         <label className="flex items-center">
                                             <input
@@ -143,7 +145,7 @@ export default function Edit({ inquiry, performanceTypes, bandSizes }: Props) {
                                                 onChange={() => handleTimeModeChange('text_time')}
                                                 className="h-4 w-4 border-plutz-tan/20 text-plutz-tan focus:ring-plutz-tan"
                                             />
-                                            <span className="ml-2 text-sm text-stone-400">Text description</span>
+                                            <span className="ml-2 text-sm text-stone-400">{t('inquiries.text_description')}</span>
                                         </label>
                                     </div>
 
@@ -157,7 +159,7 @@ export default function Edit({ inquiry, performanceTypes, bandSizes }: Props) {
                                     ) : (
                                         <TextInput
                                             type="text"
-                                            placeholder="e.g. afternoon, TBD"
+                                            placeholder={t('inquiries.time_placeholder')}
                                             className="mt-2 block w-full md:w-1/2"
                                             value={data.performance_time_text}
                                             onChange={(e) => setData('performance_time_text', e.target.value)}
@@ -168,7 +170,7 @@ export default function Edit({ inquiry, performanceTypes, bandSizes }: Props) {
 
                                 <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
                                     <div>
-                                        <InputLabel htmlFor="duration_minutes" value="Duration (minutes)" />
+                                        <InputLabel htmlFor="duration_minutes" value={t('inquiries.duration_minutes')} />
                                         <TextInput
                                             id="duration_minutes"
                                             type="number"
@@ -180,7 +182,7 @@ export default function Edit({ inquiry, performanceTypes, bandSizes }: Props) {
                                     </div>
 
                                     <div>
-                                        <InputLabel htmlFor="band_size_id" value="Band Size *" />
+                                        <InputLabel htmlFor="band_size_id" value={t('inquiries.band_size_select')} />
                                         <select
                                             id="band_size_id"
                                             className="mt-1 block w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
@@ -201,10 +203,10 @@ export default function Edit({ inquiry, performanceTypes, bandSizes }: Props) {
 
                             {/* Location */}
                             <div className="border-b border-plutz-tan/10 pb-6">
-                                <h3 className="text-lg font-medium text-plutz-cream">Location</h3>
+                                <h3 className="text-lg font-medium text-plutz-cream">{t('inquiries.location')}</h3>
                                 
                                 <div className="mt-4">
-                                    <InputLabel htmlFor="location_name" value="Location Name *" />
+                                    <InputLabel htmlFor="location_name" value={t('inquiries.location_name')} />
                                     <TextInput
                                         id="location_name"
                                         type="text"
@@ -217,7 +219,7 @@ export default function Edit({ inquiry, performanceTypes, bandSizes }: Props) {
                                 </div>
 
                                 <div className="mt-4">
-                                    <InputLabel htmlFor="location_address" value="Address" />
+                                    <InputLabel htmlFor="location_address" value={t('inquiries.address')} />
                                     <TextInput
                                         id="location_address"
                                         type="text"
@@ -231,10 +233,10 @@ export default function Edit({ inquiry, performanceTypes, bandSizes }: Props) {
 
                             {/* Contact */}
                             <div className="border-b border-plutz-tan/10 pb-6">
-                                <h3 className="text-lg font-medium text-plutz-cream">Contact Information</h3>
+                                <h3 className="text-lg font-medium text-plutz-cream">{t('inquiries.contact_information')}</h3>
                                 
                                 <div className="mt-4">
-                                    <InputLabel htmlFor="contact_person" value="Contact Person *" />
+                                    <InputLabel htmlFor="contact_person" value={t('inquiries.contact_person_field')} />
                                     <TextInput
                                         id="contact_person"
                                         type="text"
@@ -248,7 +250,7 @@ export default function Edit({ inquiry, performanceTypes, bandSizes }: Props) {
 
                                 <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
                                     <div>
-                                        <InputLabel htmlFor="contact_email" value="Email" />
+                                        <InputLabel htmlFor="contact_email" value={t('inquiries.email')} />
                                         <TextInput
                                             id="contact_email"
                                             type="email"
@@ -260,7 +262,7 @@ export default function Edit({ inquiry, performanceTypes, bandSizes }: Props) {
                                     </div>
 
                                     <div>
-                                        <InputLabel htmlFor="contact_phone" value="Phone" />
+                                        <InputLabel htmlFor="contact_phone" value={t('inquiries.phone_field')} />
                                         <TextInput
                                             id="contact_phone"
                                             type="tel"
@@ -275,11 +277,11 @@ export default function Edit({ inquiry, performanceTypes, bandSizes }: Props) {
 
                             {/* Price */}
                             <div className="border-b border-plutz-tan/10 pb-6">
-                                <h3 className="text-lg font-medium text-plutz-cream">Price</h3>
+                                <h3 className="text-lg font-medium text-plutz-cream">{t('inquiries.price')}</h3>
                                 
                                 <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
                                     <div>
-                                        <InputLabel htmlFor="price_amount" value="Amount" />
+                                        <InputLabel htmlFor="price_amount" value={t('common.amount')} />
                                         <TextInput
                                             id="price_amount"
                                             type="number"
@@ -292,7 +294,7 @@ export default function Edit({ inquiry, performanceTypes, bandSizes }: Props) {
                                     </div>
 
                                     <div>
-                                        <InputLabel htmlFor="currency" value="Currency" />
+                                        <InputLabel htmlFor="currency" value={t('inquiries.currency')} />
                                         <TextInput
                                             id="currency"
                                             type="text"
@@ -307,7 +309,7 @@ export default function Edit({ inquiry, performanceTypes, bandSizes }: Props) {
 
                             {/* Notes */}
                             <div>
-                                <InputLabel htmlFor="notes" value="Notes" />
+                                <InputLabel htmlFor="notes" value={t('common.notes')} />
                                 <textarea
                                     id="notes"
                                     className="mt-1 block w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
@@ -324,10 +326,10 @@ export default function Edit({ inquiry, performanceTypes, bandSizes }: Props) {
                                     href={route('inquiries.show', inquiry.id)}
                                     className="text-sm text-stone-400 hover:text-plutz-cream"
                                 >
-                                    Cancel
+                                    {t('common.cancel')}
                                 </Link>
                                 <PrimaryButton disabled={processing}>
-                                    Update Inquiry
+                                    {t('inquiries.update_inquiry')}
                                 </PrimaryButton>
                             </div>
                         </form>

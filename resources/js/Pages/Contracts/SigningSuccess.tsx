@@ -1,4 +1,5 @@
 import { Head } from '@inertiajs/react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface Contract {
     id: number;
@@ -12,9 +13,10 @@ interface Props {
 }
 
 export default function SigningSuccess({ contract }: Props) {
+    const { t } = useTranslation();
     return (
         <div className="min-h-screen bg-plutz-dark flex items-center justify-center p-4">
-            <Head title="Contract Signed Successfully" />
+            <Head title={t('signing.success_title')} />
             <div className="max-w-md w-full bg-plutz-surface shadow-2xl rounded-2xl p-8 text-center">
                 <div className="mb-6">
                     <div className="mx-auto h-20 w-20 bg-green-500/10 rounded-full flex items-center justify-center">
@@ -25,12 +27,12 @@ export default function SigningSuccess({ contract }: Props) {
                 </div>
                 
                 <h1 className="text-3xl font-bold text-plutz-cream mb-3">
-                    Contract Signed Successfully!
+                    {t('signing.success_title')}
                 </h1>
                 
                 <div className="mb-6 p-4 bg-green-500/10 rounded-lg border border-green-500/20">
                     <p className="text-stone-400">
-                        <strong>Signed by:</strong> {contract.signer_name}
+                        <strong>{t('signing.signed_by')}</strong> {contract.signer_name}
                     </p>
                     <p className="text-stone-400 text-sm mt-1">
                         {contract.signer_email}
@@ -38,15 +40,15 @@ export default function SigningSuccess({ contract }: Props) {
                 </div>
 
                 <p className="text-stone-400 mb-6">
-                    Thank you for signing the contract. A copy with your signature will be sent to your email address shortly.
+                    {t('signing.thanks')}
                 </p>
 
                 <div className="border-t border-plutz-tan/10 pt-6">
                     <p className="text-sm text-stone-500">
-                        You will receive an email with the signed PDF document within a few minutes.
+                        {t('signing.email_info')}
                     </p>
                     <p className="text-sm text-stone-500 mt-2">
-                        You can now safely close this window.
+                        {t('signing.close_safely')}
                     </p>
                 </div>
             </div>

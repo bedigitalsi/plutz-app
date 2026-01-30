@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Contract;
+use App\Models\Setting;
 use App\Support\MailSettings;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -46,17 +47,27 @@ class SendSignedContractEmails implements ShouldQueue
             return;
         }
 
+        // Set locale to app default for emails
+        $locale = Setting::getString('default_locale', 'en');
+        if (!in_array($locale, ['en', 'sl'])) {
+            $locale = 'en';
+        }
+        app()->setLocale($locale);
+
         // Apply mail settings from database
         MailSettings::apply();
 
         $pdfContent = file_get_contents($pdfFullPath);
 
         // Send to client
-        Mail::raw("Dear {$this->contract->client_name},\n\nThank you for signing the contract. Please find the signed PDF attached.\n\nBest regards,\nPlutz", function ($message) use ($pdfContent) {
+        $clientBody = __('email.signed_contract_client_body', ['name' => $this->contract->client_name]);
+        $clientSubject = __('email.signed_contract_client_subject') . ' - Plutz';
+
+        Mail::raw($clientBody, function ($message) use ($pdfContent, $clientSubject) {
             $message->to($this->contract->client_email)
-                ->subject('Signed Contract - Plutz')
+                ->subject($clientSubject)
                 ->attachData($pdfContent, 'signed-contract.pdf', ['mime' => 'application/pdf']);
-            
+
             // Apply from overrides if enabled
             if (MailSettings::shouldForceFrom() || MailSettings::shouldForceFromName()) {
                 $message->from(
@@ -64,7 +75,7 @@ class SendSignedContractEmails implements ShouldQueue
                     MailSettings::getFromName()
                 );
             }
-            
+
             // Apply return path if enabled
             if (MailSettings::shouldSetReturnPath()) {
                 $message->returnPath(MailSettings::getFromAddress());
@@ -72,11 +83,13 @@ class SendSignedContractEmails implements ShouldQueue
         });
 
         // Send to admin (use configured admin recipient)
-        Mail::raw("Contract signed by {$this->contract->signer_name}. PDF attached.", function ($message) use ($pdfContent) {
+        $adminBody = __('email.signed_contract_admin_body', ['name' => $this->contract->signer_name]);
+
+        Mail::raw($adminBody, function ($message) use ($pdfContent) {
             $message->to(MailSettings::getAdminRecipient())
                 ->subject('Contract Signed - ' . $this->contract->client_name)
                 ->attachData($pdfContent, 'signed-contract.pdf', ['mime' => 'application/pdf']);
-            
+
             // Apply from overrides if enabled
             if (MailSettings::shouldForceFrom() || MailSettings::shouldForceFromName()) {
                 $message->from(
@@ -84,7 +97,7 @@ class SendSignedContractEmails implements ShouldQueue
                     MailSettings::getFromName()
                 );
             }
-            
+
             // Apply return path if enabled
             if (MailSettings::shouldSetReturnPath()) {
                 $message->returnPath(MailSettings::getFromAddress());

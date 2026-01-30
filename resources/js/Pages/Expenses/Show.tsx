@@ -1,6 +1,7 @@
 import React from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router } from '@inertiajs/react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface Expense {
     id: number;
@@ -27,6 +28,7 @@ interface Props {
 }
 
 export default function Show({ expense }: Props) {
+    const { t } = useTranslation();
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString('sl-SI', {
             year: 'numeric',
@@ -55,7 +57,7 @@ export default function Show({ expense }: Props) {
     };
 
     const handleDelete = () => {
-        if (confirm('Are you sure you want to delete this expense?')) {
+        if (confirm(t('expenses.confirm_delete'))) {
             router.delete(route('expenses.destroy', expense.id));
         }
     };
@@ -82,7 +84,7 @@ export default function Show({ expense }: Props) {
                                         ? 'bg-green-500/100/10 text-green-400' 
                                         : 'bg-amber-500/10 text-amber-400'
                                 }`}>
-                                    {expense.status === 'paid' ? 'Paid' : 'Unpaid'}
+                                    {expense.status === 'paid' ? t('expenses.paid') : t('expenses.unpaid_status')}
                                 </span>
                             </div>
 
@@ -91,13 +93,13 @@ export default function Show({ expense }: Props) {
                                     href={route('expenses.edit', expense.id)}
                                     className="rounded-md bg-plutz-tan px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-plutz-tan/90"
                                 >
-                                    Edit
+                                    {t('common.edit')}
                                 </Link>
                                 <button
                                     onClick={handleDelete}
                                     className="rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500/100"
                                 >
-                                    Delete
+                                    {t('common.delete')}
                                 </button>
                             </div>
                         </div>
@@ -108,20 +110,20 @@ export default function Show({ expense }: Props) {
                         {/* Invoice Details */}
                         <div className="overflow-hidden rounded-lg bg-plutz-surface shadow-sm">
                             <div className="border-b border-plutz-tan/10 px-6 py-4">
-                                <h4 className="text-lg font-medium text-plutz-cream">Invoice Details</h4>
+                                <h4 className="text-lg font-medium text-plutz-cream">{t('expenses.invoice_details')}</h4>
                             </div>
                             <div className="p-6">
                                 <dl className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                     <div>
-                                        <dt className="text-sm font-medium text-stone-500">Invoice Date</dt>
+                                        <dt className="text-sm font-medium text-stone-500">{t('expenses.invoice_date')}</dt>
                                         <dd className="mt-1 text-sm text-plutz-cream">{formatDate(expense.invoice_date)}</dd>
                                     </div>
                                     <div>
-                                        <dt className="text-sm font-medium text-stone-500">Entered At</dt>
+                                        <dt className="text-sm font-medium text-stone-500">{t('expenses.entered_at')}</dt>
                                         <dd className="mt-1 text-sm text-plutz-cream">{formatDateTime(expense.entered_at)}</dd>
                                     </div>
                                     <div>
-                                        <dt className="text-sm font-medium text-stone-500">Created By</dt>
+                                        <dt className="text-sm font-medium text-stone-500">{t('expenses.created_by')}</dt>
                                         <dd className="mt-1 text-sm text-plutz-cream">{expense.creator.name}</dd>
                                     </div>
                                 </dl>
@@ -132,7 +134,7 @@ export default function Show({ expense }: Props) {
                         {expense.notes && (
                             <div className="overflow-hidden rounded-lg bg-plutz-surface shadow-sm">
                                 <div className="border-b border-plutz-tan/10 px-6 py-4">
-                                    <h4 className="text-lg font-medium text-plutz-cream">Notes</h4>
+                                    <h4 className="text-lg font-medium text-plutz-cream">{t('common.notes')}</h4>
                                 </div>
                                 <div className="p-6">
                                     <p className="whitespace-pre-wrap text-sm text-stone-400">{expense.notes}</p>
@@ -144,7 +146,7 @@ export default function Show({ expense }: Props) {
                         {expense.attachments.length > 0 && (
                             <div className="overflow-hidden rounded-lg bg-plutz-surface shadow-sm">
                                 <div className="border-b border-plutz-tan/10 px-6 py-4">
-                                    <h4 className="text-lg font-medium text-plutz-cream">Attachments</h4>
+                                    <h4 className="text-lg font-medium text-plutz-cream">{t('expenses.attachments')}</h4>
                                 </div>
                                 <div className="p-6">
                                     <div className="space-y-3">
@@ -181,7 +183,7 @@ export default function Show({ expense }: Props) {
                                                     className="rounded-md bg-plutz-tan px-3 py-2 text-sm font-semibold text-white hover:bg-plutz-tan/90"
                                                     download
                                                 >
-                                                    Download
+                                                    {t('expenses.download')}
                                                 </a>
                                             </div>
                                         ))}

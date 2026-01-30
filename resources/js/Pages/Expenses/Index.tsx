@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router } from '@inertiajs/react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface Expense {
     id: number;
@@ -29,6 +30,7 @@ interface Props {
 }
 
 export default function Index({ expenses, filters }: Props) {
+    const { t } = useTranslation();
     const [dateFrom, setDateFrom] = useState(filters.date_from || '');
     const [dateTo, setDateTo] = useState(filters.date_to || '');
     const [company, setCompany] = useState(filters.company || '');
@@ -58,11 +60,11 @@ export default function Index({ expenses, filters }: Props) {
 
     return (
         <AuthenticatedLayout className="bg-plutz-dark">
-            <Head title="Expenses" />
+            <Head title={t('expenses.title')} />
             <div className="max-w-[1200px] mx-auto w-full p-6 pb-0">
                 <div className="flex items-center justify-between mb-2">
-                    <h2 className="text-2xl font-serif text-plutz-cream">Expenses</h2>
-                    <Link href={route('expenses.create')} className="text-plutz-tan hover:text-plutz-tan-light text-sm font-medium">New Expense</Link>
+                    <h2 className="text-2xl font-serif text-plutz-cream">{t('expenses.title')}</h2>
+                    <Link href={route('expenses.create')} className="text-plutz-tan hover:text-plutz-tan-light text-sm font-medium">{t('expenses.new_expense')}</Link>
                 </div>
             </div>
 
@@ -72,7 +74,7 @@ export default function Index({ expenses, filters }: Props) {
                     <div className="mb-6 rounded-lg bg-plutz-surface p-4 shadow-sm">
                         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                             <div>
-                                <label className="block text-sm font-medium text-stone-400">From Date</label>
+                                <label className="block text-sm font-medium text-stone-400">{t('expenses.from_date')}</label>
                                 <input
                                     type="date"
                                     value={dateFrom}
@@ -81,7 +83,7 @@ export default function Index({ expenses, filters }: Props) {
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-stone-400">To Date</label>
+                                <label className="block text-sm font-medium text-stone-400">{t('expenses.to_date')}</label>
                                 <input
                                     type="date"
                                     value={dateTo}
@@ -90,12 +92,12 @@ export default function Index({ expenses, filters }: Props) {
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-stone-400">Company</label>
+                                <label className="block text-sm font-medium text-stone-400">{t('expenses.company')}</label>
                                 <input
                                     type="text"
                                     value={company}
                                     onChange={(e) => setCompany(e.target.value)}
-                                    placeholder="Search company..."
+                                    placeholder={t('expenses.search_company')}
                                     className="mt-1 block w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan sm:text-sm"
                                 />
                             </div>
@@ -105,13 +107,13 @@ export default function Index({ expenses, filters }: Props) {
                                 onClick={handleFilter}
                                 className="rounded-md bg-plutz-tan px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-plutz-tan/90"
                             >
-                                Apply Filters
+                                {t('expenses.apply_filters')}
                             </button>
                             <button
                                 onClick={handleReset}
                                 className="rounded-md bg-plutz-tan/20 px-4 py-2 text-sm font-semibold text-stone-400 hover:bg-plutz-tan/30"
                             >
-                                Reset
+                                {t('common.reset')}
                             </button>
                         </div>
                     </div>
@@ -121,11 +123,11 @@ export default function Index({ expenses, filters }: Props) {
                         <div className="mb-6 rounded-lg bg-plutz-surface p-4 shadow-sm">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-sm text-stone-400">Total Expenses</p>
+                                    <p className="text-sm text-stone-400">{t('expenses.total_expenses')}</p>
                                     <p className="text-2xl font-bold text-plutz-cream">{getTotalExpenses()} EUR</p>
                                 </div>
                                 <div>
-                                    <p className="text-sm text-stone-400">Count</p>
+                                    <p className="text-sm text-stone-400">{t('expenses.count')}</p>
                                     <p className="text-2xl font-bold text-plutz-cream">{expenses.data.length}</p>
                                 </div>
                             </div>
@@ -135,12 +137,12 @@ export default function Index({ expenses, filters }: Props) {
                     {/* Expenses List */}
                     {expenses.data.length === 0 ? (
                         <div className="rounded-lg bg-plutz-surface p-8 text-center shadow-sm">
-                            <p className="text-stone-500">No expenses found.</p>
+                            <p className="text-stone-500">{t('expenses.no_expenses')}</p>
                             <Link
                                 href={route('expenses.create')}
                                 className="mt-4 inline-block text-plutz-tan hover:text-plutz-tan"
                             >
-                                Create your first expense
+                                {t('expenses.create_first')}
                             </Link>
                         </div>
                     ) : (
@@ -149,22 +151,22 @@ export default function Index({ expenses, filters }: Props) {
                                 <thead className="bg-stone-900/50">
                                     <tr>
                                         <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500">
-                                            Date
+                                            {t('expenses.date')}
                                         </th>
                                         <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500">
-                                            Company
+                                            {t('expenses.company')}
                                         </th>
                                         <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500">
-                                            Amount
+                                            {t('expenses.amount')}
                                         </th>
                                         <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500">
-                                            Attachments
+                                            {t('expenses.attachments')}
                                         </th>
                                         <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500">
-                                            Created By
+                                            {t('expenses.created_by')}
                                         </th>
                                         <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-stone-500">
-                                            Actions
+                                            {t('common.actions')}
                                         </th>
                                     </tr>
                                 </thead>
@@ -198,14 +200,14 @@ export default function Index({ expenses, filters }: Props) {
                                                     href={route('expenses.show', expense.id)}
                                                     className="text-plutz-tan hover:text-plutz-tan"
                                                 >
-                                                    View
+                                                    {t('common.view')}
                                                 </Link>
                                                 <span className="mx-2 text-stone-600">|</span>
                                                 <Link
                                                     href={route('expenses.edit', expense.id)}
                                                     className="text-plutz-tan hover:text-plutz-tan"
                                                 >
-                                                    Edit
+                                                    {t('common.edit')}
                                                 </Link>
                                             </td>
                                         </tr>

@@ -5,6 +5,7 @@ import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface Role {
     id: number;
@@ -16,6 +17,7 @@ interface Props {
 }
 
 export default function Create({ roles }: Props) {
+    const { t } = useTranslation();
     const { data, setData, post, processing, errors } = useForm({
         name: '',
         email: '',
@@ -32,11 +34,11 @@ export default function Create({ roles }: Props) {
 
     return (
         <AuthenticatedLayout className="bg-plutz-dark">
-            <Head title="Add User" />
+            <Head title={t('users.add_user')} />
             <div className="max-w-[1200px] mx-auto w-full p-6 pb-0">
                 <div className="flex items-center justify-between mb-2">
-                    <h2 className="text-2xl font-serif text-plutz-cream">Add New User</h2>
-                    <Link href={route('users.index')} className="text-plutz-tan hover:text-plutz-tan-light text-sm font-medium">Back to List</Link>
+                    <h2 className="text-2xl font-serif text-plutz-cream">{t('users.add_new_user')}</h2>
+                    <Link href={route('users.index')} className="text-plutz-tan hover:text-plutz-tan-light text-sm font-medium">{t('users.back_to_list')}</Link>
                 </div>
             </div>
 
@@ -45,10 +47,10 @@ export default function Create({ roles }: Props) {
                     <div className="overflow-hidden bg-plutz-surface shadow-sm sm:rounded-lg">
                         <form onSubmit={submit} className="space-y-6 p-6">
                             <div className="border-b border-plutz-tan/10 pb-6">
-                                <h3 className="text-lg font-medium text-plutz-cream">User Details</h3>
-                                
+                                <h3 className="text-lg font-medium text-plutz-cream">{t('users.user_details')}</h3>
+
                                 <div className="mt-4">
-                                    <InputLabel htmlFor="name" value="Name *" />
+                                    <InputLabel htmlFor="name" value={t('users.name_field')} />
                                     <TextInput
                                         id="name"
                                         type="text"
@@ -62,7 +64,7 @@ export default function Create({ roles }: Props) {
                                 </div>
 
                                 <div className="mt-4">
-                                    <InputLabel htmlFor="email" value="Email *" />
+                                    <InputLabel htmlFor="email" value={t('users.email_field')} />
                                     <TextInput
                                         id="email"
                                         type="email"
@@ -75,7 +77,7 @@ export default function Create({ roles }: Props) {
                                 </div>
 
                                 <div className="mt-4">
-                                    <InputLabel htmlFor="password" value="Password *" />
+                                    <InputLabel htmlFor="password" value={t('users.password_field')} />
                                     <TextInput
                                         id="password"
                                         type="password"
@@ -88,7 +90,7 @@ export default function Create({ roles }: Props) {
                                 </div>
 
                                 <div className="mt-4">
-                                    <InputLabel htmlFor="password_confirmation" value="Confirm Password *" />
+                                    <InputLabel htmlFor="password_confirmation" value={t('users.password_confirm')} />
                                     <TextInput
                                         id="password_confirmation"
                                         type="password"
@@ -101,7 +103,7 @@ export default function Create({ roles }: Props) {
                                 </div>
 
                                 <div className="mt-4">
-                                    <InputLabel htmlFor="role" value="Role *" />
+                                    <InputLabel htmlFor="role" value={t('users.role_field')} />
                                     <select
                                         id="role"
                                         className="mt-1 block w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
@@ -109,7 +111,7 @@ export default function Create({ roles }: Props) {
                                         onChange={(e) => setData('role', e.target.value)}
                                         required
                                     >
-                                        <option value="">Select role...</option>
+                                        <option value="">{t('users.select_role')}</option>
                                         {roles.map((role) => (
                                             <option key={role.id} value={role.name}>
                                                 {role.name}
@@ -127,10 +129,10 @@ export default function Create({ roles }: Props) {
                                             onChange={(e) => setData('is_band_member', e.target.checked)}
                                             className="rounded border-plutz-tan/20 text-plutz-tan shadow-sm focus:ring-plutz-tan"
                                         />
-                                        <span className="ml-2 text-sm text-stone-400">Is Band Member</span>
+                                        <span className="ml-2 text-sm text-stone-400">{t('users.is_band_member')}</span>
                                     </label>
                                     <p className="mt-1 text-xs text-stone-500">
-                                        Band members can receive income distributions
+                                        {t('users.band_member_help')}
                                     </p>
                                 </div>
                             </div>
@@ -140,10 +142,10 @@ export default function Create({ roles }: Props) {
                                     href={route('users.index')}
                                     className="text-sm text-stone-400 hover:text-plutz-cream"
                                 >
-                                    Cancel
+                                    {t('common.cancel')}
                                 </Link>
                                 <PrimaryButton disabled={processing}>
-                                    Create User
+                                    {t('users.create_user')}
                                 </PrimaryButton>
                             </div>
                         </form>

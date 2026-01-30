@@ -6,6 +6,7 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import MoneyInput from '@/Components/MoneyInput';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface CostType {
     id: number;
@@ -36,6 +37,7 @@ interface Props {
 }
 
 export default function Edit({ groupCost, costTypes }: Props) {
+    const { t } = useTranslation();
     const { data, setData, patch, processing, errors } = useForm({
         cost_date: groupCost.cost_date,
         cost_type_id: groupCost.cost_type_id.toString(),
@@ -52,11 +54,11 @@ export default function Edit({ groupCost, costTypes }: Props) {
 
     return (
         <AuthenticatedLayout className="bg-plutz-dark">
-            <Head title="Edit Group Cost" />
+            <Head title={t('group_costs.edit_group_cost')} />
             <div className="max-w-[1200px] mx-auto w-full p-6 pb-0">
                 <div className="flex items-center justify-between mb-2">
-                    <h2 className="text-2xl font-serif text-plutz-cream">Edit Group Cost</h2>
-                    <Link href={route('group-costs.index')} className="text-plutz-tan hover:text-plutz-tan-light text-sm font-medium">Back to List</Link>
+                    <h2 className="text-2xl font-serif text-plutz-cream">{t('group_costs.edit_group_cost')}</h2>
+                    <Link href={route('group-costs.index')} className="text-plutz-tan hover:text-plutz-tan-light text-sm font-medium">{t('group_costs.back_to_list')}</Link>
                 </div>
             </div>
 
@@ -65,14 +67,14 @@ export default function Edit({ groupCost, costTypes }: Props) {
                     <div className="overflow-hidden bg-plutz-surface shadow-sm sm:rounded-lg">
                         <form onSubmit={submit} className="space-y-6 p-6">
                             <div className="border-b border-plutz-tan/10 pb-6">
-                                <h3 className="text-lg font-medium text-plutz-cream">Cost Details</h3>
+                                <h3 className="text-lg font-medium text-plutz-cream">{t('group_costs.cost_details')}</h3>
                                 <p className="mt-1 text-sm text-stone-400">
-                                    Update expense information from the mutual fund
+                                    {t('group_costs.update_expenses')}
                                 </p>
                                 
                                 <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
                                     <div>
-                                        <InputLabel htmlFor="cost_date" value="Cost Date" />
+                                        <InputLabel htmlFor="cost_date" value={t('group_costs.cost_date')} />
                                         <TextInput
                                             id="cost_date"
                                             type="date"
@@ -84,7 +86,7 @@ export default function Edit({ groupCost, costTypes }: Props) {
                                     </div>
 
                                     <div>
-                                        <InputLabel htmlFor="cost_type_id" value="Cost Type *" />
+                                        <InputLabel htmlFor="cost_type_id" value={t('group_costs.cost_type_field')} />
                                         <select
                                             id="cost_type_id"
                                             className="mt-1 block w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
@@ -92,7 +94,7 @@ export default function Edit({ groupCost, costTypes }: Props) {
                                             onChange={(e) => setData('cost_type_id', e.target.value)}
                                             required
                                         >
-                                            <option value="">Select type...</option>
+                                            <option value="">{t('group_costs.select_type')}</option>
                                             {costTypes.map((type) => (
                                                 <option key={type.id} value={type.id}>
                                                     {type.name}
@@ -105,7 +107,7 @@ export default function Edit({ groupCost, costTypes }: Props) {
 
                                 <div className="mt-4">
                                     <MoneyInput
-                                        label="Amount"
+                                        label={t('common.amount')}
                                         value={data.amount}
                                         onChange={(value) => setData('amount', value)}
                                         currency={data.currency}
@@ -122,16 +124,16 @@ export default function Edit({ groupCost, costTypes }: Props) {
                                             onChange={(e) => setData('is_paid', e.target.checked)}
                                             className="rounded border-plutz-tan/20 text-plutz-tan shadow-sm focus:ring-plutz-tan"
                                         />
-                                        <span className="ml-2 text-sm text-stone-400">Mark as Paid</span>
+                                        <span className="ml-2 text-sm text-stone-400">{t('group_costs.mark_as_paid')}</span>
                                     </label>
                                     <p className="mt-1 text-xs text-stone-500">
-                                        Paid costs are deducted from the mutual fund balance
+                                        {t('group_costs.paid_hint')}
                                     </p>
                                 </div>
                             </div>
 
                             <div>
-                                <InputLabel htmlFor="notes" value="Notes" />
+                                <InputLabel htmlFor="notes" value={t('common.notes')} />
                                 <textarea
                                     id="notes"
                                     className="mt-1 block w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
@@ -147,10 +149,10 @@ export default function Edit({ groupCost, costTypes }: Props) {
                                     href={route('group-costs.index')}
                                     className="text-sm text-stone-400 hover:text-plutz-cream"
                                 >
-                                    Cancel
+                                    {t('common.cancel')}
                                 </Link>
                                 <PrimaryButton disabled={processing}>
-                                    Update Group Cost
+                                    {t('group_costs.update_group_cost')}
                                 </PrimaryButton>
                             </div>
                         </form>

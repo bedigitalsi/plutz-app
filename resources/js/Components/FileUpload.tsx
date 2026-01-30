@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { useTranslation } from '@/hooks/useTranslation';
 import InputLabel from './InputLabel';
 import InputError from './InputError';
 
@@ -17,6 +18,7 @@ export default function FileUpload({
     error,
     capture = true,
 }: FileUploadProps) {
+    const { t } = useTranslation();
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [preview, setPreview] = useState<string | null>(null);
     const [fileName, setFileName] = useState<string | null>(null);
@@ -74,10 +76,10 @@ export default function FileUpload({
                     >
                         <span className="material-symbols-outlined text-stone-500 text-4xl mx-auto block">upload_file</span>
                         <p className="mt-2 text-sm text-stone-400">
-                            Click to upload or take a photo
+                            {t('component.file_upload_button')}
                         </p>
                         <p className="mt-1 text-xs text-stone-500">
-                            PNG, JPG, PDF up to 10MB
+                            {t('component.file_upload_formats')}
                         </p>
                     </button>
                 ) : (
@@ -103,7 +105,7 @@ export default function FileUpload({
                                 onClick={clearFile}
                                 className="ml-4 text-sm text-red-400 hover:text-red-300"
                             >
-                                Remove
+                                {t('component.file_upload_remove')}
                             </button>
                         </div>
                     </div>

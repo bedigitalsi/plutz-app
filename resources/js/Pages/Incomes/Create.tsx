@@ -6,6 +6,7 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import MoneyInput from '@/Components/MoneyInput';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface PerformanceType {
     id: number;
@@ -28,6 +29,7 @@ interface Props {
 }
 
 export default function Create({ performanceTypes, inquiry }: Props) {
+    const { t } = useTranslation();
     const { data, setData, post, processing, errors } = useForm({
         income_date: inquiry?.performance_date || '',
         amount: inquiry?.price_amount?.toString() || '',
@@ -60,11 +62,11 @@ export default function Create({ performanceTypes, inquiry }: Props) {
 
     return (
         <AuthenticatedLayout className="bg-plutz-dark">
-            <Head title="New Income" />
+            <Head title={t('incomes.new_income_page')} />
             <div className="max-w-[1200px] mx-auto w-full p-6 pb-0">
                 <div className="flex items-center justify-between mb-2">
-                    <h2 className="text-2xl font-serif text-plutz-cream">New Income</h2>
-                    <Link href={route('incomes.index')} className="text-plutz-tan hover:text-plutz-tan-light text-sm font-medium">Back to List</Link>
+                    <h2 className="text-2xl font-serif text-plutz-cream">{t('incomes.new_income_page')}</h2>
+                    <Link href={route('incomes.index')} className="text-plutz-tan hover:text-plutz-tan-light text-sm font-medium">{t('incomes.back_to_list')}</Link>
                 </div>
             </div>
 
@@ -73,7 +75,7 @@ export default function Create({ performanceTypes, inquiry }: Props) {
                     {inquiry && (
                         <div className="mb-6 rounded-lg bg-plutz-tan/10 p-4">
                             <p className="text-sm text-plutz-tan">
-                                <strong>Creating income from inquiry:</strong> {inquiry.location_name}
+                                <strong>{t('incomes.creating_from_inquiry')}</strong> {inquiry.location_name}
                             </p>
                         </div>
                     )}
@@ -81,11 +83,11 @@ export default function Create({ performanceTypes, inquiry }: Props) {
                     <div className="overflow-hidden bg-plutz-surface shadow-sm sm:rounded-lg">
                         <form onSubmit={submit} className="space-y-6 p-6">
                             <div className="border-b border-plutz-tan/10 pb-6">
-                                <h3 className="text-lg font-medium text-plutz-cream">Income Details</h3>
+                                <h3 className="text-lg font-medium text-plutz-cream">{t('incomes.income_details')}</h3>
                                 
                                 <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
                                     <div>
-                                        <InputLabel htmlFor="income_date" value="Income Date *" />
+                                        <InputLabel htmlFor="income_date" value={t('incomes.income_date')} />
                                         <TextInput
                                             id="income_date"
                                             type="date"
@@ -98,7 +100,7 @@ export default function Create({ performanceTypes, inquiry }: Props) {
                                     </div>
 
                                     <div>
-                                        <InputLabel htmlFor="performance_type_id" value="Performance Type *" />
+                                        <InputLabel htmlFor="performance_type_id" value={t('incomes.performance_type') + ' *'} />
                                         <select
                                             id="performance_type_id"
                                             className="mt-1 block w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
@@ -106,7 +108,7 @@ export default function Create({ performanceTypes, inquiry }: Props) {
                                             onChange={(e) => setData('performance_type_id', e.target.value)}
                                             required
                                         >
-                                            <option value="">Select type...</option>
+                                            <option value="">{t('incomes.select_type')}</option>
                                             {performanceTypes.map((type) => (
                                                 <option key={type.id} value={type.id}>
                                                     {type.name}
@@ -119,7 +121,7 @@ export default function Create({ performanceTypes, inquiry }: Props) {
 
                                 <div className="mt-4">
                                     <MoneyInput
-                                        label="Amount"
+                                        label={t('common.amount')}
                                         value={data.amount}
                                         onChange={(value) => setData('amount', value)}
                                         currency={data.currency}
@@ -129,7 +131,7 @@ export default function Create({ performanceTypes, inquiry }: Props) {
                                 </div>
 
                                 <div className="mt-4">
-                                    <InputLabel htmlFor="contact_person" value="Contact Person *" />
+                                    <InputLabel htmlFor="contact_person" value={t('incomes.contact_person')} />
                                     <TextInput
                                         id="contact_person"
                                         type="text"
@@ -149,13 +151,13 @@ export default function Create({ performanceTypes, inquiry }: Props) {
                                             onChange={(e) => setData('invoice_issued', e.target.checked)}
                                             className="rounded border-plutz-tan/20 text-plutz-tan shadow-sm focus:ring-plutz-tan"
                                         />
-                                        <span className="ml-2 text-sm text-stone-400">Invoice Issued</span>
+                                        <span className="ml-2 text-sm text-stone-400">{t('incomes.invoice_issued_checkbox')}</span>
                                     </label>
                                 </div>
                             </div>
 
                             <div>
-                                <InputLabel htmlFor="notes" value="Notes" />
+                                <InputLabel htmlFor="notes" value={t('common.notes')} />
                                 <textarea
                                     id="notes"
                                     className="mt-1 block w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
@@ -171,10 +173,10 @@ export default function Create({ performanceTypes, inquiry }: Props) {
                                     href={route('incomes.index')}
                                     className="text-sm text-stone-400 hover:text-plutz-cream"
                                 >
-                                    Cancel
+                                    {t('common.cancel')}
                                 </Link>
                                 <PrimaryButton disabled={processing}>
-                                    Create Income
+                                    {t('incomes.create_income')}
                                 </PrimaryButton>
                             </div>
                         </form>

@@ -7,8 +7,10 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import MoneyInput from '@/Components/MoneyInput';
 import FileUpload from '@/Components/FileUpload';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function Create() {
+    const { t } = useTranslation();
     const { data, setData, post, processing, errors } = useForm({
         invoice_date: '',
         amount: '',
@@ -26,11 +28,11 @@ export default function Create() {
 
     return (
         <AuthenticatedLayout className="bg-plutz-dark">
-            <Head title="New Expense" />
+            <Head title={t('expenses.new_expense_page')} />
             <div className="max-w-[1200px] mx-auto w-full p-6 pb-0">
                 <div className="flex items-center justify-between mb-2">
-                    <h2 className="text-2xl font-serif text-plutz-cream">New Expense</h2>
-                    <Link href={route('expenses.index')} className="text-plutz-tan hover:text-plutz-tan-light text-sm font-medium">Back to List</Link>
+                    <h2 className="text-2xl font-serif text-plutz-cream">{t('expenses.new_expense_page')}</h2>
+                    <Link href={route('expenses.index')} className="text-plutz-tan hover:text-plutz-tan-light text-sm font-medium">{t('expenses.back_to_list')}</Link>
                 </div>
             </div>
 
@@ -40,11 +42,11 @@ export default function Create() {
                         <form onSubmit={submit} className="space-y-6 p-6">
                             {/* Invoice Details */}
                             <div className="border-b border-plutz-tan/10 pb-6">
-                                <h3 className="text-lg font-medium text-plutz-cream">Invoice Details</h3>
+                                <h3 className="text-lg font-medium text-plutz-cream">{t('expenses.invoice_details')}</h3>
                                 
                                 <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
                                     <div>
-                                        <InputLabel htmlFor="invoice_date" value="Invoice Date *" />
+                                        <InputLabel htmlFor="invoice_date" value={t('expenses.invoice_date_field')} />
                                         <TextInput
                                             id="invoice_date"
                                             type="date"
@@ -57,7 +59,7 @@ export default function Create() {
                                     </div>
 
                                     <div>
-                                        <InputLabel htmlFor="company_name" value="Company Name *" />
+                                        <InputLabel htmlFor="company_name" value={t('expenses.company_name')} />
                                         <TextInput
                                             id="company_name"
                                             type="text"
@@ -72,7 +74,7 @@ export default function Create() {
 
                                 <div className="mt-4">
                                     <MoneyInput
-                                        label="Amount"
+                                        label={t('common.amount')}
                                         value={data.amount}
                                         onChange={(value) => setData('amount', value)}
                                         currency={data.currency}
@@ -82,15 +84,15 @@ export default function Create() {
                                 </div>
 
                                 <div className="mt-4">
-                                    <InputLabel htmlFor="status" value="Status" />
+                                    <InputLabel htmlFor="status" value={t('common.status')} />
                                     <select
                                         id="status"
                                         className="mt-1 block w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
                                         value={data.status}
                                         onChange={(e) => setData('status', e.target.value)}
                                     >
-                                        <option value="paid">Paid</option>
-                                        <option value="unpaid">Unpaid</option>
+                                        <option value="paid">{t('expenses.status_paid')}</option>
+                                        <option value="unpaid">{t('expenses.status_unpaid')}</option>
                                     </select>
                                     <InputError message={errors.status} className="mt-2" />
                                 </div>
@@ -98,9 +100,9 @@ export default function Create() {
 
                             {/* Attachment */}
                             <div className="border-b border-plutz-tan/10 pb-6">
-                                <h3 className="text-lg font-medium text-plutz-cream">Attachment</h3>
+                                <h3 className="text-lg font-medium text-plutz-cream">{t('expenses.attachment')}</h3>
                                 <p className="mt-1 text-sm text-stone-400">
-                                    Upload a photo or PDF of the invoice
+                                    {t('expenses.attachment_hint')}
                                 </p>
                                 
                                 <div className="mt-4">
@@ -115,7 +117,7 @@ export default function Create() {
 
                             {/* Notes */}
                             <div>
-                                <InputLabel htmlFor="notes" value="Notes" />
+                                <InputLabel htmlFor="notes" value={t('common.notes')} />
                                 <textarea
                                     id="notes"
                                     className="mt-1 block w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
@@ -132,10 +134,10 @@ export default function Create() {
                                     href={route('expenses.index')}
                                     className="text-sm text-stone-400 hover:text-plutz-cream"
                                 >
-                                    Cancel
+                                    {t('common.cancel')}
                                 </Link>
                                 <PrimaryButton disabled={processing}>
-                                    Create Expense
+                                    {t('expenses.create_expense')}
                                 </PrimaryButton>
                             </div>
                         </form>

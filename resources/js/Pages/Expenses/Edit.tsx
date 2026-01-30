@@ -7,6 +7,7 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import MoneyInput from '@/Components/MoneyInput';
 import FileUpload from '@/Components/FileUpload';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface Attachment {
     id: string;
@@ -31,6 +32,7 @@ interface Props {
 }
 
 export default function Edit({ expense }: Props) {
+    const { t } = useTranslation();
     const [attachmentsToDelete, setAttachmentsToDelete] = useState<string[]>([]);
 
     // Format date to YYYY-MM-DD for the date input
@@ -80,11 +82,11 @@ export default function Edit({ expense }: Props) {
 
     return (
         <AuthenticatedLayout className="bg-plutz-dark">
-            <Head title="Edit Expense" />
+            <Head title={t('expenses.edit_expense')} />
             <div className="max-w-[1200px] mx-auto w-full p-6 pb-0">
                 <div className="flex items-center justify-between mb-2">
-                    <h2 className="text-2xl font-serif text-plutz-cream">Edit Expense</h2>
-                    <Link href={route('expenses.show', expense.id)} className="text-plutz-tan hover:text-plutz-tan-light text-sm font-medium">Back to Details</Link>
+                    <h2 className="text-2xl font-serif text-plutz-cream">{t('expenses.edit_expense')}</h2>
+                    <Link href={route('expenses.show', expense.id)} className="text-plutz-tan hover:text-plutz-tan-light text-sm font-medium">{t('expenses.back_to_details')}</Link>
                 </div>
             </div>
 
@@ -94,11 +96,11 @@ export default function Edit({ expense }: Props) {
                         <form onSubmit={submit} className="space-y-6 p-6">
                             {/* Invoice Details */}
                             <div className="border-b border-plutz-tan/10 pb-6">
-                                <h3 className="text-lg font-medium text-plutz-cream">Invoice Details</h3>
+                                <h3 className="text-lg font-medium text-plutz-cream">{t('expenses.invoice_details')}</h3>
 
                                 <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
                                     <div>
-                                        <InputLabel htmlFor="invoice_date" value="Invoice Date *" />
+                                        <InputLabel htmlFor="invoice_date" value={t('expenses.invoice_date_field')} />
                                         <TextInput
                                             id="invoice_date"
                                             type="date"
@@ -111,7 +113,7 @@ export default function Edit({ expense }: Props) {
                                     </div>
 
                                     <div>
-                                        <InputLabel htmlFor="company_name" value="Company Name *" />
+                                        <InputLabel htmlFor="company_name" value={t('expenses.company_name')} />
                                         <TextInput
                                             id="company_name"
                                             type="text"
@@ -126,7 +128,7 @@ export default function Edit({ expense }: Props) {
 
                                 <div className="mt-4">
                                     <MoneyInput
-                                        label="Amount"
+                                        label={t('common.amount')}
                                         value={data.amount}
                                         onChange={(value) => setData('amount', value)}
                                         currency={data.currency}
@@ -136,15 +138,15 @@ export default function Edit({ expense }: Props) {
                                 </div>
 
                                 <div className="mt-4">
-                                    <InputLabel htmlFor="status" value="Status" />
+                                    <InputLabel htmlFor="status" value={t('common.status')} />
                                     <select
                                         id="status"
                                         className="mt-1 block w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
                                         value={data.status}
                                         onChange={(e) => setData('status', e.target.value)}
                                     >
-                                        <option value="paid">Paid</option>
-                                        <option value="unpaid">Unpaid</option>
+                                        <option value="paid">{t('expenses.status_paid')}</option>
+                                        <option value="unpaid">{t('expenses.status_unpaid')}</option>
                                     </select>
                                     <InputError message={errors.status} className="mt-2" />
                                 </div>
@@ -153,9 +155,9 @@ export default function Edit({ expense }: Props) {
                             {/* Existing Attachments */}
                             {expense.attachments.length > 0 && (
                                 <div className="border-b border-plutz-tan/10 pb-6">
-                                    <h3 className="text-lg font-medium text-plutz-cream">Current Attachments</h3>
+                                    <h3 className="text-lg font-medium text-plutz-cream">{t('expenses.current_attachments')}</h3>
                                     <p className="mt-1 text-sm text-stone-400">
-                                        Click to mark attachments for deletion
+                                        {t('expenses.mark_for_deletion')}
                                     </p>
 
                                     <div className="mt-4 space-y-3">
@@ -204,7 +206,7 @@ export default function Edit({ expense }: Props) {
                                                             : 'bg-red-500/10 text-red-400 hover:bg-red-500/20'
                                                     }`}
                                                 >
-                                                    {attachmentsToDelete.includes(attachment.id) ? 'Keep' : 'Delete'}
+                                                    {attachmentsToDelete.includes(attachment.id) ? t('expenses.keep') : t('common.delete')}
                                                 </button>
                                             </div>
                                         ))}
@@ -214,9 +216,9 @@ export default function Edit({ expense }: Props) {
 
                             {/* New Attachment */}
                             <div className="border-b border-plutz-tan/10 pb-6">
-                                <h3 className="text-lg font-medium text-plutz-cream">Add New Attachment</h3>
+                                <h3 className="text-lg font-medium text-plutz-cream">{t('expenses.new_attachment')}</h3>
                                 <p className="mt-1 text-sm text-stone-400">
-                                    Upload a photo or PDF of the invoice
+                                    {t('expenses.attachment_hint')}
                                 </p>
 
                                 <div className="mt-4">
@@ -231,7 +233,7 @@ export default function Edit({ expense }: Props) {
 
                             {/* Notes */}
                             <div>
-                                <InputLabel htmlFor="notes" value="Notes" />
+                                <InputLabel htmlFor="notes" value={t('common.notes')} />
                                 <textarea
                                     id="notes"
                                     className="mt-1 block w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
@@ -248,10 +250,10 @@ export default function Edit({ expense }: Props) {
                                     href={route('expenses.show', expense.id)}
                                     className="text-sm text-stone-400 hover:text-plutz-cream"
                                 >
-                                    Cancel
+                                    {t('common.cancel')}
                                 </Link>
                                 <PrimaryButton disabled={processing}>
-                                    Update Expense
+                                    {t('expenses.update_expense')}
                                 </PrimaryButton>
                             </div>
                         </form>

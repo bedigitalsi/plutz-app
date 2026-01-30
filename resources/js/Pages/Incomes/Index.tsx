@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router } from '@inertiajs/react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface Income {
     id: number;
@@ -34,6 +35,7 @@ interface Props {
 }
 
 export default function Index({ incomes, performanceTypes, filters }: Props) {
+    const { t } = useTranslation();
     const [dateFrom, setDateFrom] = useState(filters.date_from || '');
     const [dateTo, setDateTo] = useState(filters.date_to || '');
     const [performanceTypeId, setPerformanceTypeId] = useState(filters.performance_type_id || '');
@@ -59,11 +61,11 @@ export default function Index({ incomes, performanceTypes, filters }: Props) {
 
     return (
         <AuthenticatedLayout className="bg-plutz-dark">
-            <Head title="Income" />
+            <Head title={t('incomes.title')} />
             <div className="max-w-[1200px] mx-auto w-full p-6 pb-0">
                 <div className="flex items-center justify-between mb-2">
-                    <h2 className="text-2xl font-serif text-plutz-cream">Income</h2>
-                    <Link href={route('incomes.create')} className="text-plutz-tan hover:text-plutz-tan-light text-sm font-medium">New Income</Link>
+                    <h2 className="text-2xl font-serif text-plutz-cream">{t('incomes.title')}</h2>
+                    <Link href={route('incomes.create')} className="text-plutz-tan hover:text-plutz-tan-light text-sm font-medium">{t('incomes.new_income')}</Link>
                 </div>
             </div>
 
@@ -73,7 +75,7 @@ export default function Index({ incomes, performanceTypes, filters }: Props) {
                     <div className="mb-6 rounded-lg bg-plutz-surface p-4 shadow-sm">
                         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                             <div>
-                                <label className="block text-sm font-medium text-stone-400">From Date</label>
+                                <label className="block text-sm font-medium text-stone-400">{t('incomes.from_date')}</label>
                                 <input
                                     type="date"
                                     value={dateFrom}
@@ -82,7 +84,7 @@ export default function Index({ incomes, performanceTypes, filters }: Props) {
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-stone-400">To Date</label>
+                                <label className="block text-sm font-medium text-stone-400">{t('incomes.to_date')}</label>
                                 <input
                                     type="date"
                                     value={dateTo}
@@ -91,13 +93,13 @@ export default function Index({ incomes, performanceTypes, filters }: Props) {
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-stone-400">Performance Type</label>
+                                <label className="block text-sm font-medium text-stone-400">{t('incomes.performance_type')}</label>
                                 <select
                                     value={performanceTypeId}
                                     onChange={(e) => setPerformanceTypeId(e.target.value)}
                                     className="mt-1 block w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan sm:text-sm"
                                 >
-                                    <option value="">All</option>
+                                    <option value="">{t('incomes.all')}</option>
                                     {performanceTypes.map((type) => (
                                         <option key={type.id} value={type.id}>{type.name}</option>
                                     ))}
@@ -109,7 +111,7 @@ export default function Index({ incomes, performanceTypes, filters }: Props) {
                                 onClick={handleFilter}
                                 className="rounded-md bg-plutz-tan px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-plutz-tan/90"
                             >
-                                Apply Filters
+                                {t('incomes.apply_filters')}
                             </button>
                         </div>
                     </div>
@@ -119,11 +121,11 @@ export default function Index({ incomes, performanceTypes, filters }: Props) {
                         <div className="mb-6 rounded-lg bg-plutz-surface p-4 shadow-sm">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-sm text-stone-400">Total Income</p>
+                                    <p className="text-sm text-stone-400">{t('incomes.total_income')}</p>
                                     <p className="text-2xl font-bold text-green-400">{getTotalIncome()} EUR</p>
                                 </div>
                                 <div>
-                                    <p className="text-sm text-stone-400">Count</p>
+                                    <p className="text-sm text-stone-400">{t('incomes.count')}</p>
                                     <p className="text-2xl font-bold text-plutz-cream">{incomes.data.length}</p>
                                 </div>
                             </div>
@@ -133,19 +135,19 @@ export default function Index({ incomes, performanceTypes, filters }: Props) {
                     {/* Income List */}
                     {incomes.data.length === 0 ? (
                         <div className="rounded-lg bg-plutz-surface p-8 text-center shadow-sm">
-                            <p className="text-stone-500">No income records found.</p>
+                            <p className="text-stone-500">{t('incomes.no_incomes')}</p>
                         </div>
                     ) : (
                         <div className="overflow-hidden rounded-lg bg-plutz-surface shadow-sm">
                             <table className="min-w-full divide-y divide-plutz-tan/10">
                                 <thead className="bg-stone-900/50">
                                     <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500">Date</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500">Contact/Event</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500">Type</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500">Amount</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500">Status</th>
-                                        <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-stone-500">Actions</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500">{t('incomes.date')}</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500">{t('incomes.contact_event')}</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500">{t('incomes.type')}</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500">{t('incomes.amount')}</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500">{t('incomes.status')}</th>
+                                        <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-stone-500">{t('common.actions')}</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-plutz-tan/10 bg-plutz-surface">
@@ -172,12 +174,12 @@ export default function Index({ incomes, performanceTypes, filters }: Props) {
                                                 <div className="flex gap-2">
                                                     {income.invoice_issued && (
                                                         <span className="inline-flex rounded-full bg-plutz-tan/20 px-2 py-1 text-xs text-plutz-tan">
-                                                            Invoice
+                                                            {t('incomes.invoice')}
                                                         </span>
                                                     )}
                                                     {income.distributions.length > 0 && (
                                                         <span className="inline-flex rounded-full bg-green-500/100/10 px-2 py-1 text-xs text-green-400">
-                                                            Distributed
+                                                            {t('incomes.distributed')}
                                                         </span>
                                                     )}
                                                 </div>
@@ -187,7 +189,7 @@ export default function Index({ incomes, performanceTypes, filters }: Props) {
                                                     href={route('incomes.show', income.id)}
                                                     className="text-plutz-tan hover:text-plutz-tan"
                                                 >
-                                                    View
+                                                    {t('common.view')}
                                                 </Link>
                                             </td>
                                         </tr>

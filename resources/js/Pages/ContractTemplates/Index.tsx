@@ -1,6 +1,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router } from '@inertiajs/react';
 import { PageProps } from '@/types';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface ContractTemplate {
     id: number;
@@ -15,8 +16,9 @@ interface Props extends PageProps {
 }
 
 export default function Index({ auth, templates }: Props) {
+    const { t } = useTranslation();
     const handleDelete = (id: number, name: string) => {
-        if (confirm(`Are you sure you want to delete the template "${name}"?`)) {
+        if (confirm(t('templates.confirm_delete').replace(':name', name))) {
             router.delete(route('contract-templates.destroy', id));
         }
     };
@@ -27,11 +29,11 @@ export default function Index({ auth, templates }: Props) {
 
     return (
         <AuthenticatedLayout className="bg-plutz-dark">
-            <Head title="Contract Templates" />
+            <Head title={t('templates.title')} />
             <div className="max-w-[1200px] mx-auto w-full p-6 pb-0">
                 <div className="flex items-center justify-between mb-2">
-                    <h2 className="text-2xl font-serif text-plutz-cream">Contract Templates</h2>
-                    <Link href={route('settings.index')} className="text-plutz-tan hover:text-plutz-tan-light text-sm font-medium">Back to Settings</Link>
+                    <h2 className="text-2xl font-serif text-plutz-cream">{t('templates.title')}</h2>
+                    <Link href={route('settings.index')} className="text-plutz-tan hover:text-plutz-tan-light text-sm font-medium">{t('templates.back_to_settings')}</Link>
                 </div>
             </div>
 
@@ -41,12 +43,12 @@ export default function Index({ auth, templates }: Props) {
                         <div className="p-6">
                             {templates.length === 0 ? (
                                 <div className="text-center py-12">
-                                    <p className="text-stone-500 mb-4">No templates found</p>
+                                    <p className="text-stone-500 mb-4">{t('templates.no_templates')}</p>
                                     <Link
                                         href={route('contract-templates.create')}
                                         className="text-plutz-tan hover:text-plutz-tan"
                                     >
-                                        Create your first template
+                                        {t('templates.create_first')}
                                     </Link>
                                 </div>
                             ) : (
@@ -55,16 +57,16 @@ export default function Index({ auth, templates }: Props) {
                                         <thead className="bg-stone-900/50">
                                             <tr>
                                                 <th className="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">
-                                                    Name
+                                                    {t('common.name')}
                                                 </th>
                                                 <th className="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">
-                                                    Status
+                                                    {t('common.status')}
                                                 </th>
                                                 <th className="px-6 py-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">
-                                                    Last Updated
+                                                    {t('templates.last_updated')}
                                                 </th>
                                                 <th className="px-6 py-3 text-right text-xs font-medium text-stone-500 uppercase tracking-wider">
-                                                    Actions
+                                                    {t('common.actions')}
                                                 </th>
                                             </tr>
                                         </thead>
@@ -79,11 +81,11 @@ export default function Index({ auth, templates }: Props) {
                                                     <td className="px-6 py-4 whitespace-nowrap">
                                                         {template.is_active ? (
                                                             <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-500/100/10 text-green-400">
-                                                                Active
+                                                                {t('templates.active')}
                                                             </span>
                                                         ) : (
                                                             <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-stone-800 text-plutz-cream">
-                                                                Inactive
+                                                                {t('templates.inactive')}
                                                             </span>
                                                         )}
                                                     </td>
@@ -96,21 +98,21 @@ export default function Index({ auth, templates }: Props) {
                                                                 href={route('contract-templates.edit', template.id)}
                                                                 className="text-plutz-tan hover:text-plutz-tan"
                                                             >
-                                                                Edit
+                                                                {t('common.edit')}
                                                             </Link>
                                                             {!template.is_active && (
                                                                 <button
                                                                     onClick={() => handleActivate(template.id)}
                                                                     className="text-green-400 hover:text-green-400"
                                                                 >
-                                                                    Set Active
+                                                                    {t('templates.set_active')}
                                                                 </button>
                                                             )}
                                                             <button
                                                                 onClick={() => handleDelete(template.id, template.name)}
                                                                 className="text-red-400 hover:text-red-300"
                                                             >
-                                                                Delete
+                                                                {t('common.delete')}
                                                             </button>
                                                         </div>
                                                     </td>

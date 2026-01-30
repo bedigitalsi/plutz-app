@@ -3,6 +3,7 @@ export interface User {
     name: string;
     email: string;
     email_verified_at?: string;
+    locale?: string;
 }
 
 export type PageProps<
@@ -11,4 +12,6 @@ export type PageProps<
     auth: {
         user: User;
     };
+    locale: string;
+    translations: Record<string, string>;
 };

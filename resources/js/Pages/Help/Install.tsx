@@ -1,38 +1,40 @@
 import { Head } from '@inertiajs/react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function Install() {
+    const { t } = useTranslation();
     return (
         <>
-            <Head title="Install Plutz App" />
+            <Head title={t('help.install_title')} />
 
             <div className="min-h-screen bg-plutz-dark py-12 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-3xl mx-auto">
                     <div className="bg-plutz-surface shadow sm:rounded-lg">
                         <div className="px-4 py-5 sm:p-6">
                             <h1 className="text-3xl font-bold text-plutz-cream mb-6">
-                                Install Plutz on Your iPhone
+                                {t('help.install_title')}
                             </h1>
 
                             <div className="prose prose-blue max-w-none">
                                 <h2 className="text-xl font-semibold text-plutz-cream mt-6 mb-4">
-                                    Installation Steps
+                                    {t('help.steps_title')}
                                 </h2>
 
                                 <ol className="list-decimal list-inside space-y-4 text-stone-400">
                                     <li className="pl-2">
-                                        <strong>Open Safari</strong> on your iPhone (this only works in Safari, not Chrome or other browsers)
+                                        {t('help.step1')}
                                     </li>
                                     <li className="pl-2">
-                                        <strong>Navigate to</strong> the Plutz app URL
+                                        {t('help.step2')}
                                     </li>
                                     <li className="pl-2">
-                                        <strong>Tap the Share button</strong> (the square with an arrow pointing up) at the bottom of the screen
+                                        {t('help.step3')}
                                     </li>
                                     <li className="pl-2">
-                                        <strong>Scroll down</strong> and tap "Add to Home Screen"
+                                        {t('help.step4')}
                                     </li>
                                     <li className="pl-2">
-                                        <strong>Confirm</strong> by tapping "Add" in the top-right corner
+                                        {t('help.step5')}
                                     </li>
                                 </ol>
 
@@ -54,21 +56,21 @@ export default function Install() {
                                         </div>
                                         <div className="ml-3">
                                             <p className="text-sm text-plutz-tan">
-                                                <strong>Tip:</strong> Once installed, the app will open in full-screen mode without the Safari browser chrome, giving you a native app experience!
+                                                {t('help.tip')}
                                             </p>
                                         </div>
                                     </div>
                                 </div>
 
                                 <h2 className="text-xl font-semibold text-plutz-cream mt-8 mb-4">
-                                    Benefits of Installing
+                                    {t('help.benefits_title')}
                                 </h2>
 
                                 <ul className="list-disc list-inside space-y-2 text-stone-400">
-                                    <li className="pl-2">Quick access from your home screen</li>
-                                    <li className="pl-2">Full-screen experience without browser UI</li>
-                                    <li className="pl-2">Faster loading times</li>
-                                    <li className="pl-2">Works like a native app</li>
+                                    <li className="pl-2">{t('help.benefit1')}</li>
+                                    <li className="pl-2">{t('help.benefit2')}</li>
+                                    <li className="pl-2">{t('help.benefit3')}</li>
+                                    <li className="pl-2">{t('help.benefit4')}</li>
                                 </ul>
                             </div>
                         </div>

@@ -1,12 +1,15 @@
 import React from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link } from '@inertiajs/react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function Index() {
+    const { t } = useTranslation();
+
     const settingsCards = [
         {
-            title: 'Email',
-            description: 'Configure SMTP sender and email delivery settings',
+            title: t('settings.email_title'),
+            description: t('settings.email_description'),
             icon: (
                 <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -16,8 +19,8 @@ export default function Index() {
             current: route().current('settings.email'),
         },
         {
-            title: 'Contract Settings',
-            description: 'Configure contract defaults like the Plutz address',
+            title: t('settings.contracts_title'),
+            description: t('settings.contracts_description'),
             icon: (
                 <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -27,8 +30,8 @@ export default function Index() {
             current: route().current('settings.contracts'),
         },
         {
-            title: 'Contract Templates',
-            description: 'Create, edit, and set the default contract content',
+            title: t('settings.templates_title'),
+            description: t('settings.templates_description'),
             icon: (
                 <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -38,8 +41,8 @@ export default function Index() {
             current: route().current('contract-templates.*'),
         },
         {
-            title: 'Cost Types',
-            description: 'Manage expense and group cost categories',
+            title: t('settings.cost_types_title'),
+            description: t('settings.cost_types_description'),
             icon: (
                 <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
@@ -49,8 +52,8 @@ export default function Index() {
             current: route().current('cost-types.*'),
         },
         {
-            title: 'Performance Types',
-            description: 'Manage event types for inquiries and incomes',
+            title: t('settings.performance_types_title'),
+            description: t('settings.performance_types_description'),
             icon: (
                 <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
@@ -60,8 +63,8 @@ export default function Index() {
             current: route().current('performance-types.*'),
         },
         {
-            title: 'Calendar Integrations',
-            description: 'Manage iCal feeds for calendar synchronization',
+            title: t('settings.calendar_title'),
+            description: t('settings.calendar_description'),
             icon: (
                 <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -70,14 +73,25 @@ export default function Index() {
             href: route('ical-feeds.index'),
             current: route().current('ical-feeds.*'),
         },
+        {
+            title: t('settings.language_title'),
+            description: t('settings.language_description'),
+            icon: (
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+                </svg>
+            ),
+            href: route('settings.language'),
+            current: route().current('settings.language'),
+        },
     ];
 
     return (
         <AuthenticatedLayout className="bg-plutz-dark">
-            <Head title="Settings" />
+            <Head title={t('settings.title')} />
             <div className="max-w-[1200px] mx-auto w-full p-6 pb-0">
                 <div className="flex items-center justify-between mb-2">
-                    <h2 className="text-2xl font-serif text-plutz-cream">Settings</h2>
+                    <h2 className="text-2xl font-serif text-plutz-cream">{t('settings.title')}</h2>
                 </div>
             </div>
 

@@ -2,6 +2,7 @@ import { Head, useForm, router } from '@inertiajs/react';
 import { FormEventHandler, useRef, useState, useMemo } from 'react';
 import SignatureCanvas from 'react-signature-canvas';
 import { marked } from 'marked';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface Contract {
     id: number;
@@ -21,6 +22,7 @@ interface Props {
 }
 
 export default function Sign({ contract, markdown, token }: Props) {
+    const { t } = useTranslation();
     const signaturePad = useRef<SignatureCanvas>(null);
     const [signatureError, setSignatureError] = useState('');
     const [success, setSuccess] = useState(false);
@@ -60,7 +62,7 @@ export default function Sign({ contract, markdown, token }: Props) {
         e.preventDefault();
         
         if (signaturePad.current?.isEmpty()) {
-            setSignatureError('Please provide your signature');
+            setSignatureError(t('signing.signature_error'));
             return;
         }
 
@@ -89,19 +91,19 @@ export default function Sign({ contract, markdown, token }: Props) {
     if (success) {
         return (
             <div className="min-h-screen bg-plutz-dark flex items-center justify-center p-4">
-                <Head title="Contract Signed" />
+                <Head title={t('signing.success_title')} />
                 <div className="max-w-md w-full bg-plutz-surface shadow-lg rounded-lg p-8 text-center">
                     <div className="mb-4">
                         <svg className="mx-auto h-16 w-16 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
-                    <h1 className="text-2xl font-bold text-plutz-cream mb-2">Contract Signed Successfully!</h1>
+                    <h1 className="text-2xl font-bold text-plutz-cream mb-2">{t('signing.success_title')}</h1>
                     <p className="text-stone-400 mb-6">
-                        Thank you for signing the contract. You will receive a copy via email shortly.
+                        {t('signing.success_message')}
                     </p>
                     <p className="text-sm text-stone-500">
-                        You can now close this window.
+                        {t('signing.close_window')}
                     </p>
                 </div>
             </div>
@@ -110,14 +112,14 @@ export default function Sign({ contract, markdown, token }: Props) {
 
     return (
         <div className="min-h-screen bg-plutz-dark py-12 px-4 sm:px-6 lg:px-8">
-            <Head title="Sign Contract" />
+            <Head title={t('signing.title')} />
             
             <div className="max-w-4xl mx-auto">
                 {/* Header */}
                 <div className="bg-plutz-surface shadow-sm rounded-lg p-6 mb-6">
-                    <h1 className="text-2xl font-bold text-plutz-cream mb-2">Contract Signing</h1>
+                    <h1 className="text-2xl font-bold text-plutz-cream mb-2">{t('signing.header')}</h1>
                     <p className="text-stone-400">
-                        Please review the contract below and provide your signature to proceed.
+                        {t('signing.description')}
                     </p>
                 </div>
 
@@ -125,7 +127,7 @@ export default function Sign({ contract, markdown, token }: Props) {
                 <div className="bg-plutz-surface shadow-lg rounded-lg overflow-hidden mb-6">
                     {/* PDF-like header bar */}
                     <div className="bg-plutz-tan/20 border-b border-plutz-tan/10 px-8 py-4">
-                        <h2 className="text-xl font-bold text-plutz-cream">Contract Document</h2>
+                        <h2 className="text-xl font-bold text-plutz-cream">{t('signing.document')}</h2>
                     </div>
                     
                     {/* PDF-like content area with margins */}
@@ -146,14 +148,14 @@ export default function Sign({ contract, markdown, token }: Props) {
 
                 {/* Signing Form */}
                 <div className="bg-plutz-surface shadow-sm rounded-lg p-8">
-                    <h2 className="text-xl font-semibold text-plutz-cream mb-6">Your Information</h2>
+                    <h2 className="text-xl font-semibold text-plutz-cream mb-6">{t('signing.your_information')}</h2>
                     
                     <form onSubmit={submit} className="space-y-6">
                         {/* Signer Information */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-medium text-stone-400 mb-2">
-                                    Full Name *
+                                    {t('signing.full_name')}
                                 </label>
                                 <input
                                     type="text"
@@ -169,7 +171,7 @@ export default function Sign({ contract, markdown, token }: Props) {
 
                             <div>
                                 <label className="block text-sm font-medium text-stone-400 mb-2">
-                                    Email Address *
+                                    {t('signing.email')}
                                 </label>
                                 <input
                                     type="email"
@@ -185,7 +187,7 @@ export default function Sign({ contract, markdown, token }: Props) {
 
                             <div>
                                 <label className="block text-sm font-medium text-stone-400 mb-2">
-                                    Company (Optional)
+                                    {t('signing.company')}
                                 </label>
                                 <input
                                     type="text"
@@ -198,7 +200,7 @@ export default function Sign({ contract, markdown, token }: Props) {
 
                         <div>
                             <label className="block text-sm font-medium text-stone-400 mb-2">
-                                Address (Optional)
+                                {t('signing.address')}
                             </label>
                             <textarea
                                 value={data.signer_address}
@@ -211,7 +213,7 @@ export default function Sign({ contract, markdown, token }: Props) {
                         {/* Signature Pad */}
                         <div>
                             <label className="block text-sm font-medium text-stone-400 mb-2">
-                                Signature *
+                                {t('signing.signature')}
                             </label>
                             <div className="border-2 border-plutz-tan/20 rounded-md bg-plutz-surface">
                                 <SignatureCanvas
@@ -233,7 +235,7 @@ export default function Sign({ contract, markdown, token }: Props) {
                                 onClick={clearSignature}
                                 className="mt-2 text-sm text-stone-400 hover:text-plutz-cream"
                             >
-                                Clear Signature
+                                {t('signing.clear')}
                             </button>
                         </div>
 
@@ -247,9 +249,7 @@ export default function Sign({ contract, markdown, token }: Props) {
                                 required
                             />
                             <label className="ml-2 block text-sm text-stone-400">
-                                I have read and agree to the terms of this contract. I understand that by signing this 
-                                document electronically, I am providing my legal signature with the same effect as if 
-                                I had signed a paper document. *
+                                {t('signing.consent')}
                             </label>
                         </div>
                         {errors.consented && (
@@ -263,7 +263,7 @@ export default function Sign({ contract, markdown, token }: Props) {
                                 disabled={processing}
                                 className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-plutz-tan hover:bg-plutz-tan/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-plutz-tan disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                {processing ? 'Signing Contract...' : 'Sign Contract'}
+                                {processing ? t('signing.submitting') : t('signing.submit')}
                             </button>
                         </div>
                     </form>
@@ -272,7 +272,7 @@ export default function Sign({ contract, markdown, token }: Props) {
                 {/* Footer */}
                 <div className="mt-6 text-center text-sm text-stone-500">
                     <p>
-                        This is a legally binding electronic signature. A copy will be sent to your email address.
+                        {t('signing.footer')}
                     </p>
                 </div>
             </div>

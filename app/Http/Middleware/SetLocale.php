@@ -13,10 +13,14 @@ class SetLocale
     {
         $locale = 'en';
 
-        if ($request->user() && $request->user()->locale) {
-            $locale = $request->user()->locale;
-        } else {
-            $locale = Setting::getString('default_locale', 'en');
+        try {
+            if ($request->user() && $request->user()->locale) {
+                $locale = $request->user()->locale;
+            } else {
+                $locale = Setting::getString('default_locale', 'en') ?? 'en';
+            }
+        } catch (\Exception $e) {
+            $locale = 'en';
         }
 
         // Only allow supported locales

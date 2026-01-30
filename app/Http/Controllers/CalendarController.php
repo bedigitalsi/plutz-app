@@ -13,7 +13,7 @@ class CalendarController extends Controller
     public function index(Request $request): Response
     {
         $month = $request->input('month', now()->format('Y-m'));
-        $date = Carbon::createFromFormat('Y-m', $month)->startOfMonth();
+        $date = Carbon::createFromFormat('Y-m-d', $month . '-01')->startOfMonth();
 
         // Get all inquiries for the visible calendar range (includes prev/next month overflow)
         $calendarStart = $date->copy()->startOfWeek(Carbon::MONDAY);

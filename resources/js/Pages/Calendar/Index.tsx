@@ -49,7 +49,7 @@ export default function Index({ currentMonth, monthLabel, events, upcoming, cale
 
         const current = new Date(start);
         while (current <= end) {
-            const dateStr = current.toISOString().split('T')[0];
+            const dateStr = `${current.getFullYear()}-${String(current.getMonth() + 1).padStart(2, '0')}-${String(current.getDate()).padStart(2, '0')}`;
             const dayNum = current.getDate();
             const isCurrentMonth = current.getMonth() + 1 === month && current.getFullYear() === year;
             const isToday = dateStr === today;
@@ -65,7 +65,7 @@ export default function Index({ currentMonth, monthLabel, events, upcoming, cale
         const [year, month] = currentMonth.split('-').map(Number);
         const date = new Date(year, month - 1 + (direction === 'next' ? 1 : -1), 1);
         const newMonth = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-        router.get(route('calendar.index', { month: newMonth }), {}, { preserveScroll: true });
+        router.visit(route('calendar.index', { month: newMonth }));
     };
 
     const formatPrice = (price: number, currency: string) => {

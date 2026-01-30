@@ -24,5 +24,10 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->render(function (\Spatie\Permission\Exceptions\UnauthorizedException $e, $request) {
+            if ($request->expectsJson() || $request->header('X-Inertia')) {
+                return redirect()->back()->with('error', 'You do not have permission to access this page.');
+            }
+            abort(403, 'You do not have permission to access this page.');
+        });
     })->create();

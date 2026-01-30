@@ -13,27 +13,7 @@ return new class extends Migration
     {
         $role = Role::firstOrCreate(['name' => 'BandBoss', 'guard_name' => 'web']);
 
-        $permissions = [
-            'inquiries.view',
-            'inquiries.create',
-            'inquiries.edit',
-            'inquiries.change_status',
-            'income.view',
-            'income.create',
-            'income.edit',
-            'income.distribute',
-            'expenses.view',
-            'expenses.create',
-            'group_costs.view',
-            'group_costs.create',
-            'group_costs.edit',
-            'contracts.manage',
-            'contracts.send',
-            'contracts.delete',
-            'calendar.integrations.manage',
-        ];
-
-        $role->syncPermissions($permissions);
+        $role->syncPermissions(Permission::all());
     }
 
     /**

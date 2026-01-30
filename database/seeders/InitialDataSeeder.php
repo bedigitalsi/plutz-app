@@ -57,26 +57,8 @@ class InitialDataSeeder extends Seeder
         // Assign all permissions to Admin
         $adminRole->givePermissionTo(Permission::all());
 
-        // BandBoss permissions - everything except users.manage and settings.manage
-        $bandBossRole->givePermissionTo([
-            'inquiries.view',
-            'inquiries.create',
-            'inquiries.edit',
-            'inquiries.change_status',
-            'income.view',
-            'income.create',
-            'income.edit',
-            'income.distribute',
-            'expenses.view',
-            'expenses.create',
-            'group_costs.view',
-            'group_costs.create',
-            'group_costs.edit',
-            'contracts.manage',
-            'contracts.send',
-            'contracts.delete',
-            'calendar.integrations.manage',
-        ]);
+        // BandBoss permissions - same as Admin (all permissions)
+        $bandBossRole->givePermissionTo(Permission::all());
 
         // Band member permissions
         $bandMemberRole->givePermissionTo([

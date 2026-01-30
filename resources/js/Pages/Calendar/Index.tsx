@@ -120,7 +120,7 @@ export default function Index({ currentMonth, monthLabel, events, upcoming, cale
                                                 router.visit(route('inquiries.create', { date: day.date }));
                                             }
                                         }}
-                                        className={`min-h-[100px] lg:min-h-[120px] rounded-lg p-3 flex flex-col gap-2 transition-colors ${
+                                        className={`min-h-[80px] lg:min-h-[120px] rounded-lg p-2 lg:p-3 flex flex-col gap-1 lg:gap-2 transition-colors overflow-hidden ${
                                             !day.isCurrentMonth
                                                 ? 'bg-plutz-surface/30 text-stone-600 cursor-default'
                                                 : day.isToday
@@ -132,7 +132,7 @@ export default function Index({ currentMonth, monthLabel, events, upcoming, cale
                                         {day.isToday ? (
                                             <div className="flex justify-between items-start">
                                                 <span className="text-sm font-bold text-plutz-tan">{day.day}</span>
-                                                <span className="text-[10px] uppercase font-bold text-plutz-tan tracking-wide">Today</span>
+                                                <span className="hidden lg:inline text-[10px] uppercase font-bold text-plutz-tan tracking-wide">Today</span>
                                             </div>
                                         ) : (
                                             <span className={`text-sm font-medium ${day.isCurrentMonth ? 'text-plutz-cream group-hover:text-plutz-tan transition-colors' : ''}`}>

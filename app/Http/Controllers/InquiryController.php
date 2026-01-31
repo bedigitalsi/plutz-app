@@ -15,16 +15,22 @@ class InquiryController extends Controller
 {
     public function index(Request $request): Response
     {
+        // Default to showing upcoming gigs (from today) when no date filters are set
+        $hasDateFilter = $request->filled('date_from') || $request->filled('date_to');
+
         $query = Inquiry::with(['performanceType', 'bandSize', 'creator'])
-            ->orderBy('performance_date', 'desc');
+            ->orderBy('performance_date', $hasDateFilter ? 'desc' : 'asc');
 
         // Filters
         if ($request->has('status') && $request->status !== '') {
             $query->where('status', $request->status);
         }
-        
+
         if ($request->filled('date_from')) {
             $query->whereDate('performance_date', '>=', $request->date_from);
+        } elseif (!$request->filled('date_to')) {
+            // No date filters at all — default to today onwards
+            $query->whereDate('performance_date', '>=', now()->toDateString());
         }
 
         if ($request->filled('date_to')) {

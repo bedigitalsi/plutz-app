@@ -23,6 +23,11 @@ class SendContractInvitation implements ShouldQueue
 
     public function handle(): void
     {
+        // Skip if email sending is disabled
+        if (!MailSettings::isEnabled()) {
+            return;
+        }
+
         // Set locale to app default for emails
         $locale = Setting::getString('default_locale', 'en');
         if (!in_array($locale, ['en', 'sl'])) {

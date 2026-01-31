@@ -4,6 +4,7 @@ import { FormEventHandler, useState } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
 
 interface Settings {
+    mail_enabled: boolean;
     mail_from_address: string;
     mail_from_name: string;
     mail_force_from: boolean;
@@ -29,6 +30,7 @@ export default function Email({ settings }: Props) {
     const [sendingTest, setSendingTest] = useState(false);
 
     const { data, setData, post, processing, errors } = useForm({
+        mail_enabled: settings.mail_enabled,
         mail_from_address: settings.mail_from_address,
         mail_from_name: settings.mail_from_name,
         mail_force_from: settings.mail_force_from,
@@ -78,6 +80,28 @@ export default function Email({ settings }: Props) {
 
             <div className="max-w-[1200px] mx-auto w-full p-6">
                     <form onSubmit={submit} className="space-y-6">
+                        {/* Email Enabled Toggle */}
+                        <div className={`overflow-hidden shadow-sm sm:rounded-lg p-6 ${data.mail_enabled ? 'bg-plutz-surface' : 'bg-red-900/20 border border-red-700/50'}`}>
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <h3 className="text-lg font-medium text-plutz-cream">{t('settings.mail_enabled')}</h3>
+                                    <p className="text-sm text-stone-400 mt-1">{t('settings.mail_enabled_help')}</p>
+                                </div>
+                                <label className="relative inline-flex items-center cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        checked={data.mail_enabled}
+                                        onChange={(e) => setData('mail_enabled', e.target.checked)}
+                                        className="sr-only peer"
+                                    />
+                                    <div className="w-11 h-6 bg-stone-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-plutz-tan rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-plutz-tan"></div>
+                                </label>
+                            </div>
+                            {!data.mail_enabled && (
+                                <p className="text-sm text-red-400 mt-3">{t('settings.mail_disabled_warning')}</p>
+                            )}
+                        </div>
+
                         {/* Sender Settings */}
                         <div className="bg-plutz-surface overflow-hidden shadow-sm sm:rounded-lg p-6">
                             <h3 className="text-lg font-medium text-plutz-cream mb-4">{t('settings.sender_settings')}</h3>

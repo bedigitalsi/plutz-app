@@ -46,6 +46,14 @@ class MailSettings
     }
 
     /**
+     * Check if email sending is enabled
+     */
+    public static function isEnabled(): bool
+    {
+        return Setting::getBool('mail_enabled', true);
+    }
+
+    /**
      * Get the configured from address
      */
     public static function getFromAddress(): string

@@ -23,6 +23,11 @@ class SendInquiryConfirmedNotification implements ShouldQueue
 
     public function handle(): void
     {
+        // Skip if email sending is disabled
+        if (!MailSettings::isEnabled()) {
+            return;
+        }
+
         // Skip if status was changed back before this job ran
         if ($this->inquiry->fresh()->status !== 'confirmed') {
             return;

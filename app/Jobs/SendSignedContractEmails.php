@@ -21,6 +21,11 @@ class SendSignedContractEmails implements ShouldQueue
 
     public function handle(): void
     {
+        // Skip if email sending is disabled
+        if (!MailSettings::isEnabled()) {
+            return;
+        }
+
         $this->contract->refresh();
         $contract = $this->contract;
 

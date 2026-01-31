@@ -14,6 +14,7 @@ class MailSettingsController extends Controller
     {
         return Inertia::render('Settings/Email', [
             'settings' => [
+                'mail_enabled' => Setting::getBool('mail_enabled', true),
                 'mail_from_address' => Setting::getString('mail_from_address', 'info@plutzband.com'),
                 'mail_from_name' => Setting::getString('mail_from_name', 'Plutz'),
                 'mail_force_from' => Setting::getBool('mail_force_from', true),
@@ -34,6 +35,7 @@ class MailSettingsController extends Controller
     public function update(Request $request)
     {
         $validated = $request->validate([
+            'mail_enabled' => 'boolean',
             'mail_from_address' => 'required|email',
             'mail_from_name' => 'required|string|max:255',
             'mail_force_from' => 'boolean',
@@ -50,6 +52,7 @@ class MailSettingsController extends Controller
         ]);
 
         // Save all settings
+        Setting::setBool('mail_enabled', $validated['mail_enabled'] ?? true);
         Setting::setString('mail_from_address', $validated['mail_from_address']);
         Setting::setString('mail_from_name', $validated['mail_from_name']);
         Setting::setBool('mail_force_from', $validated['mail_force_from'] ?? false);
@@ -87,6 +90,10 @@ class MailSettingsController extends Controller
         $validated = $request->validate([
             'test_email' => 'required|email',
         ]);
+
+        if (!MailSettings::isEnabled()) {
+            return back()->with('error', 'Email sending is currently disabled.');
+        }
 
         try {
             // Apply current settings

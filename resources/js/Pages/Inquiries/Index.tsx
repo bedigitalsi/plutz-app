@@ -45,11 +45,13 @@ export default function Index({ inquiries, filters }: Props) {
     const [dateTo, setDateTo] = useState(filters.date_to || '');
 
     const handleFilter = () => {
-        router.get(
-            route('inquiries.index'),
-            { search, status, date_from: dateFrom, date_to: dateTo },
-            { preserveState: true }
-        );
+        const params: Record<string, string> = {};
+        if (search) params.search = search;
+        if (status) params.status = status;
+        if (dateFrom) params.date_from = dateFrom;
+        if (dateTo) params.date_to = dateTo;
+
+        router.get(route('inquiries.index'), params, { preserveState: true });
     };
 
     const handleReset = () => {

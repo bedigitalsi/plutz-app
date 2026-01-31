@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApiKeyController;
 use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ContractController;
@@ -112,6 +113,11 @@ Route::middleware(['auth', 'permission:settings.manage'])->group(function () {
     // Language settings
     Route::get('/settings/language', [LanguageSettingsController::class, 'show'])->name('settings.language');
     Route::post('/settings/language', [LanguageSettingsController::class, 'update'])->name('settings.language.update');
+
+    // API Keys
+    Route::get('/settings/api-keys', [ApiKeyController::class, 'index'])->name('settings.api-keys');
+    Route::post('/settings/api-keys', [ApiKeyController::class, 'store'])->name('settings.api-keys.store');
+    Route::delete('/settings/api-keys/{tokenId}', [ApiKeyController::class, 'destroy'])->name('settings.api-keys.destroy');
 
     // Contract Templates
     Route::get('/settings/contract-templates', [ContractTemplateController::class, 'index'])->name('contract-templates.index');

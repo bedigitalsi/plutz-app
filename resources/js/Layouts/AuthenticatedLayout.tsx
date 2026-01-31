@@ -15,11 +15,11 @@ export default function Authenticated({
     const navLinks = [
         { label: t('nav.dashboard'), route: 'dashboard', match: 'dashboard' },
         { label: t('nav.calendar'), route: 'calendar.index', match: 'calendar.*' },
-        { label: t('nav.finances'), route: 'incomes.index', match: ['incomes.*', 'expenses.*', 'group-costs.*'] },
+        { label: t('nav.income'), route: 'incomes.index', match: ['incomes.*', 'group-costs.*'] },
+        { label: t('nav.expenses'), route: 'expenses.index', match: 'expenses.*' },
         { label: t('nav.inquiries'), route: 'inquiries.index', match: 'inquiries.*' },
         { label: t('nav.contracts'), route: 'contracts.index', match: 'contracts.*' },
-        { label: t('nav.users'), route: 'users.index', match: 'users.*' },
-        { label: t('nav.settings'), route: 'settings.index', match: ['settings.*', 'ical-feeds.*', 'cost-types.*', 'performance-types.*', 'contract-templates.*'] },
+        { label: t('nav.settings'), route: 'settings.index', match: ['settings.*', 'ical-feeds.*', 'cost-types.*', 'performance-types.*', 'contract-templates.*', 'users.*'] },
     ];
 
     const isActive = (match: string | string[]) => {

@@ -184,8 +184,10 @@ export default function Show({ auth, contract, flash }: Props & { flash?: any })
                     {/* Contract Content */}
                     <div className="bg-plutz-surface overflow-hidden shadow-sm sm:rounded-lg p-6">
                         <h3 className="text-lg font-medium text-plutz-cream mb-4">{t('contracts.contract_content')}</h3>
-                        <div className="prose max-w-none text-sm whitespace-pre-line">
-                            {contract.markdown_snapshot}
+                        <div className="bg-white rounded-lg p-6">
+                            <div className="prose max-w-none text-sm text-stone-900 whitespace-pre-line">
+                                {contract.markdown_snapshot}
+                            </div>
                         </div>
                     </div>
 

@@ -24,11 +24,11 @@ class InquiryController extends Controller
         }
         
         if ($request->filled('date_from')) {
-            $query->where('performance_date', '>=', $request->date_from);
+            $query->whereDate('performance_date', '>=', $request->date_from);
         }
 
         if ($request->filled('date_to')) {
-            $query->where('performance_date', '<=', $request->date_to);
+            $query->whereDate('performance_date', '<=', $request->date_to);
         }
 
         if ($request->has('search') && $request->search !== '') {

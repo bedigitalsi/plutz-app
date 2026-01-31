@@ -15,28 +15,48 @@ class InquiryController extends Controller
 {
     public function index(Request $request): Response
     {
-        $query = Inquiry::with(['performanceType', 'bandSize', 'creator'])
-            ->orderBy('performance_date', 'desc');
+        // Check if the user has any active filters
+        $hasAnyFilter = $request->filled('date_from')
+            || $request->filled('date_to')
+            || ($request->has('status') && $request->status !== '')
+            || ($request->has('search') && $request->search !== '');
 
-        // Filters
-        if ($request->has('status') && $request->status !== '') {
-            $query->where('status', $request->status);
-        }
+        $query = Inquiry::with(['performanceType', 'bandSize', 'creator']);
 
-        if ($request->filled('date_from')) {
-            $query->whereDate('performance_date', '>=', $request->date_from);
-        }
+        if ($hasAnyFilter) {
+            // User is filtering — show results newest first, no default date restriction
+            $query->orderBy('performance_date', 'desc');
 
-        if ($request->filled('date_to')) {
-            $query->whereDate('performance_date', '<=', $request->date_to);
-        }
+            if ($request->has('status') && $request->status !== '') {
+                $query->where('status', $request->status);
+            }
 
-        if ($request->has('search') && $request->search !== '') {
-            $query->where(function($q) use ($request) {
-                $q->where('location_name', 'like', '%' . $request->search . '%')
-                  ->orWhere('contact_person', 'like', '%' . $request->search . '%')
-                  ->orWhere('contact_email', 'like', '%' . $request->search . '%');
-            });
+            if ($request->filled('date_from')) {
+                $query->whereDate('performance_date', '>=', $request->date_from);
+            }
+
+            if ($request->filled('date_to')) {
+                $query->whereDate('performance_date', '<=', $request->date_to);
+            }
+
+            if ($request->has('search') && $request->search !== '') {
+                $query->where(function($q) use ($request) {
+                    $q->where('location_name', 'like', '%' . $request->search . '%')
+                      ->orWhere('contact_person', 'like', '%' . $request->search . '%')
+                      ->orWhere('contact_email', 'like', '%' . $request->search . '%');
+                });
+            }
+        } else {
+            // No filters — try upcoming gigs first, fall back to all if none upcoming
+            $upcomingCount = Inquiry::whereDate('performance_date', '>=', now()->toDateString())->count();
+
+            if ($upcomingCount > 0) {
+                $query->whereDate('performance_date', '>=', now()->toDateString())
+                    ->orderBy('performance_date', 'asc');
+            } else {
+                // No upcoming gigs — show all, newest first
+                $query->orderBy('performance_date', 'desc');
+            }
         }
 
         return Inertia::render('Inquiries/Index', [

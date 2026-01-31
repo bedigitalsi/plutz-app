@@ -153,7 +153,14 @@ class InquiryController extends Controller
             'status' => 'required|in:pending,confirmed,rejected',
         ]);
 
+        $oldStatus = $inquiry->status;
+
         $inquiry->update(['status' => $validated['status']]);
+
+        if ($validated['status'] === 'confirmed' && $oldStatus !== 'confirmed') {
+            \App\Jobs\SendInquiryConfirmedNotification::dispatch($inquiry)
+                ->delay(now()->addMinutes(2));
+        }
 
         return Redirect::back()
             ->with('success', 'Inquiry status updated to ' . $validated['status'] . '.');

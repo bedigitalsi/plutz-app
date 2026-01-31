@@ -529,6 +529,9 @@
     "email.signed_contract_client_body": "Dear :name,\n\nThank you for signing the contract. Please find the signed PDF attached.\n\nBest regards,\nPlutz",
     "email.signed_contract_admin_body": "Contract signed by :name. PDF attached.",
 
+    "email.inquiry_confirmed_subject": "Event Confirmed",
+    "email.inquiry_confirmed_body": "Hello,\n\nAn event has been confirmed!\n\nDate: :date\nTime: :time\nDuration: :duration\nPerformance Type: :performance_type\nBand Size: :band_size\n\nLocation: :location\nAddress: :address\n\nContact: :contact_person\nEmail: :contact_email\nPhone: :contact_phone\n\nNotes: :notes\n\nBest regards,\nPlutz",
+
     "component.file_upload_button": "Click to upload or take a photo",
     "component.file_upload_formats": "PNG, JPG, PDF up to 10MB",
     "component.file_upload_remove": "Remove",

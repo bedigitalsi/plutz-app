@@ -114,13 +114,6 @@ export default function Authenticated({
                                     {link.label}
                                 </Link>
                             ))}
-                            <div className="pt-4 border-t border-plutz-tan/10 mt-4">
-                                <p className="text-sm text-stone-400">{user.name}</p>
-                                <div className="mt-2 space-y-2">
-                                    <Link href={route('profile.edit')} className="block py-1 text-sm text-stone-500 hover:text-plutz-tan">{t('nav.profile')}</Link>
-                                    <Link href={route('logout')} method="post" as="button" className="block py-1 text-sm text-stone-500 hover:text-plutz-tan">{t('nav.logout')}</Link>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 )}

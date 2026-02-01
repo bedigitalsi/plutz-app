@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import StatusBadge from './StatusBadge';
 
 interface InquiryCardProps {
@@ -23,6 +23,7 @@ interface InquiryCardProps {
 }
 
 export default function InquiryCard({ inquiry }: InquiryCardProps) {
+    const hidePrices = (usePage().props.auth as any).user?.hide_prices;
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString('sl-SI', {
             year: 'numeric',
@@ -82,7 +83,7 @@ export default function InquiryCard({ inquiry }: InquiryCardProps) {
                             </div>
                         )}
 
-                        {inquiry.price_amount && (
+                        {!hidePrices && inquiry.price_amount && (
                             <div className="mt-2 text-base font-semibold text-plutz-cream">
                                 {inquiry.price_amount} {inquiry.currency || 'EUR'}
                             </div>

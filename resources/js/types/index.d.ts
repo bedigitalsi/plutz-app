@@ -4,6 +4,7 @@ export interface User {
     email: string;
     email_verified_at?: string;
     locale?: string;
+    hide_prices?: boolean;
 }
 
 export type PageProps<

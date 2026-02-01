@@ -24,6 +24,7 @@ export default function Create({ roles }: Props) {
         password: '',
         password_confirmation: '',
         is_band_member: false,
+        hide_prices: false,
         role: '',
     });
 
@@ -133,6 +134,21 @@ export default function Create({ roles }: Props) {
                                     </label>
                                     <p className="mt-1 text-xs text-stone-500">
                                         {t('users.band_member_help')}
+                                    </p>
+                                </div>
+
+                                <div className="mt-4">
+                                    <label className="flex items-center">
+                                        <input
+                                            type="checkbox"
+                                            checked={data.hide_prices}
+                                            onChange={(e) => setData('hide_prices', e.target.checked)}
+                                            className="rounded border-plutz-tan/20 text-plutz-tan shadow-sm focus:ring-plutz-tan"
+                                        />
+                                        <span className="ml-2 text-sm text-stone-400">{t('users.hide_prices')}</span>
+                                    </label>
+                                    <p className="mt-1 text-xs text-stone-500">
+                                        {t('users.hide_prices_help')}
                                     </p>
                                 </div>
                             </div>

@@ -17,6 +17,7 @@ interface User {
     name: string;
     email: string;
     is_band_member: boolean;
+    hide_prices: boolean;
     roles: Role[];
 }
 
@@ -33,6 +34,7 @@ export default function Edit({ user, roles }: Props) {
         password: '',
         password_confirmation: '',
         is_band_member: user.is_band_member,
+        hide_prices: user.hide_prices,
         role: user.roles.length > 0 ? user.roles[0].name : '',
     });
 
@@ -136,6 +138,21 @@ export default function Edit({ user, roles }: Props) {
                                     </label>
                                     <p className="mt-1 text-xs text-stone-500">
                                         {t('users.band_member_help')}
+                                    </p>
+                                </div>
+
+                                <div className="mt-4">
+                                    <label className="flex items-center">
+                                        <input
+                                            type="checkbox"
+                                            checked={data.hide_prices}
+                                            onChange={(e) => setData('hide_prices', e.target.checked)}
+                                            className="rounded border-plutz-tan/20 text-plutz-tan shadow-sm focus:ring-plutz-tan"
+                                        />
+                                        <span className="ml-2 text-sm text-stone-400">{t('users.hide_prices')}</span>
+                                    </label>
+                                    <p className="mt-1 text-xs text-stone-500">
+                                        {t('users.hide_prices_help')}
                                     </p>
                                 </div>
                             </div>

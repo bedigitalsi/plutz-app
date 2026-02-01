@@ -578,5 +578,8 @@
     "distribution.remaining": "Preostalo:",
     "distribution.over_distributed": "Razdeljen znesek presega znesek prihodka!",
     "distribution.save": "Shrani razdelitev",
-    "distribution.saving": "Shranjujem..."
+    "distribution.saving": "Shranjujem...",
+
+    "users.hide_prices": "Skrij cene",
+    "users.hide_prices_help": "Ko je omogočeno, uporabnik ne bo videl cen na povpraševanjih."
 }

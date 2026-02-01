@@ -62,8 +62,10 @@ interface Props {
 
 export default function Dashboard({ inquiryStats, inquiryTotals, incomeStats, expenseStats, mutualFund, groupCostStats, userStats, upcomingGigs, filters }: Props) {
     const { t, locale } = useTranslation();
-    const permissions: string[] = (usePage().props.auth as any).permissions ?? [];
+    const authProps = usePage().props.auth as any;
+    const permissions: string[] = authProps.permissions ?? [];
     const can = (p: string) => permissions.includes(p);
+    const hidePrices = authProps.user?.hide_prices;
     const [dateFrom, setDateFrom] = useState<string>(filters.date_from || '');
     const [dateTo, setDateTo] = useState<string>(filters.date_to || '');
     const [showFilters, setShowFilters] = useState(false);
@@ -225,7 +227,7 @@ export default function Dashboard({ inquiryStats, inquiryTotals, incomeStats, ex
                             <span className="material-symbols-outlined text-plutz-tan">mail</span>
                         </div>
                         <p className="text-3xl font-bold text-plutz-cream">{inquiryStats.pending}</p>
-                        {inquiryTotals.pending > 0 && (
+                        {!hidePrices && inquiryTotals.pending > 0 && (
                             <div className="mt-2 text-xs text-plutz-tan font-medium flex items-center gap-1">
                                 <span className="material-symbols-outlined text-sm">trending_up</span>
                                 {formatMoney(inquiryTotals.pending)} EUR {t('dashboard.potential')}

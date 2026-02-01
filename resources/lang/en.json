@@ -578,5 +578,8 @@
     "distribution.remaining": "Remaining:",
     "distribution.over_distributed": "Total distributed exceeds income amount!",
     "distribution.save": "Save Distribution",
-    "distribution.saving": "Saving..."
+    "distribution.saving": "Saving...",
+
+    "users.hide_prices": "Hide prices",
+    "users.hide_prices_help": "When enabled, this user will not see prices on inquiries."
 }

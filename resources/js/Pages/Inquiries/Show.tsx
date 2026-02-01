@@ -1,6 +1,6 @@
 import React from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import StatusBadge from '@/Components/StatusBadge';
 import { useTranslation } from '@/hooks/useTranslation';
 
@@ -38,6 +38,7 @@ interface Props {
 
 export default function Show({ inquiry }: Props) {
     const { t } = useTranslation();
+    const hidePrices = (usePage().props.auth as any).user?.hide_prices;
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString('sl-SI', {
             year: 'numeric',
@@ -220,7 +221,7 @@ export default function Show({ inquiry }: Props) {
                         </div>
 
                         {/* Price */}
-                        {inquiry.price_amount && (
+                        {!hidePrices && inquiry.price_amount && (
                             <div className="overflow-hidden rounded-lg bg-plutz-surface shadow-sm">
                                 <div className="border-b border-plutz-tan/10 px-6 py-4">
                                     <h4 className="text-lg font-medium text-plutz-cream">{t('inquiries.price')}</h4>

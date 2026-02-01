@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import { useTranslation } from '@/hooks/useTranslation';
 
 interface CalendarEvent {
@@ -41,6 +41,7 @@ interface Props {
 
 export default function Index({ currentMonth, monthLabel, events, upcoming, calendarStart, calendarEnd, today }: Props) {
     const { t } = useTranslation();
+    const hidePrices = (usePage().props.auth as any).user?.hide_prices;
 
     // Build calendar grid
     const calendarDays = useMemo(() => {
@@ -227,7 +228,7 @@ export default function Index({ currentMonth, monthLabel, events, upcoming, cale
                                                 <span className="material-symbols-outlined text-[16px]">schedule</span>
                                                 <span>{event.time || t('calendar.tbd')}</span>
                                             </div>
-                                            {event.status === 'confirmed' && event.price ? (
+                                            {!hidePrices && event.status === 'confirmed' && event.price ? (
                                                 <div className="flex items-center gap-1.5 text-stone-400 text-xs">
                                                     <span className="material-symbols-outlined text-[16px]">payments</span>
                                                     <span>{formatPrice(event.price, event.currency)}</span>

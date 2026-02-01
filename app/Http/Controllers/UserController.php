@@ -40,6 +40,7 @@ class UserController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'is_band_member' => 'required|boolean',
+            'hide_prices' => 'boolean',
             'role' => 'required|exists:roles,name',
         ]);
 
@@ -48,6 +49,7 @@ class UserController extends Controller
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
             'is_band_member' => $validated['is_band_member'],
+            'hide_prices' => $validated['hide_prices'] ?? false,
         ]);
 
         $user->assignRole($validated['role']);
@@ -73,6 +75,7 @@ class UserController extends Controller
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
             'is_band_member' => 'required|boolean',
+            'hide_prices' => 'boolean',
             'role' => 'required|exists:roles,name',
         ]);
 
@@ -80,6 +83,7 @@ class UserController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'is_band_member' => $validated['is_band_member'],
+            'hide_prices' => $validated['hide_prices'] ?? false,
         ]);
 
         if (!empty($validated['password'])) {

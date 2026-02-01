@@ -1,6 +1,6 @@
 import React, { FormEventHandler, useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
@@ -44,6 +44,7 @@ interface Props {
 
 export default function Edit({ inquiry, performanceTypes, bandSizes }: Props) {
     const { t } = useTranslation();
+    const hidePrices = (usePage().props.auth as any).user?.hide_prices;
     const [timeMode, setTimeMode] = useState<'exact_time' | 'text_time'>(inquiry.performance_time_mode);
 
     const { data, setData, patch, processing, errors } = useForm({
@@ -276,36 +277,38 @@ export default function Edit({ inquiry, performanceTypes, bandSizes }: Props) {
                             </div>
 
                             {/* Price */}
-                            <div className="border-b border-plutz-tan/10 pb-6">
-                                <h3 className="text-lg font-medium text-plutz-cream">{t('inquiries.price')}</h3>
-                                
-                                <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
-                                    <div>
-                                        <InputLabel htmlFor="price_amount" value={t('common.amount')} />
-                                        <TextInput
-                                            id="price_amount"
-                                            type="number"
-                                            step="0.01"
-                                            className="mt-1 block w-full"
-                                            value={data.price_amount}
-                                            onChange={(e) => setData('price_amount', e.target.value)}
-                                        />
-                                        <InputError message={errors.price_amount} className="mt-2" />
-                                    </div>
+                            {!hidePrices && (
+                                <div className="border-b border-plutz-tan/10 pb-6">
+                                    <h3 className="text-lg font-medium text-plutz-cream">{t('inquiries.price')}</h3>
 
-                                    <div>
-                                        <InputLabel htmlFor="currency" value={t('inquiries.currency')} />
-                                        <TextInput
-                                            id="currency"
-                                            type="text"
-                                            className="mt-1 block w-full"
-                                            value={data.currency}
-                                            onChange={(e) => setData('currency', e.target.value)}
-                                        />
-                                        <InputError message={errors.currency} className="mt-2" />
+                                    <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+                                        <div>
+                                            <InputLabel htmlFor="price_amount" value={t('common.amount')} />
+                                            <TextInput
+                                                id="price_amount"
+                                                type="number"
+                                                step="0.01"
+                                                className="mt-1 block w-full"
+                                                value={data.price_amount}
+                                                onChange={(e) => setData('price_amount', e.target.value)}
+                                            />
+                                            <InputError message={errors.price_amount} className="mt-2" />
+                                        </div>
+
+                                        <div>
+                                            <InputLabel htmlFor="currency" value={t('inquiries.currency')} />
+                                            <TextInput
+                                                id="currency"
+                                                type="text"
+                                                className="mt-1 block w-full"
+                                                value={data.currency}
+                                                onChange={(e) => setData('currency', e.target.value)}
+                                            />
+                                            <InputError message={errors.currency} className="mt-2" />
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            )}
 
                             {/* Notes */}
                             <div>

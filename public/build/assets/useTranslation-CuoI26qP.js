@@ -1,0 +1,1 @@
+import{b as u}from"./app-Cd3UbQ0-.js";function i(){const{locale:o,translations:r}=u().props;function a(e,n){let t=r?.[e]??e;return n&&Object.entries(n).forEach(([s,l])=>{t=t.replace(`:${s}`,l)}),t}return{t:a,locale:o??"en"}}export{i as u};

@@ -562,5 +562,21 @@
     "component.file_upload_remove": "Remove",
     "component.status_pending": "Pending",
     "component.status_confirmed": "Confirmed",
-    "component.status_rejected": "Rejected"
+    "component.status_rejected": "Rejected",
+
+    "distribution.title": "Income Distribution",
+    "distribution.total_to_distribute": "Total to distribute:",
+    "distribution.include_mutual_fund": "Include Mutual Fund",
+    "distribution.distribute_equally": "Distribute Equally",
+    "distribution.recipient": "Recipient",
+    "distribution.mutual_fund": "Mutual Fund",
+    "distribution.band_fund": "Band Fund",
+    "distribution.amount": "Amount",
+    "distribution.note_optional": "Note (optional)",
+    "distribution.note_placeholder": "Optional note...",
+    "distribution.total_distributed": "Total Distributed:",
+    "distribution.remaining": "Remaining:",
+    "distribution.over_distributed": "Total distributed exceeds income amount!",
+    "distribution.save": "Save Distribution",
+    "distribution.saving": "Saving..."
 }

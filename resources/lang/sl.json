@@ -562,5 +562,21 @@
     "component.file_upload_remove": "Odstrani",
     "component.status_pending": "Nepotrjeno",
     "component.status_confirmed": "Potrjeno",
-    "component.status_rejected": "Zavrnjeno"
+    "component.status_rejected": "Zavrnjeno",
+
+    "distribution.title": "Razdelitev prihodka",
+    "distribution.total_to_distribute": "Skupaj za razdelitev:",
+    "distribution.include_mutual_fund": "Vključi skupni sklad",
+    "distribution.distribute_equally": "Razdeli enakomerno",
+    "distribution.recipient": "Prejemnik",
+    "distribution.mutual_fund": "Skupni sklad",
+    "distribution.band_fund": "Sklad skupine",
+    "distribution.amount": "Znesek",
+    "distribution.note_optional": "Opomba (neobvezno)",
+    "distribution.note_placeholder": "Neobvezna opomba...",
+    "distribution.total_distributed": "Skupaj razdeljeno:",
+    "distribution.remaining": "Preostalo:",
+    "distribution.over_distributed": "Razdeljen znesek presega znesek prihodka!",
+    "distribution.save": "Shrani razdelitev",
+    "distribution.saving": "Shranjujem..."
 }

@@ -38,7 +38,10 @@ interface Props {
 
 export default function Show({ inquiry }: Props) {
     const { t } = useTranslation();
-    const hidePrices = (usePage().props.auth as any).user?.hide_prices;
+    const authProps = usePage().props.auth as any;
+    const hidePrices = authProps.user?.hide_prices;
+    const permissions: string[] = authProps.permissions ?? [];
+    const can = (p: string) => permissions.includes(p);
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString('sl-SI', {
             year: 'numeric',
@@ -78,56 +81,62 @@ export default function Show({ inquiry }: Props) {
                             </div>
 
                             {/* Action Buttons */}
-                            <div className="mt-6 flex flex-wrap gap-2">
-                                <Link
-                                    href={route('inquiries.edit', inquiry.id)}
-                                    className="rounded-md bg-plutz-tan px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-plutz-tan/90"
-                                >
-                                    {t('common.edit')}
-                                </Link>
-
-                                {inquiry.status === 'pending' && (
-                                    <>
-                                        <button
-                                            onClick={() => handleStatusChange('confirmed')}
-                                            className="rounded-md bg-green-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500/100"
+                            {(can('inquiries.edit') || can('inquiries.change_status') || can('income.create')) && (
+                                <div className="mt-6 flex flex-wrap gap-2">
+                                    {can('inquiries.edit') && (
+                                        <Link
+                                            href={route('inquiries.edit', inquiry.id)}
+                                            className="rounded-md bg-plutz-tan px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-plutz-tan/90"
                                         >
-                                            {t('inquiries.confirm_action')}
-                                        </button>
-                                        <button
-                                            onClick={() => handleStatusChange('rejected')}
-                                            className="rounded-md bg-stone-700 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-stone-900/500"
+                                            {t('common.edit')}
+                                        </Link>
+                                    )}
+
+                                    {can('inquiries.change_status') && inquiry.status === 'pending' && (
+                                        <>
+                                            <button
+                                                onClick={() => handleStatusChange('confirmed')}
+                                                className="rounded-md bg-green-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500/100"
+                                            >
+                                                {t('inquiries.confirm_action')}
+                                            </button>
+                                            <button
+                                                onClick={() => handleStatusChange('rejected')}
+                                                className="rounded-md bg-stone-700 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-stone-900/500"
+                                            >
+                                                {t('inquiries.reject')}
+                                            </button>
+                                        </>
+                                    )}
+
+                                    {can('income.create') && !inquiry.income && (
+                                        <Link
+                                            href={`/incomes/create?inquiry_id=${inquiry.id}`}
+                                            className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500"
                                         >
-                                            {t('inquiries.reject')}
+                                            {t('inquiries.create_income')}
+                                        </Link>
+                                    )}
+
+                                    {can('inquiries.change_status') && inquiry.status !== 'pending' && (
+                                        <button
+                                            onClick={() => handleStatusChange('pending')}
+                                            className="rounded-md bg-amber-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-amber-500"
+                                        >
+                                            {t('inquiries.set_pending')}
                                         </button>
-                                    </>
-                                )}
+                                    )}
 
-                                {!inquiry.income && (
-                                    <Link
-                                        href={`/incomes/create?inquiry_id=${inquiry.id}`}
-                                        className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500"
-                                    >
-                                        {t('inquiries.create_income')}
-                                    </Link>
-                                )}
-
-                                {inquiry.status !== 'pending' && (
-                                    <button
-                                        onClick={() => handleStatusChange('pending')}
-                                        className="rounded-md bg-amber-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-amber-500"
-                                    >
-                                        {t('inquiries.set_pending')}
-                                    </button>
-                                )}
-
-                                <button
-                                    onClick={handleDelete}
-                                    className="ml-auto rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500/100"
-                                >
-                                    {t('common.delete')}
-                                </button>
-                            </div>
+                                    {can('inquiries.edit') && (
+                                        <button
+                                            onClick={handleDelete}
+                                            className="ml-auto rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500/100"
+                                        >
+                                            {t('common.delete')}
+                                        </button>
+                                    )}
+                                </div>
+                            )}
                         </div>
                     </div>
 

@@ -46,22 +46,26 @@ class DashboardController extends Controller
             'rejected' => (clone $inquiryQuery)->rejected()->sum('price_amount'),
         ];
 
-        // Build income query with optional date filters
-        $incomeQuery = Income::query();
-        if ($dateFrom) {
-            $incomeQuery->whereDate('income_date', '>=', $dateFrom);
-        }
-        if ($dateTo) {
-            $incomeQuery->whereDate('income_date', '<=', $dateTo);
-        }
+        // Income stats (only for users with income.view permission)
+        $canViewIncome = Auth::user()->can('income.view');
+        $incomeStats = ['total' => 0, 'with_invoice' => 0, 'without_invoice' => 0, 'count' => 0];
 
-        // Income stats
-        $incomeStats = [
-            'total' => (clone $incomeQuery)->sum('amount'),
-            'with_invoice' => (clone $incomeQuery)->where('invoice_issued', true)->sum('amount'),
-            'without_invoice' => (clone $incomeQuery)->where('invoice_issued', false)->sum('amount'),
-            'count' => (clone $incomeQuery)->count(),
-        ];
+        if ($canViewIncome) {
+            $incomeQuery = Income::query();
+            if ($dateFrom) {
+                $incomeQuery->whereDate('income_date', '>=', $dateFrom);
+            }
+            if ($dateTo) {
+                $incomeQuery->whereDate('income_date', '<=', $dateTo);
+            }
+
+            $incomeStats = [
+                'total' => (clone $incomeQuery)->sum('amount'),
+                'with_invoice' => (clone $incomeQuery)->where('invoice_issued', true)->sum('amount'),
+                'without_invoice' => (clone $incomeQuery)->where('invoice_issued', false)->sum('amount'),
+                'count' => (clone $incomeQuery)->count(),
+            ];
+        }
 
         // Build expense query with optional date filters
         $expenseQuery = Expense::query();

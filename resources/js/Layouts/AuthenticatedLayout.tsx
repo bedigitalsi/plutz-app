@@ -8,19 +8,25 @@ export default function Authenticated({
     children,
     className,
 }: PropsWithChildren<{ header?: ReactNode; className?: string }>) {
-    const user = usePage().props.auth.user;
+    const { auth } = usePage().props;
+    const user = auth.user;
+    const permissions: string[] = (auth as any).permissions ?? [];
     const { t } = useTranslation();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-    const navLinks = [
+    const can = (permission: string) => permissions.includes(permission);
+
+    const allNavLinks = [
         { label: t('nav.dashboard'), route: 'dashboard', match: 'dashboard' },
-        { label: t('nav.calendar'), route: 'calendar.index', match: 'calendar.*' },
-        { label: t('nav.income'), route: 'incomes.index', match: ['incomes.*', 'group-costs.*'] },
-        { label: t('nav.expenses'), route: 'expenses.index', match: 'expenses.*' },
-        { label: t('nav.inquiries'), route: 'inquiries.index', match: 'inquiries.*' },
-        { label: t('nav.contracts'), route: 'contracts.index', match: 'contracts.*' },
-        { label: t('nav.settings'), route: 'settings.index', match: ['settings.*', 'ical-feeds.*', 'cost-types.*', 'performance-types.*', 'contract-templates.*', 'users.*'] },
+        { label: t('nav.calendar'), route: 'calendar.index', match: 'calendar.*', permission: 'inquiries.view' },
+        { label: t('nav.income'), route: 'incomes.index', match: ['incomes.*', 'group-costs.*'], permission: 'income.view' },
+        { label: t('nav.expenses'), route: 'expenses.index', match: 'expenses.*', permission: 'expenses.view' },
+        { label: t('nav.inquiries'), route: 'inquiries.index', match: 'inquiries.*', permission: 'inquiries.view' },
+        { label: t('nav.contracts'), route: 'contracts.index', match: 'contracts.*', permission: 'contracts.manage' },
+        { label: t('nav.settings'), route: 'settings.index', match: ['settings.*', 'ical-feeds.*', 'cost-types.*', 'performance-types.*', 'contract-templates.*', 'users.*'], permission: 'settings.manage' },
     ];
+
+    const navLinks = allNavLinks.filter(link => !link.permission || can(link.permission));
 
     const isActive = (match: string | string[]) => {
         if (Array.isArray(match)) return match.some(m => route().current(m));

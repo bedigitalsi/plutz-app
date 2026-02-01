@@ -74,7 +74,6 @@ class InitialDataSeeder extends Seeder
         // Viewer permissions
         $viewerRole->givePermissionTo([
             'inquiries.view',
-            'income.view',
             'expenses.view',
             'group_costs.view',
         ]);

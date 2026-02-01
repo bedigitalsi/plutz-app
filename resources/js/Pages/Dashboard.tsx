@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import { useTranslation } from '@/hooks/useTranslation';
 
 interface UpcomingGig {
@@ -62,6 +62,8 @@ interface Props {
 
 export default function Dashboard({ inquiryStats, inquiryTotals, incomeStats, expenseStats, mutualFund, groupCostStats, userStats, upcomingGigs, filters }: Props) {
     const { t, locale } = useTranslation();
+    const permissions: string[] = (usePage().props.auth as any).permissions ?? [];
+    const can = (p: string) => permissions.includes(p);
     const [dateFrom, setDateFrom] = useState<string>(filters.date_from || '');
     const [dateTo, setDateTo] = useState<string>(filters.date_to || '');
     const [showFilters, setShowFilters] = useState(false);
@@ -247,42 +249,46 @@ export default function Dashboard({ inquiryStats, inquiryTotals, incomeStats, ex
                     </Link>
 
                     {/* Total Income */}
-                    <Link
-                        href={route('incomes.index', dateParams)}
-                        className="bg-plutz-surface p-6 rounded-xl border border-plutz-tan/10 shadow-sm hover:border-plutz-tan/30 transition-colors"
-                    >
-                        <div className="flex items-center justify-between mb-2">
-                            <p className="text-stone-400 text-sm font-medium uppercase tracking-wider">{t('dashboard.total_income')}</p>
-                            <span className="material-symbols-outlined text-plutz-tan">payments</span>
-                        </div>
-                        <p className="text-3xl font-bold text-plutz-cream">
-                            {formatMoney(incomeStats.total)} <span className="text-xl font-normal opacity-70">EUR</span>
-                        </p>
-                        {incomeStats.total > 0 && (
-                            <div className="mt-2 text-xs text-green-500 font-medium flex items-center gap-1">
-                                <span className="material-symbols-outlined text-sm">trending_up</span>
-                                {incomeStats.count} {t('dashboard.incomes_count')}
+                    {can('income.view') && (
+                        <Link
+                            href={route('incomes.index', dateParams)}
+                            className="bg-plutz-surface p-6 rounded-xl border border-plutz-tan/10 shadow-sm hover:border-plutz-tan/30 transition-colors"
+                        >
+                            <div className="flex items-center justify-between mb-2">
+                                <p className="text-stone-400 text-sm font-medium uppercase tracking-wider">{t('dashboard.total_income')}</p>
+                                <span className="material-symbols-outlined text-plutz-tan">payments</span>
                             </div>
-                        )}
-                    </Link>
+                            <p className="text-3xl font-bold text-plutz-cream">
+                                {formatMoney(incomeStats.total)} <span className="text-xl font-normal opacity-70">EUR</span>
+                            </p>
+                            {incomeStats.total > 0 && (
+                                <div className="mt-2 text-xs text-green-500 font-medium flex items-center gap-1">
+                                    <span className="material-symbols-outlined text-sm">trending_up</span>
+                                    {incomeStats.count} {t('dashboard.incomes_count')}
+                                </div>
+                            )}
+                        </Link>
+                    )}
 
                     {/* Mutual Fund */}
-                    <div className="bg-plutz-surface p-6 rounded-xl border border-plutz-tan/10 shadow-sm">
-                        <div className="flex items-center justify-between mb-2">
-                            <p className="text-stone-400 text-sm font-medium uppercase tracking-wider">{t('dashboard.mutual_fund')}</p>
-                            <span className="material-symbols-outlined text-plutz-tan">account_balance_wallet</span>
+                    {can('income.view') && (
+                        <div className="bg-plutz-surface p-6 rounded-xl border border-plutz-tan/10 shadow-sm">
+                            <div className="flex items-center justify-between mb-2">
+                                <p className="text-stone-400 text-sm font-medium uppercase tracking-wider">{t('dashboard.mutual_fund')}</p>
+                                <span className="material-symbols-outlined text-plutz-tan">account_balance_wallet</span>
+                            </div>
+                            <p className="text-3xl font-bold text-plutz-cream">
+                                {formatMoney(mutualFund.balance)} <span className="text-xl font-normal opacity-70">EUR</span>
+                            </p>
+                            <div className="mt-2 text-xs text-stone-400 font-medium">{t('dashboard.shared_band_savings')}</div>
                         </div>
-                        <p className="text-3xl font-bold text-plutz-cream">
-                            {formatMoney(mutualFund.balance)} <span className="text-xl font-normal opacity-70">EUR</span>
-                        </p>
-                        <div className="mt-2 text-xs text-stone-400 font-medium">{t('dashboard.shared_band_savings')}</div>
-                    </div>
+                    )}
                 </div>
 
                 {/* Main Grid: Upcoming Gigs + Financial Overview */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-                    {/* Upcoming Gigs Column — 2/3 */}
-                    <div className="lg:col-span-2">
+                <div className={`grid grid-cols-1 ${can('income.view') ? 'lg:grid-cols-3' : ''} gap-8 mb-12`}>
+                    {/* Upcoming Gigs Column */}
+                    <div className={can('income.view') ? 'lg:col-span-2' : ''}>
                         <div className="flex items-center justify-between mb-4 px-1">
                             <h2 className="text-2xl font-serif text-plutz-cream">{t('dashboard.upcoming_gigs')}</h2>
                             <Link
@@ -344,7 +350,7 @@ export default function Dashboard({ inquiryStats, inquiryTotals, incomeStats, ex
                     </div>
 
                     {/* Financial Overview Column — 1/3 */}
-                    <div className="lg:col-span-1">
+                    {can('income.view') && <div className="lg:col-span-1">
                         <div className="flex items-center justify-between mb-4 px-1">
                             <h2 className="text-2xl font-serif text-plutz-cream">{t('dashboard.financial_overview')}</h2>
                         </div>
@@ -438,7 +444,7 @@ export default function Dashboard({ inquiryStats, inquiryTotals, incomeStats, ex
                                 )}
                             </div>
                         </div>
-                    </div>
+                    </div>}
                 </div>
 
                 {/* User Personal Stats */}
@@ -465,27 +471,33 @@ export default function Dashboard({ inquiryStats, inquiryTotals, incomeStats, ex
             {/* Fixed Bottom Quick Actions */}
             <div className="fixed bottom-0 sm:bottom-8 left-1/2 -translate-x-1/2 w-full max-w-[1200px] px-0 sm:px-6 z-50">
                 <div className="bg-plutz-surface/95 sm:bg-plutz-surface/80 backdrop-blur-xl border-t sm:border border-plutz-tan/20 px-2 pt-2 pb-6 sm:p-3 sm:rounded-2xl shadow-2xl flex items-center justify-center gap-2 sm:gap-4">
-                    <Link
-                        href={route('inquiries.create')}
-                        className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 sm:gap-2 bg-plutz-tan hover:bg-plutz-tan/90 transition-all text-plutz-dark px-3 sm:px-6 py-3.5 sm:py-3 rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider sm:tracking-widest"
-                    >
-                        <span className="material-symbols-outlined text-base sm:text-lg">add_circle</span>
-                        {t('dashboard.new_inquiry')}
-                    </Link>
-                    <Link
-                        href={route('expenses.create')}
-                        className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 sm:gap-2 bg-plutz-tan/20 hover:bg-plutz-tan/30 transition-all text-plutz-tan px-3 sm:px-6 py-3.5 sm:py-3 rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider sm:tracking-widest border border-plutz-tan/20"
-                    >
-                        <span className="material-symbols-outlined text-base sm:text-lg">receipt_long</span>
-                        {t('dashboard.add_expense')}
-                    </Link>
-                    <Link
-                        href={route('incomes.create')}
-                        className="hidden sm:flex items-center gap-2 bg-plutz-tan/20 hover:bg-plutz-tan/30 transition-all text-plutz-tan px-6 py-3 rounded-xl font-bold text-sm uppercase tracking-widest border border-plutz-tan/20"
-                    >
-                        <span className="material-symbols-outlined text-lg">account_balance</span>
-                        {t('dashboard.add_income')}
-                    </Link>
+                    {can('inquiries.create') && (
+                        <Link
+                            href={route('inquiries.create')}
+                            className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 sm:gap-2 bg-plutz-tan hover:bg-plutz-tan/90 transition-all text-plutz-dark px-3 sm:px-6 py-3.5 sm:py-3 rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider sm:tracking-widest"
+                        >
+                            <span className="material-symbols-outlined text-base sm:text-lg">add_circle</span>
+                            {t('dashboard.new_inquiry')}
+                        </Link>
+                    )}
+                    {can('expenses.create') && (
+                        <Link
+                            href={route('expenses.create')}
+                            className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 sm:gap-2 bg-plutz-tan/20 hover:bg-plutz-tan/30 transition-all text-plutz-tan px-3 sm:px-6 py-3.5 sm:py-3 rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider sm:tracking-widest border border-plutz-tan/20"
+                        >
+                            <span className="material-symbols-outlined text-base sm:text-lg">receipt_long</span>
+                            {t('dashboard.add_expense')}
+                        </Link>
+                    )}
+                    {can('income.create') && (
+                        <Link
+                            href={route('incomes.create')}
+                            className="hidden sm:flex items-center gap-2 bg-plutz-tan/20 hover:bg-plutz-tan/30 transition-all text-plutz-tan px-6 py-3 rounded-xl font-bold text-sm uppercase tracking-widest border border-plutz-tan/20"
+                        >
+                            <span className="material-symbols-outlined text-lg">account_balance</span>
+                            {t('dashboard.add_income')}
+                        </Link>
+                    )}
                     <Link
                         href={route('calendar.index')}
                         className="sm:hidden flex-shrink-0 flex items-center justify-center bg-plutz-tan/20 hover:bg-plutz-tan/30 transition-all text-plutz-tan p-3.5 rounded-lg border border-plutz-tan/20"

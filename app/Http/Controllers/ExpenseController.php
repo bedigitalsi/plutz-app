@@ -63,7 +63,8 @@ class ExpenseController extends Controller
         // Handle file upload
         if ($request->hasFile('attachment')) {
             $file = $request->file('attachment');
-            $path = $file->store('expenses', 'google');
+            $year = date('Y', strtotime($expense->invoice_date));
+            $path = $file->store($year, 'google');
 
             Attachment::create([
                 'id' => (string) Str::uuid(),
@@ -132,7 +133,8 @@ class ExpenseController extends Controller
         // Handle new file upload
         if ($request->hasFile('attachment')) {
             $file = $request->file('attachment');
-            $path = $file->store('expenses', 'google');
+            $year = date('Y', strtotime($expense->invoice_date));
+            $path = $file->store($year, 'google');
 
             Attachment::create([
                 'id' => (string) Str::uuid(),

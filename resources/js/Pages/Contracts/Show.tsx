@@ -107,12 +107,6 @@ export default function Show({ auth, contract, flash }: Props & { flash?: any })
                                         >
                                             {t('contracts.send_invitation')}
                                         </button>
-                                        <button
-                                            onClick={handleDelete}
-                                            className="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700"
-                                        >
-                                            {t('common.delete')}
-                                        </button>
                                     </>
                                 )}
                                 {contract.status === 'sent' && (
@@ -123,6 +117,12 @@ export default function Show({ auth, contract, flash }: Props & { flash?: any })
                                         {t('contracts.resend_invitation')}
                                     </button>
                                 )}
+                                <button
+                                    onClick={handleDelete}
+                                    className="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700"
+                                >
+                                    {t('common.delete')}
+                                </button>
                             </div>
                         </div>
                     </div>

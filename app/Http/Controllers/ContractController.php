@@ -8,6 +8,7 @@ use App\Models\Contract;
 use App\Models\ContractSignToken;
 use App\Models\ContractTemplate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
@@ -117,6 +118,12 @@ class ContractController extends Controller
 
     public function destroy(Contract $contract)
     {
+        // Delete attachment files from storage
+        foreach ($contract->attachments as $attachment) {
+            Storage::disk($attachment->disk)->delete($attachment->path);
+            $attachment->delete();
+        }
+
         $contract->delete();
 
         return redirect()->route('contracts.index')

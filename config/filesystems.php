@@ -49,7 +49,9 @@ return [
 
         'google' => [
             'driver' => 'google',
-            'serviceAccountJson' => env('GOOGLE_DRIVE_SERVICE_ACCOUNT_JSON'),
+            'clientId' => env('GOOGLE_DRIVE_CLIENT_ID'),
+            'clientSecret' => env('GOOGLE_DRIVE_CLIENT_SECRET'),
+            'refreshToken' => env('GOOGLE_DRIVE_REFRESH_TOKEN'),
             'folder' => env('GOOGLE_DRIVE_FOLDER_ID'),
         ],
 

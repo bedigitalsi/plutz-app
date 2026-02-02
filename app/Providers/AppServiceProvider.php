@@ -36,17 +36,12 @@ class AppServiceProvider extends ServiceProvider
 
         Storage::extend('google', function ($app, $config) {
             $client = new Client();
-            $client->setAuthConfig($config['serviceAccountJson']);
-            $client->addScope(Drive::DRIVE);
+            $client->setClientId($config['clientId']);
+            $client->setClientSecret($config['clientSecret']);
+            $client->refreshToken($config['refreshToken']);
 
             $service = new Drive($client);
-
-            $options = [];
-            if (!empty($config['folder'])) {
-                $options['sharedFolderId'] = $config['folder'];
-            }
-
-            $adapter = new GoogleDriveAdapter($service, '/', $options);
+            $adapter = new GoogleDriveAdapter($service, $config['folder'] ?? '/');
 
             $driver = new Filesystem($adapter);
 

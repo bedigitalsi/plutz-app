@@ -12,7 +12,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 export default function Create() {
     const { t } = useTranslation();
     const { data, setData, post, processing, errors } = useForm({
-        invoice_date: '',
+        invoice_date: new Date().toISOString().split('T')[0],
         amount: '',
         currency: 'EUR',
         company_name: '',

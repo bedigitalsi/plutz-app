@@ -131,6 +131,15 @@ class ContractController extends Controller
             $attachment->delete();
         }
 
+        // Clean up contract directory and signature files
+        $disk = Storage::disk('local');
+        $disk->deleteDirectory('contracts/' . $contract->id);
+        foreach ($disk->files('signatures') as $file) {
+            if (str_contains($file, 'contract-' . $contract->id . '-')) {
+                $disk->delete($file);
+            }
+        }
+
         $contract->delete();
 
         return redirect()->route('contracts.index')

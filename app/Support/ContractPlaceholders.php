@@ -21,8 +21,8 @@ class ContractPlaceholders
         return [
             '[NAROČNIK]' => $contract->client_name,
             '[EMAIL]' => $contract->client_email,
-            '[PODJETJE]' => $contract->client_company ?? 'N/A',
-            '[NASLOV]' => $contract->client_address ?? 'N/A',
+            '[PODJETJE]' => $contract->client_company ?? '-',
+            '[NASLOV]' => $contract->client_address ?? '-',
             '[DATUM_NASTOPA]' => $contract->performance_date->format('d.m.Y'),
             '[SKUPNI_ZNESEK]' => number_format($contract->total_price, 2),
             '[AVANS]' => number_format($contract->deposit_amount ?? 0, 2),

@@ -339,6 +339,12 @@
     "contracts.back_to_contract": "Nazaj na pogodbo",
     "contracts.save_changes": "Shrani spremembe",
     "contracts.saving": "Shranjevanje...",
+    "contracts.created_successfully": "Pogodba uspešno ustvarjena.",
+    "contracts.updated_successfully": "Pogodba uspešno posodobljena.",
+    "contracts.deleted_successfully": "Pogodba uspešno izbrisana.",
+    "contracts.already_signed": "Pogodba je že podpisana.",
+    "contracts.invitation_sent": "Povabilo za podpis poslano na :email",
+    "contracts.cannot_edit_sent": "Ni mogoče urejati pogodbe, ki je bila poslana ali podpisana.",
 
     "signing.title": "Podpis pogodbe",
     "signing.header": "Podpis pogodbe",

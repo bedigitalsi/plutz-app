@@ -87,12 +87,12 @@ export default function Show({ auth, contract, flash }: Props & { flash?: any })
 
                     {/* Status & Actions */}
                     <div className="bg-plutz-surface overflow-hidden shadow-sm sm:rounded-lg p-6">
-                        <div className="flex justify-between items-center">
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
                             <div>
                                 <h3 className="text-lg font-medium text-plutz-cream">{t('common.status')}</h3>
                                 <div className="mt-2">{getStatusBadge(contract.status)}</div>
                             </div>
-                            <div className="space-x-2">
+                            <div className="flex flex-wrap gap-2">
                                 {contract.status === 'draft' && (
                                     <>
                                         <Link

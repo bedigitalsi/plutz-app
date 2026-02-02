@@ -70,7 +70,7 @@ class ContractController extends Controller
         $contract = Contract::create($validated);
 
         return redirect()->route('contracts.show', $contract)
-            ->with('success', 'Contract created successfully.');
+            ->with('success', __('contracts.created_successfully'));
     }
 
     public function show(Contract $contract)
@@ -91,7 +91,7 @@ class ContractController extends Controller
     public function edit(Contract $contract)
     {
         if ($contract->status !== 'draft') {
-            return back()->with('error', 'Cannot edit contract that has been sent or signed.');
+            return back()->with('error', __('contracts.cannot_edit_sent'));
         }
 
         return Inertia::render('Contracts/Edit', [
@@ -102,7 +102,7 @@ class ContractController extends Controller
     public function update(Request $request, Contract $contract)
     {
         if ($contract->status !== 'draft') {
-            return back()->with('error', 'Cannot edit contract that has been sent or signed.');
+            return back()->with('error', __('contracts.cannot_edit_sent'));
         }
 
         $validated = $request->validate([
@@ -120,7 +120,7 @@ class ContractController extends Controller
         $contract->update($validated);
 
         return redirect()->route('contracts.show', $contract)
-            ->with('success', 'Contract updated successfully.');
+            ->with('success', __('contracts.updated_successfully'));
     }
 
     public function destroy(Contract $contract)
@@ -143,13 +143,13 @@ class ContractController extends Controller
         $contract->delete();
 
         return redirect()->route('contracts.index')
-            ->with('success', 'Contract deleted successfully.');
+            ->with('success', __('contracts.deleted_successfully'));
     }
 
     public function sendInvitation(Contract $contract)
     {
         if ($contract->status === 'signed') {
-            return back()->with('error', 'Contract is already signed.');
+            return back()->with('error', __('contracts.already_signed'));
         }
 
         // Generate token
@@ -172,7 +172,7 @@ class ContractController extends Controller
         SendContractInvitation::dispatch($contract, $token);
 
         return back()->with([
-            'success' => 'Contract invitation sent successfully.',
+            'success' => __('contracts.invitation_sent'),
             'signing_url' => route('contracts.sign', $token), // Show for testing
         ]);
     }

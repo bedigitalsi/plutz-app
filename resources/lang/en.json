@@ -339,6 +339,12 @@
     "contracts.back_to_contract": "Back to Contract",
     "contracts.save_changes": "Save Changes",
     "contracts.saving": "Saving...",
+    "contracts.created_successfully": "Contract created successfully.",
+    "contracts.updated_successfully": "Contract updated successfully.",
+    "contracts.deleted_successfully": "Contract deleted successfully.",
+    "contracts.already_signed": "Contract is already signed.",
+    "contracts.invitation_sent": "Signing invitation sent to :email",
+    "contracts.cannot_edit_sent": "Cannot edit contract that has been sent or signed.",
 
     "signing.title": "Sign Contract",
     "signing.header": "Contract Signing",

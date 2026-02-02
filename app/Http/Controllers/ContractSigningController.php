@@ -26,8 +26,9 @@ class ContractSigningController extends Controller
 
         $contract = $signToken->contract;
 
-        // Substitute variables in markdown
-        $markdown = ContractPlaceholders::substitute($contract->markdown_snapshot, $contract);
+        // Substitute only non-editable placeholders (date, price, etc.)
+        // Keep signer placeholders so the frontend can do live substitution
+        $markdown = ContractPlaceholders::substituteNonEditable($contract->markdown_snapshot, $contract);
 
         return Inertia::render('Contracts/Sign', [
             'contract' => $contract,

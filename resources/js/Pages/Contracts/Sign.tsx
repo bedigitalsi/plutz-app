@@ -38,20 +38,16 @@ export default function Sign({ contract, markdown, token }: Props) {
         consented: false,
     });
 
-    // Generate preview content with live substitution and markdown parsing
+    // Generate preview content with live placeholder substitution and markdown parsing
     const previewHtml = useMemo(() => {
         let content = markdown || '';
-        // Substitute signer form values into the markdown for live preview
-        content = content.replace(new RegExp(contract.client_name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), data.signer_name || contract.client_name);
-        content = content.replace(new RegExp(contract.client_email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), data.signer_email || contract.client_email);
-        if (contract.client_company) {
-            content = content.replace(new RegExp(contract.client_company.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), data.signer_company || contract.client_company);
-        }
-        if (contract.client_address) {
-            content = content.replace(new RegExp(contract.client_address.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), data.signer_address || contract.client_address);
-        }
+        // Replace signer placeholders with live form values
+        content = content.replaceAll('[NAROČNIK]', data.signer_name || '-');
+        content = content.replaceAll('[EMAIL]', data.signer_email || '-');
+        content = content.replaceAll('[PODJETJE]', data.signer_company || '-');
+        content = content.replaceAll('[NASLOV]', data.signer_address || '-');
         return marked(content);
-    }, [markdown, data.signer_name, data.signer_email, data.signer_company, data.signer_address, contract]);
+    }, [markdown, data.signer_name, data.signer_email, data.signer_company, data.signer_address]);
 
     const clearSignature = () => {
         signaturePad.current?.clear();
@@ -246,7 +242,7 @@ export default function Sign({ contract, markdown, token }: Props) {
                                 type="checkbox"
                                 checked={data.consented}
                                 onChange={(e) => setData('consented', e.target.checked)}
-                                className="mt-1 h-4 w-4 text-plutz-tan focus:ring-plutz-tan border-plutz-tan/20 rounded"
+                                className="mt-1 h-6 w-6 sm:h-4 sm:w-4 text-plutz-tan focus:ring-plutz-tan border-plutz-tan/20 rounded shrink-0"
                                 required
                             />
                             <label className="ml-2 block text-sm text-stone-400">

@@ -49,6 +49,28 @@ class ContractPlaceholders
     }
 
     /**
+     * Replace only non-editable placeholders (date, price, deposit, plutz address).
+     * Keeps signer placeholders ([NAROČNIK], [EMAIL], [PODJETJE], [NASLOV]) for frontend live substitution.
+     */
+    public static function substituteNonEditable(string $markdown, Contract $contract): string
+    {
+        $plutzAddress = Setting::getString('plutz_address', '') ?? '';
+
+        $replacements = [
+            '[DATUM_NASTOPA]' => $contract->performance_date->format('d.m.Y'),
+            '[SKUPNI_ZNESEK]' => number_format($contract->total_price, 2),
+            '[AVANS]' => number_format($contract->deposit_amount ?? 0, 2),
+            '[PLUTZ_ADDRESS]' => $plutzAddress,
+        ];
+
+        return str_replace(
+            array_keys($replacements),
+            array_values($replacements),
+            $markdown
+        );
+    }
+
+    /**
      * Get a list of all supported placeholders with descriptions.
      *
      * @return array

@@ -8,6 +8,7 @@ use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Vite;
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\ServiceProvider;
 use League\Flysystem\Filesystem;
 use Masbug\Flysystem\GoogleDriveAdapter;
@@ -41,7 +42,9 @@ class AppServiceProvider extends ServiceProvider
             $service = new Drive($client);
             $adapter = new GoogleDriveAdapter($service, $config['folder'] ?? '/');
 
-            return new Filesystem($adapter);
+            $driver = new Filesystem($adapter);
+
+            return new FilesystemAdapter($driver, $adapter, $config);
         });
     }
 }

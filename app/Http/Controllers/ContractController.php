@@ -7,6 +7,7 @@ use App\Jobs\SendContractInvitation;
 use App\Models\Contract;
 use App\Models\ContractSignToken;
 use App\Models\ContractTemplate;
+use App\Support\ContractPlaceholders;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -75,6 +76,12 @@ class ContractController extends Controller
     public function show(Contract $contract)
     {
         $contract->load(['creator', 'signTokens', 'attachments']);
+
+        // Replace placeholders with real data for display
+        $contract->markdown_snapshot = ContractPlaceholders::substitute(
+            $contract->markdown_snapshot,
+            $contract
+        );
 
         return Inertia::render('Contracts/Show', [
             'contract' => $contract,

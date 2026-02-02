@@ -51,9 +51,14 @@ export default function Show({ auth, contract, flash }: Props & { flash?: any })
             sent: 'bg-plutz-tan/20 text-plutz-tan',
             signed: 'bg-green-500/100/10 text-green-400',
         };
+        const labels: Record<string, string> = {
+            draft: t('contracts.draft'),
+            sent: t('contracts.sent'),
+            signed: t('contracts.signed'),
+        };
         return (
             <span className={`px-3 py-1 text-sm font-semibold rounded-full ${colors[status as keyof typeof colors] || 'bg-stone-800 text-plutz-cream'}`}>
-                {status.charAt(0).toUpperCase() + status.slice(1)}
+                {labels[status] || status}
             </span>
         );
     };

@@ -131,7 +131,7 @@ export default function Sign({ contract, markdown, token }: Props) {
                     </div>
                     
                     {/* PDF-like content area with margins */}
-                    <div className="px-12 py-10 bg-plutz-surface" style={{ minHeight: '800px' }}>
+                    <div className="px-12 py-10 bg-white" style={{ minHeight: '800px' }}>
                         {/* Contract content with PDF-like styling */}
                         <div 
                             className="contract-content"
@@ -215,12 +215,13 @@ export default function Sign({ contract, markdown, token }: Props) {
                             <label className="block text-sm font-medium text-stone-400 mb-2">
                                 {t('signing.signature')}
                             </label>
-                            <div className="border-2 border-plutz-tan/20 rounded-md bg-plutz-surface">
+                            <div className="border-2 border-plutz-tan/20 rounded-md bg-white">
                                 <SignatureCanvas
                                     ref={signaturePad}
                                     canvasProps={{
                                         className: 'w-full h-48 cursor-crosshair',
                                     }}
+                                    backgroundColor="rgb(255, 255, 255)"
                                     onEnd={() => setSignatureError('')}
                                 />
                             </div>

@@ -153,6 +153,12 @@ class ExpenseController extends Controller
 
     public function destroy(Expense $expense)
     {
+        // Delete attachment files from storage
+        foreach ($expense->attachments as $attachment) {
+            Storage::disk($attachment->disk)->delete($attachment->path);
+            $attachment->delete();
+        }
+
         $expense->delete();
 
         return Redirect::route('expenses.index')

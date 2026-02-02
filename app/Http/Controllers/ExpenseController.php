@@ -63,13 +63,13 @@ class ExpenseController extends Controller
         // Handle file upload
         if ($request->hasFile('attachment')) {
             $file = $request->file('attachment');
-            $path = $file->store('expenses', 'local');
-            
+            $path = $file->store('expenses', 'google');
+
             Attachment::create([
                 'id' => (string) Str::uuid(),
                 'attachable_type' => Expense::class,
                 'attachable_id' => $expense->id,
-                'disk' => 'local',
+                'disk' => 'google',
                 'path' => $path,
                 'original_name' => $file->getClientOriginalName(),
                 'mime' => $file->getMimeType(),
@@ -132,13 +132,13 @@ class ExpenseController extends Controller
         // Handle new file upload
         if ($request->hasFile('attachment')) {
             $file = $request->file('attachment');
-            $path = $file->store('expenses', 'local');
+            $path = $file->store('expenses', 'google');
 
             Attachment::create([
                 'id' => (string) Str::uuid(),
                 'attachable_type' => Expense::class,
                 'attachable_id' => $expense->id,
-                'disk' => 'local',
+                'disk' => 'google',
                 'path' => $path,
                 'original_name' => $file->getClientOriginalName(),
                 'mime' => $file->getMimeType(),

@@ -47,6 +47,12 @@ return [
             'report' => false,
         ],
 
+        'google' => [
+            'driver' => 'google',
+            'serviceAccountJson' => env('GOOGLE_DRIVE_SERVICE_ACCOUNT_JSON'),
+            'folder' => env('GOOGLE_DRIVE_FOLDER_ID'),
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

@@ -8,7 +8,6 @@ interface FileUploadProps {
     accept?: string;
     onChange: (file: File | null) => void;
     error?: string;
-    capture?: boolean;
 }
 
 export default function FileUpload({
@@ -16,7 +15,6 @@ export default function FileUpload({
     accept = 'image/*,application/pdf',
     onChange,
     error,
-    capture = true,
 }: FileUploadProps) {
     const { t } = useTranslation();
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -64,7 +62,6 @@ export default function FileUpload({
                     type="file"
                     accept={accept}
                     onChange={handleFileChange}
-                    capture={capture ? 'environment' : undefined}
                     className="hidden"
                 />
                 

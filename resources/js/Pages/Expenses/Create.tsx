@@ -110,7 +110,6 @@ export default function Create() {
                                         accept="image/*,application/pdf"
                                         onChange={(file) => setData('attachment', file)}
                                         error={errors.attachment}
-                                        capture={true}
                                     />
                                 </div>
                             </div>

@@ -226,7 +226,6 @@ export default function Edit({ expense }: Props) {
                                         accept="image/*,application/pdf"
                                         onChange={(file) => setData('attachment', file)}
                                         error={errors.attachment}
-                                        capture={true}
                                     />
                                 </div>
                             </div>

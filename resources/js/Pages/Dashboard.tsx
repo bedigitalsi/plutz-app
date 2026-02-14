@@ -485,7 +485,10 @@ export default function Dashboard({ inquiryStats, inquiryTotals, incomeStats, ex
                                                 <td className="px-4 py-3 text-sm text-right text-green-400 font-semibold">{formatMoney(member.total_distributed)} €</td>
                                                 <td className="px-4 py-3 text-sm text-right text-plutz-tan font-semibold">{formatMoney(member.invoiced_distributed)} €</td>
                                                 <td className="px-4 py-3 text-sm text-right text-red-400 font-semibold">{formatMoney(member.total_expenses)} €</td>
-                                                <td className={`px-4 py-3 text-sm text-right font-bold ${net >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>{net >= 0 ? '+' : ''}{formatMoney(net)} €</td>
+                                                <td className="px-4 py-3 text-sm text-right font-bold">
+                                                    <span className={net >= 0 ? 'text-emerald-400' : 'text-red-400'}>{net >= 0 ? '+' : ''}{formatMoney(net)} €</span>
+                                                    <span className="text-stone-500 font-normal"> ({formatMoney(member.invoiced_distributed - member.total_expenses)} €)</span>
+                                                </td>
                                             </tr>
                                         );
                                     })}

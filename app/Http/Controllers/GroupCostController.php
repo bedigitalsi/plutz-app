@@ -38,7 +38,7 @@ class GroupCostController extends Controller
         }
 
         return Inertia::render('GroupCosts/Index', [
-            'groupCosts' => $query->paginate(20)->withQueryString(),
+            'groupCosts' => ['data' => $query->get()],
             'costTypes' => CostType::where('is_active', true)->get(),
             'filters' => $request->only(['date_from', 'date_to', 'cost_type_id', 'is_paid']),
         ]);

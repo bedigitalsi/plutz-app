@@ -62,7 +62,14 @@ export default function Create({ performanceTypes, bandSizes, date }: Props) {
             <div className="max-w-[1200px] mx-auto w-full p-6 pb-0">
                 <div className="flex items-center justify-between mb-2">
                     <h2 className="text-2xl font-serif text-plutz-cream">{t('inquiries.new_inquiry_page')}</h2>
-                    <Link href={route('inquiries.index')} className="text-plutz-tan hover:text-plutz-tan-light text-sm font-medium">{t('inquiries.back_to_list')}</Link>
+                    {date ? (
+                        <Link href={route('calendar.index', { month: date.substring(0, 7) })} className="inline-flex items-center gap-1.5 text-stone-400 hover:text-plutz-tan text-sm font-medium transition-colors group">
+                            <span className="material-symbols-outlined text-lg group-hover:-translate-x-0.5 transition-transform">arrow_back</span>
+                            {t('calendar.title')}
+                        </Link>
+                    ) : (
+                        <Link href={route('inquiries.index')} className="text-plutz-tan hover:text-plutz-tan-light text-sm font-medium">{t('inquiries.back_to_list')}</Link>
+                    )}
                 </div>
             </div>
 
@@ -309,7 +316,7 @@ export default function Create({ performanceTypes, bandSizes, date }: Props) {
                             {/* Submit */}
                             <div className="flex items-center justify-end gap-4">
                                 <Link
-                                    href={route('inquiries.index')}
+                                    href={date ? route('calendar.index', { month: date.substring(0, 7) }) : route('inquiries.index')}
                                     className="text-sm text-stone-400 hover:text-plutz-cream"
                                 >
                                     {t('common.cancel')}

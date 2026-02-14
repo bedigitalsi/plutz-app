@@ -12,10 +12,10 @@ interface GroupCost {
     notes?: string;
     cost_type: {
         name: string;
-    };
+    } | null;
     creator: {
         name: string;
-    };
+    } | null;
 }
 
 interface CostType {
@@ -188,7 +188,7 @@ export default function Index({ groupCosts, costTypes, filters }: Props) {
                                                 {formatDate(cost.cost_date)}
                                             </td>
                                             <td className="whitespace-nowrap px-6 py-4 text-sm text-plutz-cream">
-                                                {cost.cost_type.name}
+                                                {cost.cost_type?.name || '—'}
                                             </td>
                                             <td className="whitespace-nowrap px-6 py-4 text-sm font-semibold text-plutz-cream">
                                                 {parseFloat(cost.amount.toString()).toFixed(2)} {cost.currency}

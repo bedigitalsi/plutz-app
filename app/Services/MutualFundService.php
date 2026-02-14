@@ -9,48 +9,51 @@ use App\Models\Setting;
 class MutualFundService
 {
     /**
-     * Recalculate all paid_amount fields using FIFO allocation.
+     * Recalculate paid_amount fields using FIFO allocation on unpaid expenses.
      * 
-     * Total pool = opening_balance + all income distributions to mutual_fund
-     * Allocate from oldest expense to newest.
+     * Opening balance covers historical items (already set on each expense).
+     * New income (from IncomeDistribution) gets allocated FIFO to remaining unpaid expenses.
      */
     public static function recalculate(): array
     {
-        // Get opening balance
         $openingBalance = (float) Setting::getString('mutual_fund_opening_balance', '0');
 
-        // Get all income distributions to mutual fund, ordered by income date
-        $inflows = IncomeDistribution::where('recipient_type', 'mutual_fund')
-            ->join('incomes', 'income_distributions.income_id', '=', 'incomes.id')
-            ->orderBy('incomes.income_date')
-            ->orderBy('income_distributions.id')
-            ->sum('income_distributions.amount');
+        // Get all income distributions to mutual fund
+        $inflows = (float) IncomeDistribution::where('recipient_type', 'mutual_fund')
+            ->sum('amount');
 
-        $totalPool = $openingBalance + (float) $inflows;
+        $totalPool = $openingBalance + $inflows;
 
         // Get all expenses ordered oldest to newest
         $expenses = GroupCost::orderBy('cost_date')->orderBy('id')->get();
 
-        $remaining = $totalPool;
-        $totalAllocated = 0;
+        // First pass: figure out what's covered by opening balance
+        // (items that were historically marked as paid keep their paid_amount)
+        // The opening balance = sum of all historically paid amounts
+        
+        // For new income, allocate FIFO to expenses not fully covered
+        $remaining = $inflows; // Only distribute new income
+        $totalAllocated = $openingBalance;
         $totalCosts = 0;
 
         foreach ($expenses as $expense) {
             $totalCosts += (float) $expense->amount;
+            $currentPaid = (float) $expense->paid_amount;
+            $needed = (float) $expense->amount - $currentPaid;
 
-            if ($remaining <= 0) {
-                // No money left
-                $expense->paid_amount = 0;
-                $expense->is_paid = false;
-            } elseif ($remaining >= (float) $expense->amount) {
-                // Fully covered
+            if ($needed <= 0 || $remaining <= 0) {
+                continue; // Already fully paid or no money left
+            }
+
+            if ($remaining >= $needed) {
+                // Fully cover the remaining
                 $expense->paid_amount = $expense->amount;
                 $expense->is_paid = true;
-                $remaining -= (float) $expense->amount;
-                $totalAllocated += (float) $expense->amount;
+                $remaining -= $needed;
+                $totalAllocated += $needed;
             } else {
-                // Partially covered
-                $expense->paid_amount = round($remaining, 2);
+                // Partially cover
+                $expense->paid_amount = round($currentPaid + $remaining, 2);
                 $expense->is_paid = false;
                 $totalAllocated += $remaining;
                 $remaining = 0;
@@ -60,18 +63,16 @@ class MutualFundService
         }
 
         $balance = $totalPool - $totalCosts;
-        $surplus = max(0, $balance);
-        $deficit = min(0, $balance);
 
         return [
             'opening_balance' => $openingBalance,
-            'total_inflows' => (float) $inflows,
+            'total_inflows' => $inflows,
             'total_pool' => $totalPool,
             'total_costs' => $totalCosts,
             'total_allocated' => $totalAllocated,
             'balance' => $balance,
-            'surplus' => $surplus,
-            'deficit' => $deficit,
+            'surplus' => max(0, $balance),
+            'deficit' => min(0, $balance),
         ];
     }
 

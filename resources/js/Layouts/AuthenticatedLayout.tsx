@@ -19,7 +19,8 @@ export default function Authenticated({
     const allNavLinks = [
         { label: t('nav.dashboard'), route: 'dashboard', match: 'dashboard' },
         { label: t('nav.calendar'), route: 'calendar.index', match: 'calendar.*', permission: 'inquiries.view' },
-        { label: t('nav.income'), route: 'incomes.index', match: ['incomes.*', 'group-costs.*'], permission: 'income.view' },
+        { label: t('nav.income'), route: 'incomes.index', match: 'incomes.*', permission: 'income.view' },
+        { label: t('nav.group_costs'), route: 'group-costs.index', match: 'group-costs.*', permission: 'group_costs.view' },
         { label: t('nav.expenses'), route: 'expenses.index', match: 'expenses.*', permission: 'expenses.view' },
         { label: t('nav.inquiries'), route: 'inquiries.index', match: 'inquiries.*', permission: 'inquiries.view' },
         { label: t('nav.contracts'), route: 'contracts.index', match: 'contracts.*', permission: 'contracts.manage' },

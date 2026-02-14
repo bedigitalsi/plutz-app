@@ -39,7 +39,7 @@ interface Props {
 export default function Edit({ groupCost, costTypes }: Props) {
     const { t } = useTranslation();
     const { data, setData, patch, processing, errors } = useForm({
-        cost_date: groupCost.cost_date,
+        cost_date: groupCost.cost_date ? groupCost.cost_date.substring(0, 10) : '',
         cost_type_id: groupCost.cost_type_id.toString(),
         amount: groupCost.amount,
         currency: groupCost.currency || 'EUR',

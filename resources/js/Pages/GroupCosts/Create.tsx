@@ -1,4 +1,4 @@
-import React, { FormEventHandler } from 'react';
+import React, { FormEventHandler, useState, useRef, useEffect } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import InputError from '@/Components/InputError';
@@ -21,12 +21,46 @@ export default function Create({ costTypes }: Props) {
     const { t } = useTranslation();
     const { data, setData, post, processing, errors } = useForm({
         cost_date: new Date().toISOString().split('T')[0],
-        cost_type_id: '',
+        cost_type_id: '' as string,
+        new_cost_type: '',
         amount: '',
         currency: 'EUR',
         is_paid: true,
         notes: '',
     });
+
+    const [typeSearch, setTypeSearch] = useState('');
+    const [showDropdown, setShowDropdown] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
+    const filteredTypes = costTypes.filter(t =>
+        t.name.toLowerCase().includes(typeSearch.toLowerCase())
+    );
+    const exactMatch = costTypes.find(t => t.name.toLowerCase() === typeSearch.toLowerCase());
+
+    const selectType = (type: CostType) => {
+        setData(prev => ({ ...prev, cost_type_id: String(type.id), new_cost_type: '' }));
+        setTypeSearch(type.name);
+        setShowDropdown(false);
+    };
+
+    const handleTypeInput = (value: string) => {
+        setTypeSearch(value);
+        setShowDropdown(true);
+        if (!exactMatch) {
+            setData(prev => ({ ...prev, cost_type_id: '', new_cost_type: value }));
+        }
+    };
+
+    useEffect(() => {
+        const handleClick = (e: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+                setShowDropdown(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClick);
+        return () => document.removeEventListener('mousedown', handleClick);
+    }, []);
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
@@ -66,23 +100,45 @@ export default function Create({ costTypes }: Props) {
                                         <InputError message={errors.cost_date} className="mt-2" />
                                     </div>
 
-                                    <div>
-                                        <InputLabel htmlFor="cost_type_id" value={t('group_costs.cost_type_field')} />
-                                        <select
-                                            id="cost_type_id"
-                                            className="mt-1 block w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
-                                            value={data.cost_type_id}
-                                            onChange={(e) => setData('cost_type_id', e.target.value)}
-                                            required
-                                        >
-                                            <option value="">{t('group_costs.select_type')}</option>
-                                            {costTypes.map((type) => (
-                                                <option key={type.id} value={type.id}>
-                                                    {type.name}
-                                                </option>
-                                            ))}
-                                        </select>
-                                        <InputError message={errors.cost_type_id} className="mt-2" />
+                                    <div ref={dropdownRef} className="relative">
+                                        <InputLabel htmlFor="cost_type" value={t('group_costs.cost_type_field')} />
+                                        <input
+                                            id="cost_type"
+                                            type="text"
+                                            className="mt-1 block w-full rounded-md border-plutz-tan/20 bg-plutz-dark text-plutz-cream shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
+                                            value={typeSearch}
+                                            onChange={(e) => handleTypeInput(e.target.value)}
+                                            onFocus={() => setShowDropdown(true)}
+                                            placeholder={t('group_costs.select_type')}
+                                            autoComplete="off"
+                                        />
+                                        {showDropdown && (filteredTypes.length > 0 || (typeSearch && !exactMatch)) && (
+                                            <div className="absolute z-50 mt-1 w-full rounded-md bg-plutz-surface border border-[#2d2a28] shadow-xl max-h-48 overflow-y-auto">
+                                                {filteredTypes.map((type) => (
+                                                    <button
+                                                        key={type.id}
+                                                        type="button"
+                                                        onClick={() => selectType(type)}
+                                                        className="w-full text-left px-3 py-2 text-sm text-plutz-cream hover:bg-stone-700/50 transition-colors"
+                                                    >
+                                                        {type.name}
+                                                    </button>
+                                                ))}
+                                                {typeSearch && !exactMatch && (
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            setData(prev => ({ ...prev, cost_type_id: '', new_cost_type: typeSearch }));
+                                                            setShowDropdown(false);
+                                                        }}
+                                                        className="w-full text-left px-3 py-2 text-sm text-emerald-400 hover:bg-stone-700/50 transition-colors border-t border-[#2d2a28]"
+                                                    >
+                                                        + "{typeSearch}"
+                                                    </button>
+                                                )}
+                                            </div>
+                                        )}
+                                        <InputError message={errors.cost_type_id || errors.new_cost_type} className="mt-2" />
                                     </div>
                                 </div>
 

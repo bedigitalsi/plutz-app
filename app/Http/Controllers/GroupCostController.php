@@ -57,13 +57,24 @@ class GroupCostController extends Controller
     {
         $validated = $request->validate([
             'cost_date' => 'nullable|date',
-            'cost_type_id' => 'required|exists:cost_types,id',
+            'cost_type_id' => 'nullable|exists:cost_types,id',
+            'new_cost_type' => 'nullable|string|max:255',
             'amount' => 'required|numeric|min:0',
             'currency' => 'nullable|string|size:3',
             'is_paid' => 'required|boolean',
             'notes' => 'nullable|string',
         ]);
 
+        // Create new cost type if provided
+        if (!empty($validated['new_cost_type']) && empty($validated['cost_type_id'])) {
+            $costType = CostType::firstOrCreate(
+                ['name' => $validated['new_cost_type']],
+                ['is_active' => true]
+            );
+            $validated['cost_type_id'] = $costType->id;
+        }
+
+        unset($validated['new_cost_type']);
         $validated['created_by'] = Auth::id();
         $validated['currency'] = $validated['currency'] ?? 'EUR';
         $validated['cost_date'] = $validated['cost_date'] ?? today();

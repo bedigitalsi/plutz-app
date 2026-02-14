@@ -178,14 +178,14 @@ export default function Index({ groupCosts, costTypes, filters, fundStats }: Pro
                         <p className="text-stone-500">{t('group_costs.no_costs')}</p>
                     </div>
                 ) : (
-                    <div className="overflow-hidden rounded-lg bg-plutz-surface shadow-sm border border-[#2d2a28]">
+                    <div className="overflow-x-auto rounded-lg bg-plutz-surface shadow-sm border border-[#2d2a28]">
                         <table className="min-w-full divide-y divide-plutz-tan/10">
                             <thead className="bg-stone-900/50">
                                 <tr>
                                     <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500">{t('group_costs.date')}</th>
                                     <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500">{t('group_costs.type')}</th>
                                     <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500 hidden md:table-cell">{t('common.notes')}</th>
-                                    <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-stone-500 hidden md:table-cell">{t('group_costs.amount')}</th>
+                                    <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-stone-500">{t('group_costs.amount')}</th>
                                     <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500 min-w-[160px]">{t('group_costs.status')}</th>
                                     <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-stone-500 hidden md:table-cell">{t('common.actions')}</th>
                                 </tr>
@@ -208,7 +208,7 @@ export default function Index({ groupCosts, costTypes, filters, fundStats }: Pro
                                             <td className="px-4 py-3 text-sm text-stone-500 max-w-[200px] truncate hidden md:table-cell">
                                                 {cost.notes || '—'}
                                             </td>
-                                            <td className="whitespace-nowrap px-4 py-3 text-sm font-semibold text-plutz-cream text-right hidden md:table-cell">
+                                            <td className="whitespace-nowrap px-4 py-3 text-sm font-semibold text-plutz-cream text-right">
                                                 {formatAmount(total)} {cost.currency}
                                             </td>
                                             <td className="px-4 py-3 text-sm">

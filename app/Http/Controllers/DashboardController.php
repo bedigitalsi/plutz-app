@@ -151,7 +151,7 @@ class DashboardController extends Controller
 
         // Member breakdown (BandBoss only)
         $memberBreakdown = null;
-        if (Auth::user()->hasRole('BandBoss')) {
+        if (Auth::user()->hasRole('BandBoss') || Auth::user()->hasRole('Admin')) {
             $bandMembers = User::where('is_band_member', true)->get();
             $memberBreakdown = $bandMembers->map(function ($member) use ($dateFrom, $dateTo) {
                 // Total distributed to this user

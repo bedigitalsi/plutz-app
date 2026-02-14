@@ -18,19 +18,19 @@ class GroupCostController extends Controller
         $query = GroupCost::with(['costType', 'creator'])
             ->orderBy('cost_date', 'desc');
 
-        if ($request->has('date_from')) {
+        if ($request->filled('date_from')) {
             $query->where('cost_date', '>=', $request->date_from);
         }
         
-        if ($request->has('date_to')) {
+        if ($request->filled('date_to')) {
             $query->where('cost_date', '<=', $request->date_to);
         }
 
-        if ($request->has('cost_type_id') && $request->cost_type_id !== '') {
+        if ($request->filled('cost_type_id')) {
             $query->where('cost_type_id', $request->cost_type_id);
         }
 
-        if ($request->has('is_paid')) {
+        if ($request->filled('is_paid')) {
             if ($request->is_paid === 'yes') {
                 $query->paid();
             } elseif ($request->is_paid === 'no') {

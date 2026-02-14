@@ -53,10 +53,20 @@ export default function Index({ groupCosts, costTypes, filters, fundStats }: Pro
     const [isPaid, setIsPaid] = useState(filters.is_paid || '');
 
     const handleFilter = () => {
-        router.get(route('group-costs.index'),
-            { date_from: dateFrom, date_to: dateTo, cost_type_id: costTypeId, is_paid: isPaid },
-            { preserveState: true }
-        );
+        const params: Record<string, string> = {};
+        if (dateFrom) params.date_from = dateFrom;
+        if (dateTo) params.date_to = dateTo;
+        if (costTypeId) params.cost_type_id = costTypeId;
+        if (isPaid) params.is_paid = isPaid;
+        router.get(route('group-costs.index'), params, { preserveState: true });
+    };
+
+    const clearFilters = () => {
+        setDateFrom('');
+        setDateTo('');
+        setCostTypeId('');
+        setIsPaid('');
+        router.get(route('group-costs.index'), {}, { preserveState: true });
     };
 
     const formatDate = (dateString: string) => {
@@ -147,11 +157,17 @@ export default function Index({ groupCosts, costTypes, filters, fundStats }: Pro
                                 <option value="no">{t('group_costs.unpaid')}</option>
                             </select>
                         </div>
-                        <div className="flex items-end">
+                        <div className="flex items-end gap-2">
                             <button onClick={handleFilter}
-                                className="w-full rounded-md bg-plutz-tan px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-plutz-tan/90">
+                                className="flex-1 rounded-md bg-plutz-tan px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-plutz-tan/90">
                                 {t('group_costs.apply_filters')}
                             </button>
+                            {(dateFrom || dateTo || costTypeId || isPaid) && (
+                                <button onClick={clearFilters}
+                                    className="rounded-md border border-stone-600 px-3 py-2 text-sm text-stone-400 hover:text-white hover:border-stone-400 transition-colors">
+                                    ✕
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>

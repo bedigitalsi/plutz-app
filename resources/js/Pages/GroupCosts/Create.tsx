@@ -25,7 +25,7 @@ export default function Create({ costTypes }: Props) {
         new_cost_type: '',
         amount: '',
         currency: 'EUR',
-        is_paid: true,
+        is_paid: false,
         notes: '',
     });
 
@@ -153,20 +153,7 @@ export default function Create({ costTypes }: Props) {
                                     />
                                 </div>
 
-                                <div className="mt-4">
-                                    <label className="flex items-center">
-                                        <input
-                                            type="checkbox"
-                                            checked={data.is_paid}
-                                            onChange={(e) => setData('is_paid', e.target.checked)}
-                                            className="rounded border-plutz-tan/20 text-plutz-tan shadow-sm focus:ring-plutz-tan"
-                                        />
-                                        <span className="ml-2 text-sm text-stone-400">{t('group_costs.mark_as_paid')}</span>
-                                    </label>
-                                    <p className="mt-1 text-xs text-stone-500">
-                                        {t('group_costs.paid_hint')}
-                                    </p>
-                                </div>
+                                {/* Paid status handled automatically by FIFO */}
                             </div>
 
                             <div>

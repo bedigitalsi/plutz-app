@@ -67,6 +67,17 @@ export default function Show({ inquiry }: Props) {
             <Head title={`Inquiry - ${inquiry.location_name}`} />
 
             <div className="max-w-[1200px] mx-auto w-full p-6">
+                    {/* Back to Calendar */}
+                    <div className="mb-4">
+                        <Link
+                            href={route('calendar.index', { month: inquiry.performance_date?.substring(0, 7) })}
+                            className="inline-flex items-center gap-1.5 text-sm text-stone-400 hover:text-plutz-tan transition-colors group"
+                        >
+                            <span className="material-symbols-outlined text-lg group-hover:-translate-x-0.5 transition-transform">arrow_back</span>
+                            {t('calendar.title')}
+                        </Link>
+                    </div>
+
                     {/* Header with Status */}
                     <div className="mb-6 overflow-hidden rounded-lg bg-plutz-surface shadow-sm">
                         <div className="p-6">

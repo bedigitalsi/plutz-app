@@ -123,6 +123,7 @@
     "calendar.view_all": "View All",
     "calendar.confirmed": "Confirmed",
     "calendar.pending": "Pending",
+    "calendar.rejected": "Rejected",
     "calendar.awaiting_reply": "Awaiting Reply",
     "calendar.tbd": "TBD",
     "calendar.no_upcoming_events": "No upcoming events",

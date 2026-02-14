@@ -123,6 +123,7 @@
     "calendar.view_all": "Prikaži vse",
     "calendar.confirmed": "Potrjen",
     "calendar.pending": "Nepotrjeno",
+    "calendar.rejected": "Zavrnjeno",
     "calendar.awaiting_reply": "Čaka na odgovor",
     "calendar.tbd": "Ni določeno",
     "calendar.no_upcoming_events": "Ni prihajajočih dogodkov",

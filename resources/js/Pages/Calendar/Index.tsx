@@ -151,17 +151,17 @@ export default function Index({ currentMonth, monthLabel, events, upcoming, cale
                                                 onClick={(e) => e.stopPropagation()}
                                                 className={`w-full rounded px-2 py-1 flex items-center gap-1.5 ${
                                                     event.status === 'confirmed'
-                                                        ? 'bg-plutz-tan/20 border border-plutz-tan/30'
-                                                        : event.status === 'pending'
-                                                            ? 'bg-stone-700/50 border border-stone-600'
-                                                            : 'bg-stone-800/50 border border-stone-700'
+                                                        ? 'bg-emerald-500/25 border border-emerald-400/50'
+                                                        : event.status === 'rejected'
+                                                            ? 'bg-red-500/25 border border-red-400/50'
+                                                            : 'bg-amber-500/25 border border-amber-400/50'
                                                 }`}
                                             >
-                                                <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${
-                                                    event.status === 'confirmed' ? 'bg-plutz-tan' : 'bg-stone-400'
+                                                <div className={`w-2 h-2 rounded-full flex-shrink-0 ${
+                                                    event.status === 'confirmed' ? 'bg-emerald-400' : event.status === 'rejected' ? 'bg-red-400' : 'bg-amber-400'
                                                 }`}></div>
-                                                <span className={`text-[10px] font-medium truncate ${
-                                                    event.status === 'confirmed' ? 'text-plutz-tan' : 'text-stone-300'
+                                                <span className={`text-[10px] font-bold truncate ${
+                                                    event.status === 'confirmed' ? 'text-emerald-300' : event.status === 'rejected' ? 'text-red-300' : 'text-amber-300'
                                                 }`}>
                                                     {event.title}
                                                 </span>
@@ -191,10 +191,12 @@ export default function Index({ currentMonth, monthLabel, events, upcoming, cale
                                     <Link
                                         key={event.id}
                                         href={route('inquiries.show', event.id)}
-                                        className={`group flex flex-col p-4 rounded-lg transition-all ${
+                                        className={`group flex flex-col p-4 rounded-lg transition-all cursor-pointer ${
                                             event.status === 'confirmed'
-                                                ? 'border border-[#2d2a28] hover:border-plutz-tan/50 hover:bg-[#252220] cursor-pointer'
-                                                : 'border border-dashed border-stone-600 hover:border-stone-400 bg-[#1a1816] hover:bg-[#252220] cursor-pointer opacity-80 hover:opacity-100'
+                                                ? 'border-2 border-emerald-500/60 bg-emerald-500/5 hover:border-emerald-400 hover:bg-emerald-500/10'
+                                                : event.status === 'rejected'
+                                                    ? 'border-2 border-red-500/60 bg-red-500/5 hover:border-red-400 hover:bg-red-500/10'
+                                                    : 'border-2 border-amber-500/60 bg-amber-500/5 hover:border-amber-400 hover:bg-amber-500/10'
                                         }`}
                                     >
                                         {/* Header: Date + Status */}
@@ -204,11 +206,15 @@ export default function Index({ currentMonth, monthLabel, events, upcoming, cale
                                                 <span className="text-sm text-stone-400 font-medium">{event.day_name}</span>
                                             </div>
                                             {event.status === 'confirmed' ? (
-                                                <span className="px-2.5 py-1 rounded bg-plutz-tan text-plutz-dark text-[11px] font-bold uppercase tracking-wide">
+                                                <span className="px-2.5 py-1 rounded bg-emerald-500 text-white text-[11px] font-bold uppercase tracking-wide shadow-lg shadow-emerald-500/25">
                                                     {t('calendar.confirmed')}
                                                 </span>
+                                            ) : event.status === 'rejected' ? (
+                                                <span className="px-2.5 py-1 rounded bg-red-500 text-white text-[11px] font-bold uppercase tracking-wide shadow-lg shadow-red-500/25">
+                                                    {t('calendar.rejected') || 'ZAVRNJENO'}
+                                                </span>
                                             ) : (
-                                                <span className="px-2.5 py-1 rounded border border-stone-600 bg-stone-800 text-stone-300 text-[11px] font-bold uppercase tracking-wide">
+                                                <span className="px-2.5 py-1 rounded bg-amber-500 text-black text-[11px] font-bold uppercase tracking-wide shadow-lg shadow-amber-500/25">
                                                     {t('calendar.pending')}
                                                 </span>
                                             )}

@@ -43,6 +43,8 @@ interface Props {
         inflow: number;
         outflow: number;
         balance: number;
+        total_paid: number;
+        total_unpaid: number;
     };
     groupCostStats: {
         paid: number;
@@ -274,16 +276,19 @@ export default function Dashboard({ inquiryStats, inquiryTotals, incomeStats, ex
 
                     {/* Mutual Fund */}
                     {can('income.view') && (
-                        <div className="bg-plutz-surface p-6 rounded-xl border border-plutz-tan/10 shadow-sm">
+                        <Link href={route('group-costs.index')} className="bg-plutz-surface p-6 rounded-xl border border-plutz-tan/10 shadow-sm hover:border-plutz-tan/30 transition-colors">
                             <div className="flex items-center justify-between mb-2">
                                 <p className="text-stone-400 text-sm font-medium uppercase tracking-wider">{t('dashboard.mutual_fund')}</p>
                                 <span className="material-symbols-outlined text-plutz-tan">account_balance_wallet</span>
                             </div>
-                            <p className="text-3xl font-bold text-plutz-cream">
-                                {formatMoney(mutualFund.balance)} <span className="text-xl font-normal opacity-70">EUR</span>
+                            <p className={`text-3xl font-bold ${mutualFund.balance >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                                {mutualFund.balance >= 0 ? '+' : ''}{formatMoney(mutualFund.balance)} <span className="text-xl font-normal opacity-70">EUR</span>
                             </p>
-                            <div className="mt-2 text-xs text-stone-400 font-medium">{t('dashboard.shared_band_savings')}</div>
-                        </div>
+                            <div className="mt-3 flex items-center justify-between text-xs">
+                                <span className="text-emerald-400 font-medium">{t('group_costs.paid')}: {formatMoney(mutualFund.total_paid)} €</span>
+                                <span className="text-amber-400 font-medium">{t('group_costs.unpaid')}: {formatMoney(mutualFund.total_unpaid)} €</span>
+                            </div>
+                        </Link>
                     )}
                 </div>
 

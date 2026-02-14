@@ -71,8 +71,8 @@ export default function Index({ incomes, performanceTypes, filters }: Props) {
 
 
             <div className="max-w-[1200px] mx-auto w-full p-6">
-                    {/* Filters */}
-                    <div className="mb-6 rounded-lg bg-plutz-surface p-4 shadow-sm">
+                    {/* Filters - hidden on mobile */}
+                    <div className="mb-6 rounded-lg bg-plutz-surface p-4 shadow-sm hidden md:block">
                         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                             <div>
                                 <label className="block text-sm font-medium text-stone-400">{t('incomes.from_date')}</label>
@@ -138,25 +138,25 @@ export default function Index({ incomes, performanceTypes, filters }: Props) {
                             <p className="text-stone-500">{t('incomes.no_incomes')}</p>
                         </div>
                     ) : (
-                        <div className="overflow-hidden rounded-lg bg-plutz-surface shadow-sm">
+                        <div className="overflow-x-auto rounded-lg bg-plutz-surface shadow-sm">
                             <table className="min-w-full divide-y divide-plutz-tan/10">
                                 <thead className="bg-stone-900/50">
                                     <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500">{t('incomes.date')}</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500">{t('incomes.contact_event')}</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500">{t('incomes.type')}</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500">{t('incomes.amount')}</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500">{t('incomes.status')}</th>
-                                        <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-stone-500">{t('common.actions')}</th>
+                                        <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500">{t('incomes.date')}</th>
+                                        <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500 hidden md:table-cell">{t('incomes.contact_event')}</th>
+                                        <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500">{t('incomes.type')}</th>
+                                        <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500">{t('incomes.amount')}</th>
+                                        <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500 hidden md:table-cell">{t('incomes.status')}</th>
+                                        <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-stone-500 hidden md:table-cell">{t('common.actions')}</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-plutz-tan/10 bg-plutz-surface">
                                     {incomes.data.map((income) => (
-                                        <tr key={income.id} className="hover:bg-stone-900/50">
-                                            <td className="whitespace-nowrap px-6 py-4 text-sm text-plutz-cream">
+                                        <tr key={income.id} className="hover:bg-stone-900/50 cursor-pointer" onClick={() => router.get(route('incomes.show', income.id))}>
+                                            <td className="whitespace-nowrap px-4 py-3 text-sm text-plutz-cream">
                                                 {formatDate(income.income_date)}
                                             </td>
-                                            <td className="px-6 py-4 text-sm text-plutz-cream">
+                                            <td className="px-4 py-3 text-sm text-plutz-cream hidden md:table-cell">
                                                 <div>
                                                     <p className="font-medium">{income.contact_person}</p>
                                                     {income.inquiry && (
@@ -164,13 +164,13 @@ export default function Index({ incomes, performanceTypes, filters }: Props) {
                                                     )}
                                                 </div>
                                             </td>
-                                            <td className="whitespace-nowrap px-6 py-4 text-sm text-stone-500">
+                                            <td className="whitespace-nowrap px-4 py-3 text-sm text-stone-500">
                                                 {income.performance_type.name}
                                             </td>
-                                            <td className="whitespace-nowrap px-6 py-4 text-sm font-semibold text-green-400">
+                                            <td className="whitespace-nowrap px-4 py-3 text-sm font-semibold text-green-400">
                                                 {parseFloat(income.amount.toString()).toFixed(2)} {income.currency}
                                             </td>
-                                            <td className="whitespace-nowrap px-6 py-4 text-sm">
+                                            <td className="whitespace-nowrap px-4 py-3 text-sm hidden md:table-cell">
                                                 <div className="flex gap-2">
                                                     {income.invoice_issued && (
                                                         <span className="inline-flex rounded-full bg-plutz-tan/20 px-2 py-1 text-xs text-plutz-tan">
@@ -184,7 +184,7 @@ export default function Index({ incomes, performanceTypes, filters }: Props) {
                                                     )}
                                                 </div>
                                             </td>
-                                            <td className="whitespace-nowrap px-6 py-4 text-right text-sm">
+                                            <td className="whitespace-nowrap px-4 py-3 text-right text-sm hidden md:table-cell">
                                                 <Link
                                                     href={route('incomes.show', income.id)}
                                                     className="text-plutz-tan hover:text-plutz-tan"

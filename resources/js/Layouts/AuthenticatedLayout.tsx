@@ -48,7 +48,7 @@ export default function Authenticated({
 
                     {/* Desktop Nav */}
                     <div className="flex items-center gap-6">
-                        <nav className="hidden lg:flex items-center gap-8 text-sm font-medium uppercase tracking-widest text-stone-500">
+                        <nav className="hidden lg:flex items-center gap-5 text-xs font-medium uppercase tracking-wider text-stone-500">
                             {navLinks.map((link) => (
                                 <Link
                                     key={link.route}

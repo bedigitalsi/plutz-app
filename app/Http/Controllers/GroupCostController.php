@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CostType;
 use App\Models\GroupCost;
+use App\Services\MutualFundService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -41,6 +42,7 @@ class GroupCostController extends Controller
             'groupCosts' => ['data' => $query->get()],
             'costTypes' => CostType::where('is_active', true)->get(),
             'filters' => $request->only(['date_from', 'date_to', 'cost_type_id', 'is_paid']),
+            'fundStats' => MutualFundService::getStats(),
         ]);
     }
 
@@ -67,6 +69,7 @@ class GroupCostController extends Controller
         $validated['cost_date'] = $validated['cost_date'] ?? today();
 
         $groupCost = GroupCost::create($validated);
+        MutualFundService::recalculate();
 
         return Redirect::route('group-costs.index')
             ->with('success', 'Group cost created successfully.');
@@ -95,6 +98,7 @@ class GroupCostController extends Controller
         $validated['cost_date'] = $validated['cost_date'] ?? today();
 
         $groupCost->update($validated);
+        MutualFundService::recalculate();
 
         return Redirect::route('group-costs.index')
             ->with('success', 'Group cost updated successfully.');
@@ -103,6 +107,7 @@ class GroupCostController extends Controller
     public function destroy(GroupCost $groupCost)
     {
         $groupCost->delete();
+        MutualFundService::recalculate();
 
         return Redirect::route('group-costs.index')
             ->with('success', 'Group cost deleted successfully.');

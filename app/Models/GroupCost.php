@@ -15,6 +15,7 @@ class GroupCost extends Model
         'cost_date',
         'cost_type_id',
         'amount',
+        'paid_amount',
         'currency',
         'is_paid',
         'notes',
@@ -24,8 +25,26 @@ class GroupCost extends Model
     protected $casts = [
         'cost_date' => 'date',
         'amount' => 'decimal:2',
+        'paid_amount' => 'decimal:2',
         'is_paid' => 'boolean',
     ];
+
+    /**
+     * Get the remaining unpaid amount.
+     */
+    public function getRemainingAttribute(): float
+    {
+        return max(0, (float) $this->amount - (float) $this->paid_amount);
+    }
+
+    /**
+     * Get the paid percentage.
+     */
+    public function getPaidPercentageAttribute(): float
+    {
+        if ((float) $this->amount == 0) return 100;
+        return round(((float) $this->paid_amount / (float) $this->amount) * 100, 1);
+    }
 
     protected static function boot()
     {

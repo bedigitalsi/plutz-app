@@ -263,6 +263,7 @@
     "group_costs.paid": "Plačano",
     "group_costs.unpaid": "Neplačano",
     "group_costs.apply_filters": "Uporabi filtre",
+    "group_costs.fund_balance": "Stanje sklada",
     "group_costs.total_costs": "Skupni stroški",
     "group_costs.total_paid": "Plačano",
     "group_costs.total_unpaid": "Neplačano",

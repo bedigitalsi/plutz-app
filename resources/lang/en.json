@@ -263,6 +263,7 @@
     "group_costs.paid": "Paid",
     "group_costs.unpaid": "Unpaid",
     "group_costs.apply_filters": "Apply Filters",
+    "group_costs.fund_balance": "Fund Balance",
     "group_costs.total_costs": "Total Costs",
     "group_costs.total_paid": "Paid",
     "group_costs.total_unpaid": "Unpaid",

@@ -7,6 +7,7 @@ use App\Models\GroupCost;
 use App\Models\Income;
 use App\Models\IncomeDistribution;
 use App\Models\Inquiry;
+use App\Services\MutualFundService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -82,28 +83,9 @@ class DashboardController extends Controller
             'count' => (clone $expenseQuery)->count(),
         ];
 
-        // Mutual fund calculation
-        $mutualFundInflowQuery = IncomeDistribution::where('recipient_type', 'mutual_fund')
-            ->whereHas('income', function ($query) use ($dateFrom, $dateTo) {
-                if ($dateFrom) {
-                    $query->whereDate('income_date', '>=', $dateFrom);
-                }
-                if ($dateTo) {
-                    $query->whereDate('income_date', '<=', $dateTo);
-                }
-            });
-        $mutualFundInflow = $mutualFundInflowQuery->sum('amount');
-
-        $mutualFundOutflowQuery = GroupCost::paid();
-        if ($dateFrom) {
-            $mutualFundOutflowQuery->whereDate('cost_date', '>=', $dateFrom);
-        }
-        if ($dateTo) {
-            $mutualFundOutflowQuery->whereDate('cost_date', '<=', $dateTo);
-        }
-        $mutualFundOutflow = $mutualFundOutflowQuery->sum('amount');
-
-        $mutualFundBalance = $mutualFundInflow - $mutualFundOutflow;
+        // Mutual fund calculation (uses FIFO service)
+        $fundStats = MutualFundService::getStats();
+        $mutualFundBalance = $fundStats['balance'];
 
         // Build group cost query with optional date filters
         $groupCostQuery = GroupCost::query();
@@ -191,9 +173,11 @@ class DashboardController extends Controller
             'incomeStats' => $incomeStats,
             'expenseStats' => $expenseStats,
             'mutualFund' => [
-                'inflow' => $mutualFundInflow,
-                'outflow' => $mutualFundOutflow,
+                'inflow' => $fundStats['total_pool'],
+                'outflow' => $fundStats['total_costs'],
                 'balance' => $mutualFundBalance,
+                'total_paid' => $fundStats['total_paid'],
+                'total_unpaid' => $fundStats['total_unpaid'],
             ],
             'groupCostStats' => $groupCostStats,
             'userStats' => $userStats,

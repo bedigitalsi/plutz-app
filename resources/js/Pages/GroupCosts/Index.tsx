@@ -125,8 +125,8 @@ export default function Index({ groupCosts, costTypes, filters, fundStats }: Pro
                     </div>
                 </div>
 
-                {/* Filters */}
-                <div className="mb-6 rounded-lg bg-plutz-surface p-4 shadow-sm border border-[#2d2a28]">
+                {/* Filters - hidden on mobile */}
+                <div className="mb-6 rounded-lg bg-plutz-surface p-4 shadow-sm border border-[#2d2a28] hidden md:block">
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-5">
                         <div>
                             <label className="block text-xs font-medium text-stone-500 uppercase tracking-wider">{t('group_costs.from_date')}</label>
@@ -184,10 +184,10 @@ export default function Index({ groupCosts, costTypes, filters, fundStats }: Pro
                                 <tr>
                                     <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500">{t('group_costs.date')}</th>
                                     <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500">{t('group_costs.type')}</th>
-                                    <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500">{t('common.notes')}</th>
-                                    <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-stone-500">{t('group_costs.amount')}</th>
+                                    <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500 hidden md:table-cell">{t('common.notes')}</th>
+                                    <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-stone-500 hidden md:table-cell">{t('group_costs.amount')}</th>
                                     <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500 min-w-[160px]">{t('group_costs.status')}</th>
-                                    <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-stone-500">{t('common.actions')}</th>
+                                    <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-stone-500 hidden md:table-cell">{t('common.actions')}</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-plutz-tan/10 bg-plutz-surface">
@@ -198,17 +198,17 @@ export default function Index({ groupCosts, costTypes, filters, fundStats }: Pro
                                     const remaining = total - paid;
 
                                     return (
-                                        <tr key={cost.id} className="hover:bg-stone-900/30">
+                                        <tr key={cost.id} className="hover:bg-stone-900/30 cursor-pointer" onClick={() => router.get(route('group-costs.edit', cost.id))}>
                                             <td className="whitespace-nowrap px-4 py-3 text-sm text-plutz-cream">
                                                 {formatDate(cost.cost_date)}
                                             </td>
                                             <td className="whitespace-nowrap px-4 py-3 text-sm text-plutz-cream">
                                                 {cost.cost_type?.name || '—'}
                                             </td>
-                                            <td className="px-4 py-3 text-sm text-stone-500 max-w-[200px] truncate">
+                                            <td className="px-4 py-3 text-sm text-stone-500 max-w-[200px] truncate hidden md:table-cell">
                                                 {cost.notes || '—'}
                                             </td>
-                                            <td className="whitespace-nowrap px-4 py-3 text-sm font-semibold text-plutz-cream text-right">
+                                            <td className="whitespace-nowrap px-4 py-3 text-sm font-semibold text-plutz-cream text-right hidden md:table-cell">
                                                 {formatAmount(total)} {cost.currency}
                                             </td>
                                             <td className="px-4 py-3 text-sm">
@@ -233,12 +233,12 @@ export default function Index({ groupCosts, costTypes, filters, fundStats }: Pro
                                                     </span>
                                                 )}
                                             </td>
-                                            <td className="whitespace-nowrap px-4 py-3 text-right text-sm">
+                                            <td className="whitespace-nowrap px-4 py-3 text-right text-sm hidden md:table-cell">
                                                 <div className="flex items-center justify-end gap-3">
                                                     <Link href={route('group-costs.edit', cost.id)} className="text-plutz-tan hover:text-plutz-cream text-xs">
                                                         {t('common.edit')}
                                                     </Link>
-                                                    <button onClick={() => handleDelete(cost.id)} className="text-red-400 hover:text-red-300 text-xs">
+                                                    <button onClick={(e) => { e.stopPropagation(); handleDelete(cost.id); }} className="text-red-400 hover:text-red-300 text-xs">
                                                         {t('common.delete')}
                                                     </button>
                                                 </div>

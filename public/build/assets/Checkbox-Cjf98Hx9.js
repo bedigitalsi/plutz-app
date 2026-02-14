@@ -1,0 +1,1 @@
+import{j as r}from"./app-TpI9Fo31.js";function n({className:t="",...o}){return r.jsx("input",{...o,type:"checkbox",className:"rounded border-plutz-tan/20 bg-plutz-dark text-plutz-tan shadow-sm focus:ring-plutz-tan "+t})}export{n as C};

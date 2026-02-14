@@ -1,0 +1,1 @@
+import{j as o}from"./app-TpI9Fo31.js";function r({value:t,className:e="",children:s,...n}){return o.jsx("label",{...n,className:"block text-sm font-medium text-stone-400 "+e,children:t||s})}export{r as I};

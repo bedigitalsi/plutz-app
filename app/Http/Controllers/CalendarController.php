@@ -37,6 +37,7 @@ class CalendarController extends Controller
                     'price' => $inquiry->price_amount ? (float) $inquiry->price_amount : null,
                     'currency' => $inquiry->currency ?? 'EUR',
                     'performance_type' => $inquiry->performanceType?->name,
+                    'contact_person' => $inquiry->contact_person,
                 ];
             });
 

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -14,6 +14,7 @@ interface CalendarEvent {
     price: number | null;
     currency: string;
     performance_type: string | null;
+    contact_person: string | null;
 }
 
 interface UpcomingEvent {
@@ -42,6 +43,8 @@ interface Props {
 export default function Index({ currentMonth, monthLabel, events, upcoming, calendarStart, calendarEnd, today }: Props) {
     const { t } = useTranslation();
     const hidePrices = (usePage().props.auth as any).user?.hide_prices;
+    const [modalDate, setModalDate] = useState<string | null>(null);
+    const [modalEvents, setModalEvents] = useState<CalendarEvent[]>([]);
 
     // Build calendar grid
     const calendarDays = useMemo(() => {
@@ -73,6 +76,47 @@ export default function Index({ currentMonth, monthLabel, events, upcoming, cale
 
     const formatPrice = (price: number, currency: string) => {
         return new Intl.NumberFormat('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(price) + ' ' + currency;
+    };
+
+    const getBadgeColor = (dayEvents: CalendarEvent[]) => {
+        const hasConfirmed = dayEvents.some(e => e.status === 'confirmed');
+        const hasRejected = dayEvents.some(e => e.status === 'rejected');
+        if (hasConfirmed) return 'emerald';
+        if (hasRejected) return 'red';
+        return 'amber';
+    };
+
+    const colorClasses: Record<string, { badge: string; text: string }> = {
+        emerald: { badge: 'bg-emerald-500 shadow-lg shadow-emerald-500/30', text: 'text-white' },
+        red: { badge: 'bg-red-500 shadow-lg shadow-red-500/30', text: 'text-white' },
+        amber: { badge: 'bg-amber-500 shadow-lg shadow-amber-500/30', text: 'text-black' },
+    };
+
+    const openModal = (date: string, dayEvents: CalendarEvent[]) => {
+        setModalDate(date);
+        setModalEvents(dayEvents);
+    };
+
+    const closeModal = () => {
+        setModalDate(null);
+        setModalEvents([]);
+    };
+
+    const formatModalDate = (dateStr: string) => {
+        const d = new Date(dateStr + 'T00:00:00');
+        return d.toLocaleDateString('sl-SI', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    };
+
+    const statusDotColor = (status: string) => {
+        if (status === 'confirmed') return 'bg-emerald-400';
+        if (status === 'rejected') return 'bg-red-400';
+        return 'bg-amber-400';
+    };
+
+    const statusLabel = (status: string) => {
+        if (status === 'confirmed') return t('calendar.confirmed');
+        if (status === 'rejected') return t('calendar.rejected') || 'Zavrnjeno';
+        return t('calendar.pending');
     };
 
     const weekDays = [t('calendar.mon'), t('calendar.tue'), t('calendar.wed'), t('calendar.thu'), t('calendar.fri'), t('calendar.sat'), t('calendar.sun')];
@@ -119,11 +163,14 @@ export default function Index({ currentMonth, monthLabel, events, upcoming, cale
                                     <div
                                         key={day.date}
                                         onClick={() => {
-                                            if (day.isCurrentMonth) {
+                                            if (!day.isCurrentMonth) return;
+                                            if (day.events.length > 0) {
+                                                openModal(day.date, day.events);
+                                            } else {
                                                 router.visit(route('inquiries.create', { date: day.date }));
                                             }
                                         }}
-                                        className={`min-h-[80px] lg:min-h-[120px] rounded-lg p-2 lg:p-3 flex flex-col gap-1 lg:gap-2 transition-colors overflow-hidden ${
+                                        className={`min-h-[80px] lg:min-h-[120px] rounded-lg p-2 lg:p-3 flex flex-col transition-colors overflow-hidden ${
                                             !day.isCurrentMonth
                                                 ? 'bg-plutz-surface/30 text-stone-600 cursor-default'
                                                 : day.isToday
@@ -143,30 +190,18 @@ export default function Index({ currentMonth, monthLabel, events, upcoming, cale
                                             </span>
                                         )}
 
-                                        {/* Event Pills */}
-                                        {day.events.map((event) => (
-                                            <Link
-                                                key={event.id}
-                                                href={route('inquiries.show', event.id)}
-                                                onClick={(e) => e.stopPropagation()}
-                                                className={`w-full rounded px-2 py-1 flex items-center gap-1.5 ${
-                                                    event.status === 'confirmed'
-                                                        ? 'bg-emerald-500/25 border border-emerald-400/50'
-                                                        : event.status === 'rejected'
-                                                            ? 'bg-red-500/25 border border-red-400/50'
-                                                            : 'bg-amber-500/25 border border-amber-400/50'
-                                                }`}
-                                            >
-                                                <div className={`w-2 h-2 rounded-full flex-shrink-0 ${
-                                                    event.status === 'confirmed' ? 'bg-emerald-400' : event.status === 'rejected' ? 'bg-red-400' : 'bg-amber-400'
-                                                }`}></div>
-                                                <span className={`text-[10px] font-bold truncate ${
-                                                    event.status === 'confirmed' ? 'text-emerald-300' : event.status === 'rejected' ? 'text-red-300' : 'text-amber-300'
-                                                }`}>
-                                                    {event.title}
-                                                </span>
-                                            </Link>
-                                        ))}
+                                        {/* Event Count Badge */}
+                                        {day.events.length > 0 && (() => {
+                                            const color = getBadgeColor(day.events);
+                                            const cls = colorClasses[color];
+                                            return (
+                                                <div className="flex-1 flex items-center justify-center">
+                                                    <div className={`w-9 h-9 lg:w-11 lg:h-11 rounded-lg flex items-center justify-center ${cls.badge}`}>
+                                                        <span className={`text-base lg:text-lg font-bold ${cls.text}`}>{day.events.length}</span>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })()}
                                     </div>
                                 ))}
                             </div>
@@ -271,6 +306,96 @@ export default function Index({ currentMonth, monthLabel, events, upcoming, cale
                     </aside>
                 </div>
             </main>
+
+            {/* Modal for day events */}
+            {modalDate && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={closeModal}>
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+                    <div
+                        className="relative bg-plutz-surface rounded-xl border border-[#2d2a28] shadow-2xl w-full max-w-lg max-h-[80vh] overflow-hidden flex flex-col"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {/* Modal Header */}
+                        <div className="flex items-center justify-between p-5 border-b border-[#2d2a28]">
+                            <h3 className="font-serif text-xl font-semibold text-white capitalize">{formatModalDate(modalDate)}</h3>
+                            <button onClick={closeModal} className="text-stone-400 hover:text-white transition-colors">
+                                <span className="material-symbols-outlined">close</span>
+                            </button>
+                        </div>
+
+                        {/* Modal Body */}
+                        <div className="flex-1 overflow-y-auto p-5 space-y-3">
+                            {modalEvents.map((event) => (
+                                <Link
+                                    key={event.id}
+                                    href={route('inquiries.show', event.id)}
+                                    className={`flex items-start gap-3 p-4 rounded-lg border transition-all hover:scale-[1.01] ${
+                                        event.status === 'confirmed'
+                                            ? 'border-emerald-500/40 bg-emerald-500/5 hover:bg-emerald-500/10'
+                                            : event.status === 'rejected'
+                                                ? 'border-red-500/40 bg-red-500/5 hover:bg-red-500/10'
+                                                : 'border-amber-500/40 bg-amber-500/5 hover:bg-amber-500/10'
+                                    }`}
+                                >
+                                    {/* Status dot */}
+                                    <div className={`w-3 h-3 rounded-full mt-1 flex-shrink-0 ${statusDotColor(event.status)}`} />
+
+                                    {/* Info */}
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex items-center justify-between gap-2">
+                                            <h4 className="text-base font-semibold text-white truncate">{event.title}</h4>
+                                            <span className={`text-[10px] font-bold uppercase tracking-wide flex-shrink-0 px-2 py-0.5 rounded ${
+                                                event.status === 'confirmed' ? 'bg-emerald-500/20 text-emerald-300'
+                                                : event.status === 'rejected' ? 'bg-red-500/20 text-red-300'
+                                                : 'bg-amber-500/20 text-amber-300'
+                                            }`}>{statusLabel(event.status)}</span>
+                                        </div>
+                                        <div className="mt-1 space-y-0.5">
+                                            {event.contact_person && (
+                                                <p className="text-sm text-stone-400 flex items-center gap-1.5">
+                                                    <span className="material-symbols-outlined text-[14px]">person</span>
+                                                    {event.contact_person}
+                                                </p>
+                                            )}
+                                            {event.location_address && (
+                                                <p className="text-sm text-stone-400 flex items-center gap-1.5">
+                                                    <span className="material-symbols-outlined text-[14px]">location_on</span>
+                                                    {event.location_address}
+                                                </p>
+                                            )}
+                                        </div>
+                                        <div className="flex items-center gap-4 mt-2">
+                                            {event.time && (
+                                                <span className="text-xs text-stone-500 flex items-center gap-1">
+                                                    <span className="material-symbols-outlined text-[14px]">schedule</span>
+                                                    {event.time}
+                                                </span>
+                                            )}
+                                            {!hidePrices && event.price != null && (
+                                                <span className="text-xs text-stone-500 flex items-center gap-1">
+                                                    <span className="material-symbols-outlined text-[14px]">payments</span>
+                                                    {formatPrice(event.price, event.currency)}
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+
+                        {/* Modal Footer — Add New */}
+                        <div className="p-5 border-t border-[#2d2a28]">
+                            <Link
+                                href={route('inquiries.create', { date: modalDate })}
+                                className="w-full py-3 rounded-lg border border-dashed border-stone-600 text-stone-400 hover:text-white hover:border-stone-400 hover:bg-[#252220] transition-all text-sm font-medium flex items-center justify-center gap-2"
+                            >
+                                <span className="material-symbols-outlined text-lg">add</span>
+                                {t('calendar.add_event_request')}
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+            )}
         </AuthenticatedLayout>
     );
 }

@@ -7,6 +7,7 @@ use App\Models\GroupCost;
 use App\Models\Income;
 use App\Models\IncomeDistribution;
 use App\Models\Inquiry;
+use App\Models\User;
 use App\Services\MutualFundService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -148,6 +149,43 @@ class DashboardController extends Controller
             $userStats['monthly'] = $monthlyQuery->get();
         }
 
+        // Member breakdown (BandBoss only)
+        $memberBreakdown = null;
+        if (Auth::user()->hasRole('BandBoss')) {
+            $bandMembers = User::where('is_band_member', true)->get();
+            $memberBreakdown = $bandMembers->map(function ($member) use ($dateFrom, $dateTo) {
+                // Total distributed to this user
+                $distQuery = IncomeDistribution::where('recipient_type', 'user')
+                    ->where('recipient_user_id', $member->id)
+                    ->whereHas('income', function ($q) use ($dateFrom, $dateTo) {
+                        if ($dateFrom) $q->whereDate('income_date', '>=', $dateFrom);
+                        if ($dateTo) $q->whereDate('income_date', '<=', $dateTo);
+                    });
+
+                // Distributed from invoiced incomes only
+                $invoicedDistQuery = IncomeDistribution::where('recipient_type', 'user')
+                    ->where('recipient_user_id', $member->id)
+                    ->whereHas('income', function ($q) use ($dateFrom, $dateTo) {
+                        $q->where('invoice_issued', true);
+                        if ($dateFrom) $q->whereDate('income_date', '>=', $dateFrom);
+                        if ($dateTo) $q->whereDate('income_date', '<=', $dateTo);
+                    });
+
+                // Expenses added by this user
+                $expQuery = Expense::where('created_by', $member->id);
+                if ($dateFrom) $expQuery->whereDate('invoice_date', '>=', $dateFrom);
+                if ($dateTo) $expQuery->whereDate('invoice_date', '<=', $dateTo);
+
+                return [
+                    'id' => $member->id,
+                    'name' => $member->name,
+                    'total_distributed' => (float) (clone $distQuery)->sum('amount'),
+                    'invoiced_distributed' => (float) (clone $invoicedDistQuery)->sum('amount'),
+                    'total_expenses' => (float) $expQuery->sum('amount'),
+                ];
+            })->values()->toArray();
+        }
+
         // Upcoming gigs (confirmed inquiries with future performance dates)
         $upcomingGigs = Inquiry::with(['performanceType', 'bandSize'])
             ->where('status', '!=', 'rejected')
@@ -181,6 +219,7 @@ class DashboardController extends Controller
             ],
             'groupCostStats' => $groupCostStats,
             'userStats' => $userStats,
+            'memberBreakdown' => $memberBreakdown,
             'upcomingGigs' => $upcomingGigs,
             'recentInquiries' => $recentInquiries,
             'recentIncomes' => $recentIncomes,

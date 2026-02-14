@@ -55,6 +55,13 @@ interface Props {
         total_received: number;
         monthly: { month: string; total: number }[];
     } | null;
+    memberBreakdown?: {
+        id: number;
+        name: string;
+        total_distributed: number;
+        invoiced_distributed: number;
+        total_expenses: number;
+    }[] | null;
     upcomingGigs: UpcomingGig[];
     filters: {
         date_from: string | null;
@@ -62,7 +69,7 @@ interface Props {
     };
 }
 
-export default function Dashboard({ inquiryStats, inquiryTotals, incomeStats, expenseStats, mutualFund, groupCostStats, userStats, upcomingGigs, filters }: Props) {
+export default function Dashboard({ inquiryStats, inquiryTotals, incomeStats, expenseStats, mutualFund, groupCostStats, userStats, memberBreakdown, upcomingGigs, filters }: Props) {
     const { t, locale } = useTranslation();
     const authProps = usePage().props.auth as any;
     const permissions: string[] = authProps.permissions ?? [];
@@ -453,6 +460,40 @@ export default function Dashboard({ inquiryStats, inquiryTotals, incomeStats, ex
                         </div>
                     </div>}
                 </div>
+
+                {/* Member Breakdown (BandBoss only) */}
+                {memberBreakdown && memberBreakdown.length > 0 && (
+                    <div className="mb-12">
+                        <h2 className="text-2xl font-serif text-plutz-cream mb-4 px-1">{t('dashboard.member_breakdown')}</h2>
+                        <div className="overflow-x-auto rounded-xl bg-plutz-surface border border-plutz-tan/10 shadow-sm">
+                            <table className="min-w-full divide-y divide-plutz-tan/10">
+                                <thead className="bg-stone-900/50">
+                                    <tr>
+                                        <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-stone-500">{t('dashboard.member')}</th>
+                                        <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-stone-500">{t('dashboard.distributed')}</th>
+                                        <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-stone-500">{t('dashboard.invoiced')}</th>
+                                        <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-stone-500">{t('dashboard.expenses_label')}</th>
+                                        <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-stone-500">{t('dashboard.net')}</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-plutz-tan/10">
+                                    {memberBreakdown.map((member) => {
+                                        const net = member.total_distributed - member.total_expenses;
+                                        return (
+                                            <tr key={member.id} className="hover:bg-stone-900/30">
+                                                <td className="px-4 py-3 text-sm font-medium text-plutz-cream">{member.name}</td>
+                                                <td className="px-4 py-3 text-sm text-right text-green-400 font-semibold">{formatMoney(member.total_distributed)} €</td>
+                                                <td className="px-4 py-3 text-sm text-right text-plutz-tan font-semibold">{formatMoney(member.invoiced_distributed)} €</td>
+                                                <td className="px-4 py-3 text-sm text-right text-red-400 font-semibold">{formatMoney(member.total_expenses)} €</td>
+                                                <td className={`px-4 py-3 text-sm text-right font-bold ${net >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>{net >= 0 ? '+' : ''}{formatMoney(net)} €</td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                )}
 
                 {/* User Personal Stats */}
                 {userStats && (

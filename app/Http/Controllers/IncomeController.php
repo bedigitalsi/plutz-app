@@ -7,6 +7,7 @@ use App\Models\IncomeDistribution;
 use App\Models\Inquiry;
 use App\Models\PerformanceType;
 use App\Models\User;
+use App\Services\MutualFundService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -106,9 +107,17 @@ class IncomeController extends Controller
 
     public function destroy(Income $income)
     {
+        $hadFundDistribution = $income->distributions()
+            ->where('recipient_type', 'mutual_fund')->exists();
+
         // Delete distributions first
         $income->distributions()->delete();
         $income->delete();
+
+        // Recalculate mutual fund if it was affected
+        if ($hadFundDistribution) {
+            MutualFundService::recalculate();
+        }
 
         return Redirect::route('incomes.index')
             ->with('success', 'Income deleted successfully.');
@@ -147,6 +156,13 @@ class IncomeController extends Controller
                 ]);
             }
         });
+
+        // Recalculate mutual fund if any distribution goes to the fund
+        $hasFundDistribution = collect($validated['distributions'])
+            ->contains('recipient_type', 'mutual_fund');
+        if ($hasFundDistribution) {
+            MutualFundService::recalculate();
+        }
 
         return Redirect::route('incomes.show', $income->id)
             ->with('success', 'Income distributed successfully.');

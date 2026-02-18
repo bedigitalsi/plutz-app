@@ -90,8 +90,8 @@ class ContractController extends Controller
 
     public function edit(Contract $contract)
     {
-        if ($contract->status !== 'draft') {
-            return back()->with('error', __('contracts.cannot_edit_sent'));
+        if (!in_array($contract->status, ['draft', 'sent'])) {
+            return back()->with('error', __('contracts.cannot_edit_signed'));
         }
 
         return Inertia::render('Contracts/Edit', [
@@ -101,8 +101,8 @@ class ContractController extends Controller
 
     public function update(Request $request, Contract $contract)
     {
-        if ($contract->status !== 'draft') {
-            return back()->with('error', __('contracts.cannot_edit_sent'));
+        if (!in_array($contract->status, ['draft', 'sent'])) {
+            return back()->with('error', __('contracts.cannot_edit_signed'));
         }
 
         $validated = $request->validate([
@@ -116,6 +116,13 @@ class ContractController extends Controller
             'currency' => 'nullable|string|size:3',
             'markdown_snapshot' => 'required|string',
         ]);
+
+        // If contract was sent, reset to draft and invalidate sign tokens
+        if ($contract->status === 'sent') {
+            $validated['status'] = 'draft';
+            $validated['sent_at'] = null;
+            $contract->signTokens()->delete();
+        }
 
         $contract->update($validated);
 

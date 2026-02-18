@@ -98,11 +98,16 @@ export default function Show({ auth, contract, flash }: Props & { flash?: any })
                                 <div className="mt-2">{getStatusBadge(contract.status)}</div>
                             </div>
                             <div className="flex flex-wrap gap-2">
-                                {contract.status === 'draft' && (
+                                {(contract.status === 'draft' || contract.status === 'sent') && (
                                     <>
                                         <Link
                                             href={route('contracts.edit', contract.id)}
                                             className="inline-flex items-center px-4 py-2 bg-stone-700 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-stone-700"
+                                            onClick={(e) => {
+                                                if (contract.status === 'sent' && !confirm(t('contracts.edit_sent_warning'))) {
+                                                    e.preventDefault();
+                                                }
+                                            }}
                                         >
                                             {t('common.edit')}
                                         </Link>
@@ -110,17 +115,9 @@ export default function Show({ auth, contract, flash }: Props & { flash?: any })
                                             onClick={handleSend}
                                             className="inline-flex items-center px-4 py-2 bg-plutz-tan border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-plutz-tan/90"
                                         >
-                                            {t('contracts.send_invitation')}
+                                            {contract.status === 'sent' ? t('contracts.resend_invitation') : t('contracts.send_invitation')}
                                         </button>
                                     </>
-                                )}
-                                {contract.status === 'sent' && (
-                                    <button
-                                        onClick={handleSend}
-                                        className="inline-flex items-center px-4 py-2 bg-plutz-tan border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-plutz-tan/90"
-                                    >
-                                        {t('contracts.resend_invitation')}
-                                    </button>
                                 )}
                                 <button
                                     onClick={handleDelete}

@@ -11,7 +11,6 @@
     "nav.settings": "Nastavitve",
     "nav.profile": "Profil",
     "nav.logout": "Odjava",
-
     "common.save": "Shrani",
     "common.saved": "Shranjeno.",
     "common.cancel": "Prekliči",
@@ -41,7 +40,6 @@
     "common.no_results": "Ni rezultatov.",
     "common.language": "Jezik",
     "common.system_default": "Sistemska privzeta vrednost",
-
     "auth.login": "Prijava",
     "auth.login.email": "E-pošta",
     "auth.login.password": "Geslo",
@@ -64,7 +62,6 @@
     "auth.verify_email.description": "Hvala za registracijo! Preden začnete, prosimo potrdite svoj e-poštni naslov s klikom na povezavo, ki smo vam jo poslali. Če e-pošte niste prejeli, vam jo z veseljem pošljemo znova.",
     "auth.verify_email.sent": "Nova potrditvena povezava je bila poslana na e-poštni naslov, ki ste ga navedli ob registraciji.",
     "auth.verify_email.resend": "Ponovno pošlji potrditveno e-pošto",
-
     "dashboard.title": "Nadzorna plošča",
     "dashboard.all_time": "Celotno obdobje",
     "dashboard.from": "Od",
@@ -115,7 +112,6 @@
     "dashboard.new_inquiry": "Povpraševanje",
     "dashboard.add_expense": "Dodaj strošek",
     "dashboard.add_income": "Dodaj prihodek",
-
     "calendar.title": "Koledar",
     "calendar.mon": "Pon",
     "calendar.tue": "Tor",
@@ -134,7 +130,6 @@
     "calendar.tbd": "Ni določeno",
     "calendar.no_upcoming_events": "Ni prihajajočih dogodkov",
     "calendar.add_event_request": "Dodaj zahtevo za dogodek",
-
     "inquiries.title": "Povpraševanja",
     "inquiries.new_inquiry": "Novo povpraševanje",
     "inquiries.search_placeholder": "Lokacija, kontakt...",
@@ -187,7 +182,6 @@
     "inquiries.edit_inquiry": "Uredi povpraševanje",
     "inquiries.back_to_details": "Nazaj na podrobnosti",
     "inquiries.update_inquiry": "Posodobi povpraševanje",
-
     "incomes.title": "Prihodki",
     "incomes.new_income": "Nov prihodek",
     "incomes.from_date": "Od datuma",
@@ -219,7 +213,6 @@
     "incomes.contact_person": "Kontaktna oseba *",
     "incomes.invoice_issued_checkbox": "Račun izdan",
     "incomes.create_income": "Ustvari prihodek",
-
     "expenses.title": "Stroški",
     "expenses.new_expense": "Nov strošek",
     "expenses.from_date": "Od datuma",
@@ -258,7 +251,6 @@
     "expenses.new_attachment": "Dodaj novo prilogo",
     "expenses.keep": "Obdrži",
     "expenses.update_expense": "Posodobi strošek",
-
     "group_costs.title": "Skupni stroški",
     "group_costs.new_cost": "Nov strošek",
     "group_costs.from_date": "Od datuma",
@@ -291,7 +283,6 @@
     "group_costs.edit_group_cost": "Uredi skupni strošek",
     "group_costs.update_expenses": "Posodobi podatke o stroških iz skupnega sklada",
     "group_costs.update_group_cost": "Posodobi skupni strošek",
-
     "contracts.title": "Pogodbe",
     "contracts.new_contract": "+ Nova pogodba",
     "contracts.search_placeholder": "Iskanje po imenu stranke, e-pošti...",
@@ -353,7 +344,6 @@
     "contracts.already_signed": "Pogodba je že podpisana.",
     "contracts.invitation_sent": "Povabilo za podpis poslano na :email",
     "contracts.cannot_edit_sent": "Ni mogoče urejati pogodbe, ki je bila poslana ali podpisana.",
-
     "signing.title": "Podpis pogodbe",
     "signing.header": "Podpis pogodbe",
     "signing.description": "Prosimo, preglejte spodnjo pogodbo in oddajte svoj podpis za nadaljevanje.",
@@ -380,7 +370,6 @@
     "signing.expired_title": "Povezava za podpis je potekla",
     "signing.expired_message": "Ta povezava za podpis pogodbe je potekla ali je bila že uporabljena. Prosimo, obrnite se na pošiljatelja za novo povezavo za podpis.",
     "signing.expired_support": "Če menite, da gre za napako, se prosimo obrnite na podporo.",
-
     "templates.title": "Predloge pogodb",
     "templates.back_to_settings": "Nazaj na nastavitve",
     "templates.no_templates": "Ni najdenih predlog",
@@ -409,7 +398,6 @@
     "templates.edit_template": "Uredi predlogo pogodbe",
     "templates.active_notice": "Aktivna predloga: Ta predloga se trenutno uporablja kot privzeta pri ustvarjanju pogodb.",
     "templates.save_changes": "Shrani spremembe",
-
     "settings.title": "Nastavitve",
     "settings.email_title": "E-pošta",
     "settings.email_description": "Nastavite SMTP pošiljatelja in dostavo e-pošte",
@@ -484,7 +472,6 @@
     "settings.language_page_title": "Jezikovne nastavitve",
     "settings.default_language": "Privzeti jezik",
     "settings.default_language_help": "Ta jezik se uporablja za gostujoče strani (prijava, registracija), podpisovanje pogodb in e-poštna obvestila.",
-
     "users.title": "Upravljanje uporabnikov",
     "users.add_user": "Dodaj uporabnika",
     "users.no_users": "Ni najdenih uporabnikov.",
@@ -509,7 +496,6 @@
     "users.password_edit_help": "Pustite prazno za ohranitev trenutnega gesla",
     "users.password_confirm_edit": "Potrdi geslo",
     "users.update_user": "Posodobi uporabnika",
-
     "profile.title": "Profil",
     "profile.info_title": "Podatki o profilu",
     "profile.info_description": "Posodobite podatke o svojem profilu in e-poštni naslov.",
@@ -526,12 +512,10 @@
     "profile.delete_button": "Izbriši račun",
     "profile.delete_confirm_title": "Ali ste prepričani, da želite izbrisati svoj račun?",
     "profile.delete_confirm_description": "Ko je vaš račun izbrisan, bodo vsi njegovi viri in podatki trajno izbrisani. Prosimo, vnesite geslo za potrditev trajnega izbrisa računa.",
-
     "welcome.title": "Dobrodošli",
     "welcome.already_logged": "Dobrodošli nazaj!",
     "welcome.logged_in": "Že ste prijavljeni.",
     "welcome.go_dashboard": "Pojdi na nadzorno ploščo",
-
     "ical.title": "iCal viri",
     "ical.about_title": "O iCal virih",
     "ical.about_description": "Ustvarite vire za naročnino na potrjena povpraševanja v Apple Koledarju ali drugih aplikacijah za koledar. Vsak vir ustvari edinstven URL, ki ga lahko kopirate in uporabite v svoji aplikaciji za koledar.",
@@ -547,7 +531,6 @@
     "ical.create_first": "Ustvarite svoj prvi vir",
     "ical.feed_info": "Ta vir prikazuje vsa potrjena povpraševanja.",
     "ical.confirm_delete": "Ali ste prepričani, da želite izbrisati ta vir? URL naročnine bo prenehal delovati.",
-
     "help.install_title": "Namestite Plutz na svoj iPhone",
     "help.steps_title": "Koraki namestitve",
     "help.step1": "Odprite Safari na svojem iPhonu (to deluje samo v Safariju, ne v Chromu ali drugih brskalnikih)",
@@ -561,23 +544,19 @@
     "help.benefit2": "Celozaslonska izkušnja brez brskalniške vrstice",
     "help.benefit3": "Hitrejši časi nalaganja",
     "help.benefit4": "Deluje kot izvorna aplikacija",
-
     "email.contract_invitation_subject": "Povabilo k podpisu pogodbe",
     "email.contract_invitation_body": "Spoštovani :name,\n\nProsimo, podpišite pogodbo z obiskom:\n:url\n\nHvala,\nPlutz",
     "email.signed_contract_client_subject": "Podpisana pogodba",
     "email.signed_contract_client_body": "Spoštovani :name,\n\nHvala za podpis pogodbe. V prilogi najdete podpisan PDF.\n\nLep pozdrav,\nPlutz",
     "email.signed_contract_admin_body": "Pogodbo je podpisal/a :name. PDF v prilogi.",
-
     "email.inquiry_confirmed_subject": "Dogodek potrjen",
     "email.inquiry_confirmed_body": "Pozdravljeni,\n\nDogodek je bil potrjen!\n\nDatum: :date\nUra: :time\nTrajanje: :duration\nVrsta nastopa: :performance_type\nVelikost zasedbe: :band_size\n\nLokacija: :location\nNaslov: :address\n\nKontaktna oseba: :contact_person\nE-pošta: :contact_email\nTelefon: :contact_phone\n\nOpombe: :notes\n\nLep pozdrav,\nPlutz",
-
     "component.file_upload_button": "Kliknite za nalaganje ali fotografiranje",
     "component.file_upload_formats": "PNG, JPG, PDF do 10MB",
     "component.file_upload_remove": "Odstrani",
     "component.status_pending": "Nepotrjeno",
     "component.status_confirmed": "Potrjeno",
     "component.status_rejected": "Zavrnjeno",
-
     "distribution.title": "Razdelitev prihodka",
     "distribution.total_to_distribute": "Skupaj za razdelitev:",
     "distribution.include_mutual_fund": "Vključi skupni sklad",
@@ -593,7 +572,47 @@
     "distribution.over_distributed": "Razdeljen znesek presega znesek prihodka!",
     "distribution.save": "Shrani razdelitev",
     "distribution.saving": "Shranjujem...",
-
     "users.hide_prices": "Skrij cene",
-    "users.hide_prices_help": "Ko je omogočeno, uporabnik ne bo videl cen na povpraševanjih."
+    "users.hide_prices_help": "Ko je omogočeno, uporabnik ne bo videl cen na povpraševanjih.",
+    "Email History": "Zgodovina e-pošte",
+    "View and manage sent email logs": "Pregleduj in upravljaj dnevnik poslane e-pošte",
+    "Back to Settings": "Nazaj na nastavitve",
+    "Search": "Iskanje",
+    "Search by To email or Subject": "Iskanje po prejemniku ali zadevi",
+    "Type": "Vrsta",
+    "All Types": "Vse vrste",
+    "Contract Invitation": "Povabilo k podpisu",
+    "Contract Signed": "Pogodba podpisana",
+    "Inquiry Confirmed": "Povpraševanje potrjeno",
+    "Test": "Test",
+    "Other": "Drugo",
+    "Apply": "Uporabi",
+    "Reset": "Ponastavi",
+    "Bulk Delete": "Množično brisanje",
+    "Delete logs older than": "Izbriši zapise starejše od",
+    "7 days": "7 dni",
+    "30 days": "30 dni",
+    "90 days": "90 dni",
+    "1 year": "1 leto",
+    "All": "Vse",
+    "Delete Logs": "Izbriši zapise",
+    "Deleting...": "Brisanje...",
+    "No email logs found.": "Ni najdenih zapisov e-pošte.",
+    "Date": "Datum",
+    "To": "Prejemnik",
+    "Subject": "Zadeva",
+    "Status": "Status",
+    "Actions": "Dejanja",
+    "Sent": "Poslano",
+    "Failed": "Neuspešno",
+    "Delete": "Izbriši",
+    "Email Details": "Podrobnosti e-pošte",
+    "Close": "Zapri",
+    "Loading...": "Nalaganje...",
+    "From": "Pošiljatelj",
+    "Body": "Vsebina",
+    "Unable to load this email log.": "Zapisa e-pošte ni mogoče naložiti.",
+    "Failed to load email details.": "Podrobnosti e-pošte ni mogoče naložiti.",
+    "Are you sure you want to delete this email log?": "Ali ste prepričani, da želite izbrisati ta zapis?",
+    "Are you sure you want to bulk delete email logs?": "Ali ste prepričani, da želite množično izbrisati zapise e-pošte?"
 }

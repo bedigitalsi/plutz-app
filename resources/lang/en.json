@@ -11,7 +11,6 @@
     "nav.settings": "Settings",
     "nav.profile": "Profile",
     "nav.logout": "Log Out",
-
     "common.save": "Save",
     "common.saved": "Saved.",
     "common.cancel": "Cancel",
@@ -41,7 +40,6 @@
     "common.no_results": "No results found.",
     "common.language": "Language",
     "common.system_default": "System Default",
-
     "auth.login": "Log in",
     "auth.login.email": "Email",
     "auth.login.password": "Password",
@@ -64,7 +62,6 @@
     "auth.verify_email.description": "Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn't receive the email, we will gladly send you another.",
     "auth.verify_email.sent": "A new verification link has been sent to the email address you provided during registration.",
     "auth.verify_email.resend": "Resend Verification Email",
-
     "dashboard.title": "Dashboard",
     "dashboard.all_time": "All time",
     "dashboard.from": "From",
@@ -115,7 +112,6 @@
     "dashboard.new_inquiry": "New Inquiry",
     "dashboard.add_expense": "Add Expense",
     "dashboard.add_income": "Add Income",
-
     "calendar.title": "Calendar",
     "calendar.mon": "Mon",
     "calendar.tue": "Tue",
@@ -134,7 +130,6 @@
     "calendar.tbd": "TBD",
     "calendar.no_upcoming_events": "No upcoming events",
     "calendar.add_event_request": "Add Event Request",
-
     "inquiries.title": "Inquiries",
     "inquiries.new_inquiry": "New Inquiry",
     "inquiries.search_placeholder": "Location, contact...",
@@ -187,7 +182,6 @@
     "inquiries.edit_inquiry": "Edit Inquiry",
     "inquiries.back_to_details": "Back to Details",
     "inquiries.update_inquiry": "Update Inquiry",
-
     "incomes.title": "Income",
     "incomes.new_income": "New Income",
     "incomes.from_date": "From Date",
@@ -219,7 +213,6 @@
     "incomes.contact_person": "Contact Person *",
     "incomes.invoice_issued_checkbox": "Invoice Issued",
     "incomes.create_income": "Create Income",
-
     "expenses.title": "Expenses",
     "expenses.new_expense": "New Expense",
     "expenses.from_date": "From Date",
@@ -258,7 +251,6 @@
     "expenses.new_attachment": "Add New Attachment",
     "expenses.keep": "Keep",
     "expenses.update_expense": "Update Expense",
-
     "group_costs.title": "Group Costs",
     "group_costs.new_cost": "New Cost",
     "group_costs.from_date": "From Date",
@@ -291,7 +283,6 @@
     "group_costs.edit_group_cost": "Edit Group Cost",
     "group_costs.update_expenses": "Update expense information from the mutual fund",
     "group_costs.update_group_cost": "Update Group Cost",
-
     "contracts.title": "Contracts",
     "contracts.new_contract": "+ New Contract",
     "contracts.search_placeholder": "Search by client name, email...",
@@ -353,7 +344,6 @@
     "contracts.already_signed": "Contract is already signed.",
     "contracts.invitation_sent": "Signing invitation sent to :email",
     "contracts.cannot_edit_sent": "Cannot edit contract that has been sent or signed.",
-
     "signing.title": "Sign Contract",
     "signing.header": "Contract Signing",
     "signing.description": "Please review the contract below and provide your signature to proceed.",
@@ -380,7 +370,6 @@
     "signing.expired_title": "Signing Link Expired",
     "signing.expired_message": "This contract signing link has expired or has already been used. Please contact the sender to request a new signing link.",
     "signing.expired_support": "If you believe this is an error, please contact support.",
-
     "templates.title": "Contract Templates",
     "templates.back_to_settings": "Back to Settings",
     "templates.no_templates": "No templates found",
@@ -409,7 +398,6 @@
     "templates.edit_template": "Edit Contract Template",
     "templates.active_notice": "Active Template: This template is currently used as the default when creating contracts.",
     "templates.save_changes": "Save Changes",
-
     "settings.title": "Settings",
     "settings.email_title": "Email",
     "settings.email_description": "Configure SMTP sender and email delivery settings",
@@ -484,7 +472,6 @@
     "settings.language_page_title": "Language Settings",
     "settings.default_language": "Default Language",
     "settings.default_language_help": "This language is used for guest pages (login, register), contract signing, and email notifications.",
-
     "users.title": "User Management",
     "users.add_user": "Add User",
     "users.no_users": "No users found.",
@@ -509,7 +496,6 @@
     "users.password_edit_help": "Leave blank to keep current password",
     "users.password_confirm_edit": "Confirm Password",
     "users.update_user": "Update User",
-
     "profile.title": "Profile",
     "profile.info_title": "Profile Information",
     "profile.info_description": "Update your account's profile information and email address.",
@@ -526,12 +512,10 @@
     "profile.delete_button": "Delete Account",
     "profile.delete_confirm_title": "Are you sure you want to delete your account?",
     "profile.delete_confirm_description": "Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.",
-
     "welcome.title": "Welcome",
     "welcome.already_logged": "Welcome back!",
     "welcome.logged_in": "You are already logged in.",
     "welcome.go_dashboard": "Go to Dashboard",
-
     "ical.title": "iCal Feeds",
     "ical.about_title": "About iCal Feeds",
     "ical.about_description": "Create feeds to subscribe to your confirmed inquiries in Apple Calendar or other calendar apps. Each feed generates a unique URL that you can copy and use in your calendar app.",
@@ -547,7 +531,6 @@
     "ical.create_first": "Create your first feed",
     "ical.feed_info": "This feed shows all confirmed inquiries.",
     "ical.confirm_delete": "Are you sure you want to delete this feed? The subscription URL will stop working.",
-
     "help.install_title": "Install Plutz on Your iPhone",
     "help.steps_title": "Installation Steps",
     "help.step1": "Open Safari on your iPhone (this only works in Safari, not Chrome or other browsers)",
@@ -561,23 +544,19 @@
     "help.benefit2": "Full-screen experience without browser UI",
     "help.benefit3": "Faster loading times",
     "help.benefit4": "Works like a native app",
-
     "email.contract_invitation_subject": "Contract Signing Invitation",
     "email.contract_invitation_body": "Dear :name,\n\nPlease sign the contract by visiting:\n:url\n\nThank you,\nPlutz",
     "email.signed_contract_client_subject": "Signed Contract",
     "email.signed_contract_client_body": "Dear :name,\n\nThank you for signing the contract. Please find the signed PDF attached.\n\nBest regards,\nPlutz",
     "email.signed_contract_admin_body": "Contract signed by :name. PDF attached.",
-
     "email.inquiry_confirmed_subject": "Event Confirmed",
     "email.inquiry_confirmed_body": "Hello,\n\nAn event has been confirmed!\n\nDate: :date\nTime: :time\nDuration: :duration\nPerformance Type: :performance_type\nBand Size: :band_size\n\nLocation: :location\nAddress: :address\n\nContact: :contact_person\nEmail: :contact_email\nPhone: :contact_phone\n\nNotes: :notes\n\nBest regards,\nPlutz",
-
     "component.file_upload_button": "Click to upload or take a photo",
     "component.file_upload_formats": "PNG, JPG, PDF up to 10MB",
     "component.file_upload_remove": "Remove",
     "component.status_pending": "Pending",
     "component.status_confirmed": "Confirmed",
     "component.status_rejected": "Rejected",
-
     "distribution.title": "Income Distribution",
     "distribution.total_to_distribute": "Total to distribute:",
     "distribution.include_mutual_fund": "Include Mutual Fund",
@@ -593,7 +572,47 @@
     "distribution.over_distributed": "Total distributed exceeds income amount!",
     "distribution.save": "Save Distribution",
     "distribution.saving": "Saving...",
-
     "users.hide_prices": "Hide prices",
-    "users.hide_prices_help": "When enabled, this user will not see prices on inquiries."
+    "users.hide_prices_help": "When enabled, this user will not see prices on inquiries.",
+    "Email History": "Email History",
+    "View and manage sent email logs": "View and manage sent email logs",
+    "Back to Settings": "Back to Settings",
+    "Search": "Search",
+    "Search by To email or Subject": "Search by To email or Subject",
+    "Type": "Type",
+    "All Types": "All Types",
+    "Contract Invitation": "Contract Invitation",
+    "Contract Signed": "Contract Signed",
+    "Inquiry Confirmed": "Inquiry Confirmed",
+    "Test": "Test",
+    "Other": "Other",
+    "Apply": "Apply",
+    "Reset": "Reset",
+    "Bulk Delete": "Bulk Delete",
+    "Delete logs older than": "Delete logs older than",
+    "7 days": "7 days",
+    "30 days": "30 days",
+    "90 days": "90 days",
+    "1 year": "1 year",
+    "All": "All",
+    "Delete Logs": "Delete Logs",
+    "Deleting...": "Deleting...",
+    "No email logs found.": "No email logs found.",
+    "Date": "Date",
+    "To": "To",
+    "Subject": "Subject",
+    "Status": "Status",
+    "Actions": "Actions",
+    "Sent": "Sent",
+    "Failed": "Failed",
+    "Delete": "Delete",
+    "Email Details": "Email Details",
+    "Close": "Close",
+    "Loading...": "Loading...",
+    "From": "From",
+    "Body": "Body",
+    "Unable to load this email log.": "Unable to load this email log.",
+    "Failed to load email details.": "Failed to load email details.",
+    "Are you sure you want to delete this email log?": "Are you sure you want to delete this email log?",
+    "Are you sure you want to bulk delete email logs?": "Are you sure you want to bulk delete email logs?"
 }

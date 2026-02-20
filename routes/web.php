@@ -9,6 +9,7 @@ use App\Http\Controllers\ContractSettingsController;
 use App\Http\Controllers\ContractTemplateController;
 use App\Http\Controllers\CostTypeController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EmailLogController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\GroupCostController;
 use App\Http\Controllers\HelpController;
@@ -105,6 +106,10 @@ Route::middleware(['auth', 'permission:settings.manage'])->group(function () {
     Route::get('/settings/email', [MailSettingsController::class, 'show'])->name('settings.email');
     Route::post('/settings/email', [MailSettingsController::class, 'update'])->name('settings.email.update');
     Route::post('/settings/email/test', [MailSettingsController::class, 'sendTest'])->name('settings.email.test');
+    Route::get('/settings/email-history', [EmailLogController::class, 'index'])->name('settings.email-history');
+    Route::get('/settings/email-history/{emailLog}', [EmailLogController::class, 'show'])->name('settings.email-history.show');
+    Route::delete('/settings/email-history/{emailLog}', [EmailLogController::class, 'destroy'])->name('settings.email-history.destroy');
+    Route::post('/settings/email-history/bulk-delete', [EmailLogController::class, 'bulkDelete'])->name('settings.email-history.bulk-delete');
 
     // Contract settings
     Route::get('/settings/contracts', [ContractSettingsController::class, 'show'])->name('settings.contracts');

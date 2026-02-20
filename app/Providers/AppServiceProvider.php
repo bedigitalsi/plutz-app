@@ -4,7 +4,10 @@ namespace App\Providers;
 
 use Google\Client;
 use Google\Service\Drive;
+use App\Listeners\LogSentEmail;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Mail\Events\MessageSent;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Vite;
@@ -29,6 +32,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Vite::prefetch(concurrency: 3);
+        Event::listen(MessageSent::class, LogSentEmail::class);
 
         RateLimiter::for('api', function ($request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());

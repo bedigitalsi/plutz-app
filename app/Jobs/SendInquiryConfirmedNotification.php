@@ -75,7 +75,10 @@ class SendInquiryConfirmedNotification implements ShouldQueue
 
             Mail::raw($body, function ($message) use ($user, $subject) {
                 $message->to($user->email)
-                    ->subject($subject);
+                    ->subject($subject)
+                    ->withSymfonyMessage(function ($symfonyMessage) {
+                        $symfonyMessage->getHeaders()->addTextHeader('X-Email-Type', 'inquiry_confirmed');
+                    });
 
                 if (MailSettings::shouldForceFrom() || MailSettings::shouldForceFromName()) {
                     $message->from(

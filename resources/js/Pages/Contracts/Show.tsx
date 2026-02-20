@@ -98,7 +98,7 @@ export default function Show({ auth, contract, flash }: Props & { flash?: any })
                                 <div className="mt-2">{getStatusBadge(contract.status)}</div>
                             </div>
                             <div className="flex flex-wrap gap-2">
-                                {contract.status === 'draft' && (
+                                {contract.status !== 'signed' && (
                                     <>
                                         <Link
                                             href={route('contracts.edit', contract.id)}

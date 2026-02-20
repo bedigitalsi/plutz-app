@@ -90,8 +90,8 @@ class ContractController extends Controller
 
     public function edit(Contract $contract)
     {
-        if ($contract->status !== 'draft') {
-            return back()->with('error', __('contracts.cannot_edit_sent'));
+        if ($contract->status === 'signed') {
+            return back()->with('error', __('contracts.cannot_edit_signed'));
         }
 
         return Inertia::render('Contracts/Edit', [
@@ -101,8 +101,8 @@ class ContractController extends Controller
 
     public function update(Request $request, Contract $contract)
     {
-        if ($contract->status !== 'draft') {
-            return back()->with('error', __('contracts.cannot_edit_sent'));
+        if ($contract->status === 'signed') {
+            return back()->with('error', __('contracts.cannot_edit_signed'));
         }
 
         $validated = $request->validate([

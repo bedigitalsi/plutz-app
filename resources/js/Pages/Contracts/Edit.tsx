@@ -28,7 +28,7 @@ export default function Edit({ auth, contract }: Props) {
         client_email: contract.client_email,
         client_company: contract.client_company || '',
         client_address: contract.client_address || '',
-        performance_date: contract.performance_date,
+        performance_date: contract.performance_date ? contract.performance_date.substring(0, 10) : '',
         total_price: contract.total_price,
         deposit_amount: contract.deposit_amount || '',
         currency: contract.currency,

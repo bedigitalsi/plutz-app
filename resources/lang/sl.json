@@ -550,7 +550,7 @@
     "email.signed_contract_client_body": "Spoštovani :name,\n\nHvala za podpis pogodbe. V prilogi najdete podpisan PDF.\n\nLep pozdrav,\nPlutz",
     "email.signed_contract_admin_body": "Pogodbo je podpisal/a :name. PDF v prilogi.",
     "email.inquiry_confirmed_subject": "Dogodek potrjen",
-    "email.inquiry_confirmed_body": "Pozdravljeni,\n\nDogodek je bil potrjen!\n\nDatum: :date\nUra: :time\nTrajanje: :duration\nVrsta nastopa: :performance_type\nVelikost zasedbe: :band_size\n\nLokacija: :location\nNaslov: :address\n\nKontaktna oseba: :contact_person\nE-pošta: :contact_email\nTelefon: :contact_phone\n\nOpombe: :notes\n\nLep pozdrav,\nPlutz",
+    "email.inquiry_confirmed_body": "Pozdravljeni,\n\nDogodek je bil potrjen!\n\nDatum: :date\nUra: :time\nTrajanje: :duration\nVrsta nastopa: :performance_type\nZasedba: :band_members\n\nLokacija: :location\nNaslov: :address\n\nKontaktna oseba: :contact_person\nE-pošta: :contact_email\nTelefon: :contact_phone\n\nOpombe: :notes\n\nLep pozdrav,\nPlutz",
     "component.file_upload_button": "Kliknite za nalaganje ali fotografiranje",
     "component.file_upload_formats": "PNG, JPG, PDF do 10MB",
     "component.file_upload_remove": "Odstrani",

@@ -67,7 +67,7 @@ class IcalFeedController extends Controller
 
         // Get confirmed and pending inquiries (exclude rejected)
         $inquiries = Inquiry::whereIn('status', ['confirmed', 'pending'])
-            ->with(['performanceType', 'bandSize'])
+            ->with(['performanceType', 'bandMembers:id,name'])
             ->orderBy('performance_date', 'asc')
             ->get();
 
@@ -115,8 +115,8 @@ class IcalFeedController extends Controller
             if ($inquiry->performanceType) {
                 $descParts[] = 'Type: ' . $inquiry->performanceType->name;
             }
-            if ($inquiry->bandSize) {
-                $descParts[] = 'Band size: ' . $inquiry->bandSize->name;
+            if ($inquiry->bandMembers->isNotEmpty()) {
+                $descParts[] = 'Band: ' . $inquiry->bandMembers->pluck('name')->join(', ');
             }
             if ($inquiry->location_name) {
                 $locationDesc = $inquiry->location_name;

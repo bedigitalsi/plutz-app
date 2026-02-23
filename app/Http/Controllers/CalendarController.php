@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Inquiry;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -19,7 +20,8 @@ class CalendarController extends Controller
         $calendarStart = $date->copy()->startOfWeek(Carbon::MONDAY);
         $calendarEnd = $date->copy()->endOfMonth()->endOfWeek(Carbon::SUNDAY);
 
-        $events = Inquiry::with(['performanceType', 'bandSize'])
+        $events = Inquiry::with(['performanceType', 'bandMembers:id,name'])
+            ->visibleTo(Auth::user())
             ->whereBetween('performance_date', [$calendarStart, $calendarEnd])
             ->orderBy('performance_date')
             ->get()
@@ -43,6 +45,7 @@ class CalendarController extends Controller
 
         // Upcoming events (future confirmed + pending, not rejected)
         $upcoming = Inquiry::with(['performanceType'])
+            ->visibleTo(Auth::user())
             ->where('performance_date', '>=', now()->toDateString())
             ->where('status', '!=', 'rejected')
             ->orderBy('performance_date')
@@ -84,7 +87,8 @@ class CalendarController extends Controller
             'end' => 'required|date',
         ]);
 
-        $inquiries = Inquiry::with(['performanceType', 'bandSize'])
+        $inquiries = Inquiry::with(['performanceType', 'bandMembers:id,name'])
+            ->visibleTo(Auth::user())
             ->whereBetween('performance_date', [$request->start, $request->end])
             ->get();
 

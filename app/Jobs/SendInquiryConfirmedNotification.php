@@ -4,7 +4,6 @@ namespace App\Jobs;
 
 use App\Models\Inquiry;
 use App\Models\Setting;
-use App\Models\User;
 use App\Support\MailSettings;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -23,21 +22,20 @@ class SendInquiryConfirmedNotification implements ShouldQueue
 
     public function handle(): void
     {
-        // Skip if email sending is disabled
         if (!MailSettings::isEnabled()) {
             return;
         }
 
-        // Skip if status was changed back before this job ran
         if ($this->inquiry->fresh()->status !== 'confirmed') {
             return;
         }
 
         MailSettings::apply();
 
-        $this->inquiry->load(['performanceType', 'bandSize']);
+        $this->inquiry->load(['performanceType', 'bandMembers']);
 
-        $bandMembers = User::where('is_band_member', true)->get();
+        // Only notify assigned band members (not all)
+        $bandMembers = $this->inquiry->bandMembers;
 
         if ($bandMembers->isEmpty()) {
             return;
@@ -45,10 +43,11 @@ class SendInquiryConfirmedNotification implements ShouldQueue
 
         $defaultLocale = Setting::getString('default_locale', 'en');
 
-        // Build time display
         $time = $this->inquiry->performance_time_mode === 'exact_time'
             ? $this->inquiry->performance_time_exact
             : $this->inquiry->performance_time_text;
+
+        $memberNames = $bandMembers->pluck('name')->join(', ');
 
         foreach ($bandMembers as $user) {
             $locale = $user->locale ?: $defaultLocale;
@@ -64,7 +63,7 @@ class SendInquiryConfirmedNotification implements ShouldQueue
                 'location' => $this->inquiry->location_name ?: '—',
                 'address' => $this->inquiry->location_address ?: '—',
                 'performance_type' => $this->inquiry->performanceType?->name ?? '—',
-                'band_size' => $this->inquiry->bandSize?->name ?? '—',
+                'band_members' => $memberNames,
                 'contact_person' => $this->inquiry->contact_person ?: '—',
                 'contact_email' => $this->inquiry->contact_email ?: '—',
                 'contact_phone' => $this->inquiry->contact_phone ?: '—',

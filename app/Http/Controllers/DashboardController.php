@@ -187,7 +187,8 @@ class DashboardController extends Controller
         }
 
         // Upcoming gigs (confirmed inquiries with future performance dates)
-        $upcomingGigs = Inquiry::with(['performanceType', 'bandSize'])
+        $upcomingGigs = Inquiry::with(['performanceType', 'bandMembers:id,name'])
+            ->visibleTo(auth()->user())
             ->where('status', '!=', 'rejected')
             ->where('performance_date', '>=', now()->toDateString())
             ->orderBy('performance_date', 'asc')
@@ -195,7 +196,8 @@ class DashboardController extends Controller
             ->get();
 
         // Recent activities
-        $recentInquiries = Inquiry::with(['performanceType', 'bandSize'])
+        $recentInquiries = Inquiry::with(['performanceType', 'bandMembers:id,name'])
+            ->visibleTo(auth()->user())
             ->orderBy('created_at', 'desc')
             ->limit(5)
             ->get();

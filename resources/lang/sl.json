@@ -614,5 +614,8 @@
     "Unable to load this email log.": "Zapisa e-pošte ni mogoče naložiti.",
     "Failed to load email details.": "Podrobnosti e-pošte ni mogoče naložiti.",
     "Are you sure you want to delete this email log?": "Ali ste prepričani, da želite izbrisati ta zapis?",
-    "Are you sure you want to bulk delete email logs?": "Ali ste prepričani, da želite množično izbrisati zapise e-pošte?"
+    "Are you sure you want to bulk delete email logs?": "Ali ste prepričani, da želite množično izbrisati zapise e-pošte?",
+    "inquiries.band_members": "Člani benda",
+    "inquiries.band_members_help": "Izberi kdo bo igral na tem dogodku",
+    "inquiries.people": "oseb"
 }

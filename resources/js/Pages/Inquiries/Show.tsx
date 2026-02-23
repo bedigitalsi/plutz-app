@@ -23,9 +23,10 @@ interface Inquiry {
     performance_type?: {
         name: string;
     };
-    band_size?: {
-        label: string;
-    };
+    band_members?: {
+        id: number;
+        name: string;
+    }[];
     income?: {
         id: number;
         amount: number;
@@ -182,10 +183,19 @@ export default function Show({ inquiry }: Props) {
                                             <dd className="mt-1 text-sm text-plutz-cream">{inquiry.performance_type.name}</dd>
                                         </div>
                                     )}
-                                    {inquiry.band_size && (
+                                    {inquiry.band_members && inquiry.band_members.length > 0 && (
                                         <div>
-                                            <dt className="text-sm font-medium text-stone-500">{t('inquiries.band_size')}</dt>
-                                            <dd className="mt-1 text-sm text-plutz-cream">{inquiry.band_size.label}</dd>
+                                            <dt className="text-sm font-medium text-stone-500">{t('inquiries.band_members')}</dt>
+                                            <dd className="mt-1 flex flex-wrap gap-1.5">
+                                                {inquiry.band_members.map((member) => (
+                                                    <span key={member.id} className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-plutz-tan/20 text-plutz-tan border border-plutz-tan/30">
+                                                        {member.name}
+                                                    </span>
+                                                ))}
+                                                <span className="text-xs text-stone-500 self-center ml-1">
+                                                    ({inquiry.band_members.length === 1 ? 'Solo' : `${inquiry.band_members.length} people`})
+                                                </span>
+                                            </dd>
                                         </div>
                                     )}
                                 </dl>

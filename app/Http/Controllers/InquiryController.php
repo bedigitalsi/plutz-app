@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BandSize;
 use App\Models\Inquiry;
 use App\Models\PerformanceType;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -15,16 +15,16 @@ class InquiryController extends Controller
 {
     public function index(Request $request): Response
     {
-        // Check if the user has any active filters
+        $user = Auth::user();
         $hasAnyFilter = $request->filled('date_from')
             || $request->filled('date_to')
             || ($request->has('status') && $request->status !== '')
             || ($request->has('search') && $request->search !== '');
 
-        $query = Inquiry::with(['performanceType', 'bandSize', 'creator']);
+        $query = Inquiry::with(['performanceType', 'bandMembers:id,name', 'creator'])
+            ->visibleTo($user);
 
         if ($hasAnyFilter) {
-            // User is filtering — show results newest first, no default date restriction
             $query->orderBy('performance_date', 'desc');
 
             if ($request->has('status') && $request->status !== '') {
@@ -47,14 +47,14 @@ class InquiryController extends Controller
                 });
             }
         } else {
-            // No filters — try upcoming gigs first, fall back to all if none upcoming
-            $upcomingCount = Inquiry::whereDate('performance_date', '>=', now()->toDateString())->count();
+            $upcomingCount = Inquiry::visibleTo($user)
+                ->whereDate('performance_date', '>=', now()->toDateString())
+                ->count();
 
             if ($upcomingCount > 0) {
                 $query->whereDate('performance_date', '>=', now()->toDateString())
                     ->orderBy('performance_date', 'asc');
             } else {
-                // No upcoming gigs — show all, newest first
                 $query->orderBy('performance_date', 'desc');
             }
         }
@@ -69,7 +69,7 @@ class InquiryController extends Controller
     {
         return Inertia::render('Inquiries/Create', [
             'performanceTypes' => PerformanceType::where('is_active', true)->get(),
-            'bandSizes' => BandSize::orderBy('order')->get(),
+            'bandMembers' => User::where('is_band_member', true)->orderBy('name')->get(['id', 'name']),
             'date' => $request->query('date'),
         ]);
     }
@@ -88,23 +88,27 @@ class InquiryController extends Controller
             'contact_email' => 'nullable|email|max:255',
             'contact_phone' => 'nullable|string|max:50',
             'performance_type_id' => 'required|exists:performance_types,id',
-            'band_size_id' => 'required|exists:band_sizes,id',
+            'band_member_ids' => 'required|array|min:1',
+            'band_member_ids.*' => 'exists:users,id',
             'price_amount' => 'nullable|numeric|min:0',
             'currency' => 'nullable|string|max:3',
             'notes' => 'nullable|string',
         ]);
+
+        $memberIds = $validated['band_member_ids'];
+        unset($validated['band_member_ids']);
 
         $validated['status'] = 'pending';
         $validated['created_by'] = Auth::id();
         $validated['received_at'] = now();
         $validated['currency'] = $validated['currency'] ?? 'EUR';
 
-        // Set default duration from settings if not provided
         if (empty($validated['duration_minutes'])) {
             $validated['duration_minutes'] = \App\Models\Setting::where('key', 'default_duration_minutes')->value('value') ?? 120;
         }
 
         $inquiry = Inquiry::create($validated);
+        $inquiry->bandMembers()->sync($memberIds);
 
         return Redirect::route('inquiries.show', $inquiry->id)
             ->with('success', 'Inquiry created successfully.');
@@ -112,7 +116,7 @@ class InquiryController extends Controller
 
     public function show(Inquiry $inquiry): Response
     {
-        $inquiry->load(['performanceType', 'bandSize', 'creator', 'income']);
+        $inquiry->load(['performanceType', 'bandMembers:id,name', 'creator', 'income']);
 
         return Inertia::render('Inquiries/Show', [
             'inquiry' => $inquiry,
@@ -121,10 +125,12 @@ class InquiryController extends Controller
 
     public function edit(Inquiry $inquiry): Response
     {
+        $inquiry->load('bandMembers:id,name');
+
         return Inertia::render('Inquiries/Edit', [
-            'inquiry' => $inquiry,
+            'inquiry' => $inquiry->append('band_member_ids'),
             'performanceTypes' => PerformanceType::where('is_active', true)->get(),
-            'bandSizes' => BandSize::orderBy('order')->get(),
+            'bandMembers' => User::where('is_band_member', true)->orderBy('name')->get(['id', 'name']),
         ]);
     }
 
@@ -142,18 +148,22 @@ class InquiryController extends Controller
             'contact_email' => 'nullable|email|max:255',
             'contact_phone' => 'nullable|string|max:50',
             'performance_type_id' => 'required|exists:performance_types,id',
-            'band_size_id' => 'required|exists:band_sizes,id',
+            'band_member_ids' => 'required|array|min:1',
+            'band_member_ids.*' => 'exists:users,id',
             'price_amount' => 'nullable|numeric|min:0',
             'currency' => 'nullable|string|max:3',
             'notes' => 'nullable|string',
         ]);
 
-        // Set default duration if not provided
+        $memberIds = $validated['band_member_ids'];
+        unset($validated['band_member_ids']);
+
         if (empty($validated['duration_minutes'])) {
             $validated['duration_minutes'] = \App\Models\Setting::where('key', 'default_duration_minutes')->value('value') ?? 120;
         }
 
         $inquiry->update($validated);
+        $inquiry->bandMembers()->sync($memberIds);
 
         return Redirect::route('inquiries.show', $inquiry->id)
             ->with('success', 'Inquiry updated successfully.');

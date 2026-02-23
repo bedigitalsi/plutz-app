@@ -13,7 +13,7 @@ interface UpcomingGig {
     price_amount: string | null;
     currency: string | null;
     performance_type?: { name: string } | null;
-    band_size?: { label: string } | null;
+    band_members?: { id: number; name: string }[];
 }
 
 interface Props {

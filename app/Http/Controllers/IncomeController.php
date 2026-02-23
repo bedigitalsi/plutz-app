@@ -59,7 +59,7 @@ class IncomeController extends Controller
         
         // Pre-fill from inquiry if provided
         if ($request->has('inquiry_id')) {
-            $inquiry = Inquiry::with(['performanceType', 'bandSize'])->find($request->inquiry_id);
+            $inquiry = Inquiry::with(['performanceType', 'bandMembers:id,name'])->find($request->inquiry_id);
         }
 
         return Inertia::render('Incomes/Create', [

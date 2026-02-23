@@ -16,9 +16,10 @@ interface InquiryCardProps {
         performance_type?: {
             name: string;
         };
-        band_size?: {
-            label: string;
-        };
+        band_members?: {
+            id: number;
+            name: string;
+        }[];
     };
 }
 
@@ -77,8 +78,8 @@ export default function InquiryCard({ inquiry }: InquiryCardProps) {
                             <div className="flex items-center gap-2">
                                 <span className="material-symbols-outlined text-base text-stone-500">music_note</span>
                                 <span>{inquiry.performance_type.name}</span>
-                                {inquiry.band_size && (
-                                    <span className="text-stone-500">• {inquiry.band_size.label}</span>
+                                {inquiry.band_members && inquiry.band_members.length > 0 && (
+                                    <span className="text-stone-500">• {inquiry.band_members.map(m => m.name).join(', ')}</span>
                                 )}
                             </div>
                         )}

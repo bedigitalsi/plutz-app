@@ -17,9 +17,10 @@ interface Inquiry {
     performance_type?: {
         name: string;
     };
-    band_size?: {
-        label: string;
-    };
+    band_members?: {
+        id: number;
+        name: string;
+    }[];
 }
 
 interface Props {

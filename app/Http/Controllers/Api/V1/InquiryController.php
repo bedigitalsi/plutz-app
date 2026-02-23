@@ -14,7 +14,9 @@ class InquiryController extends Controller
     {
         $this->authorizeApi($request, 'inquiries.view');
 
-        $query = Inquiry::with(['performanceType', 'bandSize', 'creator'])
+        $user = $request->user();
+        $query = Inquiry::with(['performanceType', 'bandMembers:id,name', 'creator'])
+            ->visibleTo($user)
             ->orderBy('performance_date', 'desc');
 
         if ($request->has('status') && $request->status !== '') {
@@ -46,7 +48,7 @@ class InquiryController extends Controller
     {
         $this->authorizeApi($request, 'inquiries.view');
 
-        $inquiry->load(['performanceType', 'bandSize', 'creator', 'income']);
+        $inquiry->load(['performanceType', 'bandMembers:id,name', 'creator', 'income']);
 
         return response()->json(['data' => $inquiry]);
     }
@@ -67,11 +69,15 @@ class InquiryController extends Controller
             'contact_email' => 'nullable|email|max:255',
             'contact_phone' => 'nullable|string|max:50',
             'performance_type_id' => 'required|exists:performance_types,id',
-            'band_size_id' => 'required|exists:band_sizes,id',
+            'band_member_ids' => 'required|array|min:1',
+            'band_member_ids.*' => 'exists:users,id',
             'price_amount' => 'nullable|numeric|min:0',
             'currency' => 'nullable|string|max:3',
             'notes' => 'nullable|string',
         ]);
+
+        $memberIds = $validated['band_member_ids'];
+        unset($validated['band_member_ids']);
 
         $validated['status'] = 'pending';
         $validated['created_by'] = $request->user()->id;
@@ -83,7 +89,8 @@ class InquiryController extends Controller
         }
 
         $inquiry = Inquiry::create($validated);
-        $inquiry->load(['performanceType', 'bandSize', 'creator']);
+        $inquiry->bandMembers()->sync($memberIds);
+        $inquiry->load(['performanceType', 'bandMembers:id,name', 'creator']);
 
         return response()->json(['data' => $inquiry], 201);
     }
@@ -104,18 +111,23 @@ class InquiryController extends Controller
             'contact_email' => 'nullable|email|max:255',
             'contact_phone' => 'nullable|string|max:50',
             'performance_type_id' => 'required|exists:performance_types,id',
-            'band_size_id' => 'required|exists:band_sizes,id',
+            'band_member_ids' => 'required|array|min:1',
+            'band_member_ids.*' => 'exists:users,id',
             'price_amount' => 'nullable|numeric|min:0',
             'currency' => 'nullable|string|max:3',
             'notes' => 'nullable|string',
         ]);
+
+        $memberIds = $validated['band_member_ids'];
+        unset($validated['band_member_ids']);
 
         if (empty($validated['duration_minutes'])) {
             $validated['duration_minutes'] = Setting::where('key', 'default_duration_minutes')->value('value') ?? 120;
         }
 
         $inquiry->update($validated);
-        $inquiry->load(['performanceType', 'bandSize', 'creator']);
+        $inquiry->bandMembers()->sync($memberIds);
+        $inquiry->load(['performanceType', 'bandMembers:id,name', 'creator']);
 
         return response()->json(['data' => $inquiry]);
     }
@@ -145,24 +157,19 @@ class InquiryController extends Controller
                 ->delay(now()->addMinutes(2));
         }
 
-        $inquiry->load(['performanceType', 'bandSize', 'creator']);
+        $inquiry->load(['performanceType', 'bandMembers:id,name', 'creator']);
 
         return response()->json(['data' => $inquiry]);
     }
 
-    /**
-     * Check that the token has the required ability AND the user has the Spatie permission.
-     */
     private function authorizeApi(Request $request, string $permission): void
     {
         $user = $request->user();
 
-        // Check Sanctum token ability
         if ($user->currentAccessToken() && !$user->tokenCan($permission)) {
             abort(403, 'Token does not have the required permission: ' . $permission);
         }
 
-        // Check Spatie permission
         if (!$user->hasPermissionTo($permission)) {
             abort(403, 'User does not have the required permission: ' . $permission);
         }

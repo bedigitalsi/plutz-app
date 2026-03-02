@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Attachment;
 use App\Models\Contract;
+use App\Models\Setting;
 use App\Support\ContractPlaceholders;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -69,11 +70,34 @@ class GenerateSignedContractPdf implements ShouldQueue
         $converter = new \League\CommonMark\CommonMarkConverter();
         $htmlContent = $converter->convert($markdown);
 
-        // Signature - use absolute path based on the storage disk actually used
-        $signatureFullPath = \Storage::disk('local')->path($this->signaturePath);
-        $signatureDataUri = null;
+        // Client signature
+        $signatureFullPath = Storage::disk('local')->path($this->signaturePath);
+        $signatureDataUri = '';
         if (file_exists($signatureFullPath)) {
             $signatureDataUri = 'data:image/png;base64,' . base64_encode(file_get_contents($signatureFullPath));
+        }
+
+        // Company signature from settings
+        $companySignaturePath = Setting::getString('company_signature', '');
+        $companySignatureDataUri = '';
+        if ($companySignaturePath) {
+            $companySignatureFullPath = Storage::disk('local')->path($companySignaturePath);
+            if (file_exists($companySignatureFullPath)) {
+                $companySignatureDataUri = 'data:image/png;base64,' . base64_encode(file_get_contents($companySignatureFullPath));
+            }
+        }
+
+        // Company signature HTML block
+        $companySignatureHtml = '';
+        if ($companySignatureDataUri) {
+            $companySignatureHtml = <<<BLOCK
+            <div class="sig-col">
+                <h3>Podpis izvajalca</h3>
+                <img src="{$companySignatureDataUri}" alt="Company Signature" />
+                <p class="sig-name">KUD Tempo Bela krajina</p>
+                <p class="sig-name">Zastopa: Simona Plut</p>
+            </div>
+BLOCK;
         }
         
         $html = <<<HTML
@@ -133,21 +157,37 @@ class GenerateSignedContractPdf implements ShouldQueue
             border-top: 1px solid #d1d5db;
             margin: 20px 0;
         }
-        .signature {
+        .signatures {
             margin-top: 40px;
             padding-top: 20px;
             border-top: 2px solid #1e40af;
+            width: 100%;
         }
-        .signature h3 {
+        .signatures table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .signatures td {
+            width: 50%;
+            vertical-align: top;
+            padding: 0 10px;
+        }
+        .sig-col h3 {
             color: #1e40af;
             font-size: 12pt;
             margin-bottom: 10px;
         }
-        .signature img {
-            max-width: 250px;
+        .sig-col img {
+            max-width: 220px;
             border: 1px solid #d1d5db;
             padding: 8px;
             background: #fafafa;
+        }
+        .sig-col .sig-name {
+            font-size: 9pt;
+            color: #374151;
+            margin: 4px 0 0 0;
+            text-align: left;
         }
         .audit {
             margin-top: 15px;
@@ -167,15 +207,28 @@ class GenerateSignedContractPdf implements ShouldQueue
 <body>
     {$htmlContent}
 
-    <div class="signature">
-        <h3>Podpis naročnika</h3>
-        <img src="{$signatureDataUri}" alt="Signature" />
-        <div class="audit">
-            <p><strong>Podpisnik:</strong> {$this->contract->signer_name}</p>
-            <p><strong>Email:</strong> {$this->contract->signer_email}</p>
-            <p><strong>Datum podpisa:</strong> {$this->contract->signed_at->format('d.m.Y H:i:s')}</p>
-            <p><strong>IP naslov:</strong> {$this->contract->signer_ip}</p>
-        </div>
+    <div class="signatures">
+        <table>
+            <tr>
+                <td>
+                    <div class="sig-col">
+                        <h3>Podpis naročnika</h3>
+                        <img src="{$signatureDataUri}" alt="Signature" />
+                        <p class="sig-name">{$this->contract->signer_name}</p>
+                    </div>
+                </td>
+                <td>
+                    {$companySignatureHtml}
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="audit">
+        <p><strong>Podpisnik:</strong> {$this->contract->signer_name}</p>
+        <p><strong>Email:</strong> {$this->contract->signer_email}</p>
+        <p><strong>Datum podpisa:</strong> {$this->contract->signed_at->format('d.m.Y H:i:s')}</p>
+        <p><strong>IP naslov:</strong> {$this->contract->signer_ip}</p>
     </div>
 </body>
 </html>

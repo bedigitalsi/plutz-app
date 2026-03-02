@@ -105,9 +105,8 @@ class MailSettingsController extends Controller
                 function ($message) use ($validated) {
                     $message->to($validated['test_email'])
                         ->subject('Test Email - Plutz App')
-                        ->withSymfonyMessage(function ($symfonyMessage) {
-                            $symfonyMessage->getHeaders()->addTextHeader('X-Email-Type', 'test');
-                        });
+                        ;
+            $message->getSymfonyMessage()->getHeaders()->addTextHeader('X-Email-Type', 'test');
 
                     // Apply from overrides
                     if (MailSettings::shouldForceFrom() || MailSettings::shouldForceFromName()) {

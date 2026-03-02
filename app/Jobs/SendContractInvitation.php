@@ -49,9 +49,8 @@ class SendContractInvitation implements ShouldQueue
         Mail::raw($body, function ($message) use ($subject) {
             $message->to($this->contract->client_email)
                 ->subject($subject)
-                ->withSymfonyMessage(function ($symfonyMessage) {
-                    $symfonyMessage->getHeaders()->addTextHeader('X-Email-Type', 'contract_invitation');
-                });
+                ;
+            $message->getSymfonyMessage()->getHeaders()->addTextHeader('X-Email-Type', 'contract_invitation');
 
             // Apply from overrides if enabled
             if (MailSettings::shouldForceFrom() || MailSettings::shouldForceFromName()) {

@@ -72,9 +72,8 @@ class SendSignedContractEmails implements ShouldQueue
             $message->to($this->contract->client_email)
                 ->subject($clientSubject)
                 ->attachData($pdfContent, 'signed-contract.pdf', ['mime' => 'application/pdf'])
-                ->withSymfonyMessage(function ($symfonyMessage) {
-                    $symfonyMessage->getHeaders()->addTextHeader('X-Email-Type', 'contract_signed');
-                });
+                ;
+            $message->getSymfonyMessage()->getHeaders()->addTextHeader('X-Email-Type', 'contract_signed');
 
             // Apply from overrides if enabled
             if (MailSettings::shouldForceFrom() || MailSettings::shouldForceFromName()) {
@@ -97,9 +96,8 @@ class SendSignedContractEmails implements ShouldQueue
             $message->to(MailSettings::getAdminRecipient())
                 ->subject('Contract Signed - ' . $this->contract->client_name)
                 ->attachData($pdfContent, 'signed-contract.pdf', ['mime' => 'application/pdf'])
-                ->withSymfonyMessage(function ($symfonyMessage) {
-                    $symfonyMessage->getHeaders()->addTextHeader('X-Email-Type', 'contract_signed');
-                });
+                ;
+            $message->getSymfonyMessage()->getHeaders()->addTextHeader('X-Email-Type', 'contract_signed');
 
             // Apply from overrides if enabled
             if (MailSettings::shouldForceFrom() || MailSettings::shouldForceFromName()) {

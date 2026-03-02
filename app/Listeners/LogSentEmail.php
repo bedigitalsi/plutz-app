@@ -9,6 +9,11 @@ use Symfony\Component\Mime\Email;
 class LogSentEmail
 {
     /**
+     * Track already-logged message IDs within this request to prevent duplicates.
+     */
+    private static array $logged = [];
+
+    /**
      * Handle the event.
      */
     public function handle(MessageSent $event): void
@@ -17,6 +22,15 @@ class LogSentEmail
 
         if (!$message instanceof Email) {
             return;
+        }
+
+        // Deduplicate: use Message-ID header to prevent double logging
+        $messageId = $message->getHeaders()->get('Message-ID')?->getBodyAsString();
+        if ($messageId && in_array($messageId, self::$logged, true)) {
+            return;
+        }
+        if ($messageId) {
+            self::$logged[] = $messageId;
         }
 
         $to = collect($message->getTo())

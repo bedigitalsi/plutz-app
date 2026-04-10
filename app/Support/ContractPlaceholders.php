@@ -57,6 +57,7 @@ class ContractPlaceholders
         $plutzAddress = Setting::getString('plutz_address', '') ?? '';
 
         $replacements = [
+            '[TELEFON]' => $contract->client_phone ?? '-',
             '[ŠT_POGODBE]' => $contract->contract_number ?? 'P-' . str_pad($contract->id, 4, '0', STR_PAD_LEFT),
             '[DATUM_POGODBE]' => $contract->created_at->format('d.m.Y'),
             '[DATUM_NASTOPA]' => $contract->performance_date->format('d.m.Y'),

@@ -617,5 +617,17 @@
     "Are you sure you want to bulk delete email logs?": "Ali ste prepričani, da želite množično izbrisati zapise e-pošte?",
     "inquiries.band_members": "Člani benda",
     "inquiries.band_members_help": "Izberi kdo bo igral na tem dogodku",
-    "inquiries.people": "oseb"
+    "inquiries.people": "oseb",
+    "contracts.client_phone": "Telefon",
+    "contracts.location": "Lokacija nastopa",
+    "contracts.location_name": "Ime lokacije",
+    "contracts.location_address": "Naslov lokacije",
+    "contracts.recipients": "Prejemniki",
+    "contracts.add_recipient": "Dodaj prejemnika",
+    "contracts.primary": "Glavni",
+    "contracts.confirm_remove_recipient": "Ali želite odstraniti tega prejemnika?",
+    "contracts.recipient_added": "Prejemnik uspešno dodan.",
+    "contracts.recipient_removed": "Prejemnik uspešno odstranjen.",
+    "contracts.cannot_remove_signed_recipient": "Ni mogoče odstraniti prejemnika, ki je že podpisal.",
+    "contracts.invitations_sent": "Povabila poslana :count prejemnikom."
 }

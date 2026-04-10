@@ -12,6 +12,8 @@ class ContractSignToken extends Model
 
     protected $fillable = [
         'contract_id',
+        'recipient_name',
+        'recipient_email',
         'token_hash',
         'expires_at',
         'used_at',

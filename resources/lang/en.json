@@ -617,5 +617,17 @@
     "Are you sure you want to bulk delete email logs?": "Are you sure you want to bulk delete email logs?",
     "inquiries.band_members": "Band Members",
     "inquiries.band_members_help": "Select who will play at this event",
-    "inquiries.people": "people"
+    "inquiries.people": "people",
+    "contracts.client_phone": "Phone",
+    "contracts.location": "Performance Location",
+    "contracts.location_name": "Venue Name",
+    "contracts.location_address": "Venue Address",
+    "contracts.recipients": "Recipients",
+    "contracts.add_recipient": "Add Recipient",
+    "contracts.primary": "Primary",
+    "contracts.confirm_remove_recipient": "Remove this recipient?",
+    "contracts.recipient_added": "Recipient added successfully.",
+    "contracts.recipient_removed": "Recipient removed successfully.",
+    "contracts.cannot_remove_signed_recipient": "Cannot remove a recipient who has already signed.",
+    "contracts.invitations_sent": "Invitations sent to :count recipients."
 }

@@ -54,8 +54,11 @@ class ContractController extends Controller
             'client_name' => 'required|string|max:255',
             'client_email' => 'required|email',
             'client_company' => 'nullable|string|max:255',
+            'client_phone' => 'nullable|string|max:50',
             'client_address' => 'nullable|string',
             'performance_date' => 'required|date',
+            'location_name' => 'nullable|string|max:255',
+            'location_address' => 'nullable|string|max:500',
             'total_price' => 'required|numeric|min:0',
             'deposit_amount' => 'nullable|numeric|min:0',
             'currency' => 'nullable|string|size:3',
@@ -109,8 +112,11 @@ class ContractController extends Controller
             'client_name' => 'required|string|max:255',
             'client_email' => 'required|email',
             'client_company' => 'nullable|string|max:255',
+            'client_phone' => 'nullable|string|max:50',
             'client_address' => 'nullable|string',
             'performance_date' => 'required|date',
+            'location_name' => 'nullable|string|max:255',
+            'location_address' => 'nullable|string|max:500',
             'total_price' => 'required|numeric|min:0',
             'deposit_amount' => 'nullable|numeric|min:0',
             'currency' => 'nullable|string|size:3',
@@ -152,15 +158,73 @@ class ContractController extends Controller
             return back()->with('error', __('contracts.already_signed'));
         }
 
-        // Generate token
-        $token = Str::random(64);
-        
-        ContractSignToken::create([
-            'contract_id' => $contract->id,
-            'token_hash' => hash('sha256', $token),
-            'expires_at' => now()->addDays(30),
-            'created_by' => auth()->id(),
+        $sentCount = 0;
+        $primarySigningUrl = null;
+
+        // Collect all recipients: primary + additional
+        $recipients = collect();
+
+        // Primary recipient
+        $recipients->push([
+            'name' => $contract->client_name,
+            'email' => $contract->client_email,
+            'is_primary' => true,
         ]);
+
+        // Additional recipients (added via UI, stored as sign_tokens with recipient_email)
+        $additionalTokens = $contract->signTokens()
+            ->whereNotNull('recipient_email')
+            ->where('recipient_email', '!=', $contract->client_email)
+            ->whereNull('used_at')
+            ->get();
+
+        foreach ($additionalTokens as $t) {
+            $recipients->push([
+                'name' => $t->recipient_name,
+                'email' => $t->recipient_email,
+                'is_primary' => false,
+                'existing_token' => $t,
+            ]);
+        }
+
+        // Delete old unused primary tokens to avoid duplicates
+        $contract->signTokens()
+            ->where(function ($q) use ($contract) {
+                $q->whereNull('recipient_email')
+                   ->orWhere('recipient_email', $contract->client_email);
+            })
+            ->whereNull('used_at')
+            ->delete();
+
+        // Send to each recipient
+        foreach ($recipients as $recipient) {
+            $token = Str::random(64);
+
+            if (!empty($recipient['existing_token'])) {
+                // Update existing token
+                $recipient['existing_token']->update([
+                    'token_hash' => hash('sha256', $token),
+                    'expires_at' => now()->addDays(30),
+                ]);
+            } else {
+                // Create new token
+                ContractSignToken::create([
+                    'contract_id' => $contract->id,
+                    'recipient_name' => $recipient['name'],
+                    'recipient_email' => $recipient['email'],
+                    'token_hash' => hash('sha256', $token),
+                    'expires_at' => now()->addDays(30),
+                    'created_by' => auth()->id(),
+                ]);
+            }
+
+            SendContractInvitation::dispatch($contract, $token, $recipient['email'], $recipient['name']);
+            $sentCount++;
+
+            if ($recipient['is_primary']) {
+                $primarySigningUrl = route('contracts.sign', $token);
+            }
+        }
 
         // Update contract status
         $contract->update([
@@ -168,12 +232,44 @@ class ContractController extends Controller
             'sent_at' => now(),
         ]);
 
-        // Dispatch email job
-        SendContractInvitation::dispatch($contract, $token);
-
         return back()->with([
-            'success' => __('contracts.invitation_sent'),
-            'signing_url' => route('contracts.sign', $token), // Show for testing
+            'success' => __('contracts.invitations_sent', ['count' => $sentCount]),
+            'signing_url' => $primarySigningUrl,
         ]);
     }
+
+    public function addRecipient(Request $request, Contract $contract)
+    {
+        $request->validate([
+            'recipient_name' => 'required|string|max:255',
+            'recipient_email' => 'required|email|max:255',
+        ]);
+
+        ContractSignToken::create([
+            'contract_id' => $contract->id,
+            'recipient_name' => $request->recipient_name,
+            'recipient_email' => $request->recipient_email,
+            'token_hash' => hash('sha256', Str::random(64)),
+            'expires_at' => now()->addDays(30),
+            'created_by' => auth()->id(),
+        ]);
+
+        return back()->with('success', __('contracts.recipient_added'));
+    }
+
+    public function removeRecipient(Contract $contract, ContractSignToken $token)
+    {
+        if ($token->contract_id !== $contract->id) {
+            abort(403);
+        }
+
+        if ($token->used_at) {
+            return back()->with('error', __('contracts.cannot_remove_signed_recipient'));
+        }
+
+        $token->delete();
+
+        return back()->with('success', __('contracts.recipient_removed'));
+    }
+
 }

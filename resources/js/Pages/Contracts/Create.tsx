@@ -1,3 +1,4 @@
+import { marked } from 'marked';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, useForm, Link } from '@inertiajs/react';
 import { PageProps } from '@/types';
@@ -26,9 +27,12 @@ export default function Create({ auth, templates, activeTemplate }: Props) {
     const { data, setData, post, processing, errors } = useForm({
         client_name: '',
         client_email: '',
+        client_phone: '',
         client_company: '',
         client_address: '',
         performance_date: '',
+        location_name: '',
+        location_address: '',
         total_price: '',
         deposit_amount: '',
         currency: 'EUR',
@@ -76,15 +80,21 @@ export default function Create({ auth, templates, activeTemplate }: Props) {
     };
 
     // Replace placeholders with actual form data for preview
-    const getPreviewContent = () => {
+    const getPreviewHtml = () => {
         let content = data.markdown_snapshot || '';
         content = content.replace(/\[NAROČNIK\]/g, data.client_name || '[NAROČNIK]');
         content = content.replace(/\[EMAIL\]/g, data.client_email || '[EMAIL]');
+        content = content.replace(/\[TELEFON\]/g, data.client_phone || '[TELEFON]');
         content = content.replace(/\[PODJETJE\]/g, data.client_company || '[PODJETJE]');
         content = content.replace(/\[NASLOV\]/g, data.client_address || '[NASLOV]');
-        content = content.replace(/\[DATUM_NASTOPA\]/g, data.performance_date || '[DATUM_NASTOPA]');
-        content = content.replace(/\[SKUPNI_ZNESEK\]/g, data.total_price ? `${data.total_price} ${data.currency}` : '[SKUPNI_ZNESEK]');
-        content = content.replace(/\[AVANS\]/g, data.deposit_amount ? `${data.deposit_amount} ${data.currency}` : '[AVANS]');
+        content = content.replace(/\[DATUM_NASTOPA\]/g, data.performance_date ? new Date(data.performance_date + 'T00:00:00').toLocaleDateString('sl-SI') : '[DATUM_NASTOPA]');
+        content = content.replace(/\[LOKACIJA\]/g, data.location_name || '[LOKACIJA]');
+        content = content.replace(/\[NASLOV_LOKACIJE\]/g, data.location_address || '[NASLOV_LOKACIJE]');
+        content = content.replace(/\[SKUPNI_ZNESEK\]/g, data.total_price ? `${data.total_price}` : '[SKUPNI_ZNESEK]');
+        content = content.replace(/\[AVANS\]/g, data.deposit_amount ? `${data.deposit_amount}` : '[AVANS]');
+        content = content.replace(/\[DATUM_POGODBE\]/g, new Date().toLocaleDateString('sl-SI'));
+        content = content.replace(/\[ŠT_POGODBE\]/g, 'PLUTZ-' + new Date().getFullYear() + '-XXX');
+        content = content.replace(/\[DATUM_PODPISA\]/g, '[ob podpisu]');
         return content;
     };
 
@@ -146,6 +156,19 @@ export default function Create({ auth, templates, activeTemplate }: Props) {
 
                                     <div>
                                         <label className="block text-sm font-medium text-stone-400 mb-2">
+                                            {t('contracts.client_phone')}
+                                        </label>
+                                        <input
+                                            type="tel"
+                                            value={data.client_phone}
+                                            onChange={(e) => setData('client_phone', e.target.value)}
+                                            className="w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
+                                            placeholder="+386..."
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-stone-400 mb-2">
                                             {t('contracts.company_optional')}
                                         </label>
                                         <input
@@ -183,6 +206,37 @@ export default function Create({ auth, templates, activeTemplate }: Props) {
                                         rows={3}
                                         className="w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
                                     />
+                                </div>
+                            </div>
+
+                            {/* Location */}
+                            <div>
+                                <h3 className="text-lg font-medium text-plutz-cream mb-4">{t('contracts.location')}</h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-stone-400 mb-2">
+                                            {t('contracts.location_name')}
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={data.location_name}
+                                            onChange={(e) => setData('location_name', e.target.value)}
+                                            className="w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
+                                            placeholder="npr. Hotel Slon, Grad Otočec..."
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-stone-400 mb-2">
+                                            {t('contracts.location_address')}
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={data.location_address}
+                                            onChange={(e) => setData('location_address', e.target.value)}
+                                            className="w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
+                                            placeholder="Ulica, mesto..."
+                                        />
+                                    </div>
                                 </div>
                             </div>
 
@@ -280,7 +334,7 @@ export default function Create({ auth, templates, activeTemplate }: Props) {
                                 )}
 
                                 <div className="text-sm text-stone-400 mb-2">
-                                    {t('contracts.placeholders_hint')} [NAROČNIK], [EMAIL], [PODJETJE], [NASLOV], [DATUM_NASTOPA], [SKUPNI_ZNESEK], [AVANS], [PLUTZ_ADDRESS]
+                                    {t('contracts.placeholders_hint')} [ŠT_POGODBE], [DATUM_POGODBE], [NAROČNIK], [EMAIL], [TELEFON], [PODJETJE], [NASLOV], [DATUM_NASTOPA], [LOKACIJA], [NASLOV_LOKACIJE], [SKUPNI_ZNESEK], [AVANS], [DATUM_PODPISA]
                                 </div>
 
                                 <textarea
@@ -295,12 +349,53 @@ export default function Create({ auth, templates, activeTemplate }: Props) {
                                 )}
 
                                 {showPreview && (
-                                    <div className="mt-4 p-4 border border-plutz-tan/20 rounded-md bg-stone-900/50">
-                                        <h4 className="font-medium mb-2">{t('contracts.preview')}</h4>
-                                        <div className="prose max-w-none">
-                                            {getPreviewContent().split('\n').map((line, i) => (
-                                                <p key={i}>{line}</p>
-                                            ))}
+                                    <div className="mt-4 border border-plutz-tan/20 rounded-md overflow-hidden">
+                                        <div className="bg-plutz-tan/20 border-b border-plutz-tan/10 px-8 py-3 flex justify-between items-center">
+                                            <h4 className="font-medium text-plutz-cream text-sm">{t('contracts.preview')}</h4>
+                                            <span className="text-xs text-stone-400">PDF Preview</span>
+                                        </div>
+                                        {/* PDF-like page */}
+                                        <div className="bg-stone-600 p-8 flex justify-center">
+                                            <div className="bg-white w-full max-w-[210mm] shadow-2xl" style={{ minHeight: '297mm', padding: '40px 50px' }}>
+                                                {/* Contract header */}
+                                                <div className="flex justify-between items-start mb-8 pb-6 border-b-2 border-stone-200">
+                                                    <div>
+                                                        <img src="/build/assets/plutz-logo-dark.png" alt="Plutz" className="h-10 mb-2" onError={(e) => { (e.target as HTMLImageElement).style.display='none' }} />
+                                                        <div style={{ fontFamily: 'Georgia, serif', fontSize: '22px', fontWeight: 'bold', color: '#1a1a1a' }}>
+                                                            POGODBA
+                                                        </div>
+                                                    </div>
+                                                    <div className="text-right" style={{ fontFamily: 'Arial, sans-serif', fontSize: '13px', color: '#666' }}>
+                                                        <div style={{ fontWeight: 600, color: '#1a1a1a', fontSize: '14px' }}>
+                                                            Št. pogodbe: PLUTZ-{new Date().getFullYear()}-XXX
+                                                        </div>
+                                                        <div className="mt-1">
+                                                            Datum: {new Date().toLocaleDateString('sl-SI')}
+                                                        </div>
+                                                        {data.performance_date && (
+                                                            <div>
+                                                                Datum nastopa: {new Date(data.performance_date + 'T00:00:00').toLocaleDateString('sl-SI')}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                {/* Contract body */}
+                                                <div 
+                                                    className="contract-content"
+                                                    style={{
+                                                        fontFamily: 'Georgia, serif',
+                                                        fontSize: '14px',
+                                                        lineHeight: '1.8',
+                                                        color: '#1a1a1a'
+                                                    }}
+                                                    dangerouslySetInnerHTML={{ __html: marked(getPreviewHtml()) as string }}
+                                                />
+                                                {/* Footer */}
+                                                <div className="mt-12 pt-6 border-t border-stone-200 flex justify-between" style={{ fontFamily: 'Arial, sans-serif', fontSize: '11px', color: '#999' }}>
+                                                    <span>Plutz d.o.o.</span>
+                                                    <span>Stran 1/1</span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 )}

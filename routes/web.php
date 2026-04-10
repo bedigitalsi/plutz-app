@@ -222,6 +222,7 @@ Route::middleware(['auth', 'permission:contracts.manage'])->group(function () {
     Route::post('contracts/{contract}/send', [ContractController::class, 'sendInvitation'])
         ->name('contracts.send')
         ->middleware('permission:contracts.send');
+Route::post('contracts/{contract}/recipients', [ContractController::class, 'addRecipient'])        ->name('contracts.add-recipient');    Route::delete('contracts/{contract}/recipients/{token}', [ContractController::class, 'removeRecipient'])        ->name('contracts.remove-recipient');
 });
 
 require __DIR__.'/auth.php';

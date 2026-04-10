@@ -18,7 +18,9 @@ class SendContractInvitation implements ShouldQueue
 
     public function __construct(
         public Contract $contract,
-        public string $token
+        public string $token,
+        public ?string $recipientEmail = null,
+        public ?string $recipientName = null,
     ) {}
 
     public function handle(): void
@@ -40,14 +42,17 @@ class SendContractInvitation implements ShouldQueue
 
         $signingUrl = route('contracts.sign', $this->token);
 
+        $recipientName = $this->recipientName ?? $this->contract->client_name;
+        $recipientEmail = $this->recipientEmail ?? $this->contract->client_email;
+
         $body = __('email.contract_invitation_body', [
-            'name' => $this->contract->client_name,
+            'name' => $recipientName,
             'url' => $signingUrl,
         ]);
         $subject = __('email.contract_invitation_subject') . ' - Plutz';
 
-        Mail::raw($body, function ($message) use ($subject) {
-            $message->to($this->contract->client_email)
+        Mail::raw($body, function ($message) use ($subject, $recipientEmail) {
+            $message->to($recipientEmail)
                 ->subject($subject)
                 ;
             $message->getSymfonyMessage()->getHeaders()->addTextHeader('X-Email-Type', 'contract_invitation');

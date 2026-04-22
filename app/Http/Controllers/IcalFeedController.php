@@ -65,8 +65,8 @@ class IcalFeedController extends Controller
             abort(404, 'Feed not found or inactive');
         }
 
-        // Get confirmed and pending inquiries (exclude rejected)
-        $inquiries = Inquiry::whereIn('status', ['confirmed', 'pending'])
+        // Only confirmed inquiries
+        $inquiries = Inquiry::where('status', 'confirmed')
             ->with(['performanceType', 'bandMembers:id,name'])
             ->orderBy('performance_date', 'asc')
             ->get();
@@ -103,8 +103,6 @@ class IcalFeedController extends Controller
             }
 
             $descParts = [];
-            $descParts[] = $inquiry->status === 'confirmed' ? '>>POTRJENO<<' : '>>POVPRAŠEVANJE<<';
-            $descParts[] = '';
             if ($inquiry->performance_time_mode === 'exact_time' && $inquiry->performance_time_exact) {
                 $descParts[] = 'Time: ' . $inquiry->performance_time_exact;
             } elseif ($inquiry->performance_time_mode === 'text_time' && $inquiry->performance_time_text) {

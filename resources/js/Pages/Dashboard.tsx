@@ -20,6 +20,7 @@ interface Props {
     inquiryStats: {
         pending: number;
         confirmed: number;
+        confirmed_upcoming: number;
         rejected: number;
         total: number;
     };
@@ -27,6 +28,7 @@ interface Props {
         total: number;
         pending: number;
         confirmed: number;
+        confirmed_upcoming: number;
         rejected: number;
     };
     incomeStats: {
@@ -253,8 +255,11 @@ export default function Dashboard({ inquiryStats, inquiryTotals, incomeStats, ex
                             <p className="text-stone-400 text-sm font-medium uppercase tracking-wider">{t('dashboard.confirmed_gigs')}</p>
                             <span className="material-symbols-outlined text-plutz-tan">event_available</span>
                         </div>
-                        <p className="text-3xl font-bold text-plutz-cream">{inquiryStats.confirmed}</p>
-                        <div className="mt-2 text-xs text-stone-400 font-medium">
+                        <p className="text-3xl font-bold text-plutz-cream">{inquiryStats.confirmed_upcoming}</p>
+                        <div className="mt-2 text-xs text-plutz-tan font-medium">
+                            {inquiryStats.confirmed} {t('dashboard.total_short')}
+                        </div>
+                        <div className="text-xs text-stone-400 font-medium">
                             {nextGig ? `${t('dashboard.next')} ${formatDate(nextGig.performance_date)}` : t('dashboard.no_upcoming')}
                         </div>
                     </Link>

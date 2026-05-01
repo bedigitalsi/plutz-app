@@ -34,10 +34,12 @@ class DashboardController extends Controller
         }
 
         // Inquiry stats
+        $today = now()->toDateString();
         $inquiryStats = [
             'total' => (clone $inquiryQuery)->count(),
             'pending' => (clone $inquiryQuery)->pending()->count(),
             'confirmed' => (clone $inquiryQuery)->confirmed()->count(),
+            'confirmed_upcoming' => (clone $inquiryQuery)->confirmed()->whereDate('performance_date', '>=', $today)->count(),
             'rejected' => (clone $inquiryQuery)->rejected()->count(),
         ];
 
@@ -45,6 +47,7 @@ class DashboardController extends Controller
             'total' => (clone $inquiryQuery)->sum('price_amount'),
             'pending' => (clone $inquiryQuery)->pending()->sum('price_amount'),
             'confirmed' => (clone $inquiryQuery)->confirmed()->sum('price_amount'),
+            'confirmed_upcoming' => (clone $inquiryQuery)->confirmed()->whereDate('performance_date', '>=', $today)->sum('price_amount'),
             'rejected' => (clone $inquiryQuery)->rejected()->sum('price_amount'),
         ];
 

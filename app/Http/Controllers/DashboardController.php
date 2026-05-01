@@ -25,7 +25,7 @@ class DashboardController extends Controller
         $dateTo = $request->input('date_to');
 
         // Build inquiry query with optional date filters
-        $inquiryQuery = Inquiry::query();
+        $inquiryQuery = Inquiry::query()->visibleTo(Auth::user());
         if ($dateFrom) {
             $inquiryQuery->whereDate('performance_date', '>=', $dateFrom);
         }

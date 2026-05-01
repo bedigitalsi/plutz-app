@@ -65,13 +65,14 @@ interface Props {
         total_expenses: number;
     }[] | null;
     upcomingGigs: UpcomingGig[];
+    icalUrl: string;
     filters: {
         date_from: string | null;
         date_to: string | null;
     };
 }
 
-export default function Dashboard({ inquiryStats, inquiryTotals, incomeStats, expenseStats, mutualFund, groupCostStats, userStats, memberBreakdown, upcomingGigs, filters }: Props) {
+export default function Dashboard({ inquiryStats, inquiryTotals, incomeStats, expenseStats, mutualFund, groupCostStats, userStats, memberBreakdown, upcomingGigs, icalUrl, filters }: Props) {
     const { t, locale } = useTranslation();
     const authProps = usePage().props.auth as any;
     const permissions: string[] = authProps.permissions ?? [];
@@ -80,6 +81,15 @@ export default function Dashboard({ inquiryStats, inquiryTotals, incomeStats, ex
     const [dateFrom, setDateFrom] = useState<string>(filters.date_from || '');
     const [dateTo, setDateTo] = useState<string>(filters.date_to || '');
     const [showFilters, setShowFilters] = useState(false);
+    const [icalCopied, setIcalCopied] = useState(false);
+    const webcalUrl = icalUrl.replace(/^https?:\/\//, 'webcal://');
+
+    const copyIcalUrl = () => {
+        navigator.clipboard.writeText(icalUrl).then(() => {
+            setIcalCopied(true);
+            setTimeout(() => setIcalCopied(false), 2000);
+        });
+    };
 
     useEffect(() => {
         setDateFrom(filters.date_from || '');
@@ -502,6 +512,34 @@ export default function Dashboard({ inquiryStats, inquiryTotals, incomeStats, ex
                         </div>
                     </div>
                 )}
+
+                {/* Personal iCal feed */}
+                <div className="mb-12 bg-plutz-surface rounded-xl border border-plutz-tan/10 p-6 shadow-sm">
+                    <div className="flex items-center gap-3 mb-3">
+                        <span className="material-symbols-outlined text-plutz-tan">calendar_add_on</span>
+                        <h3 className="text-sm font-semibold text-plutz-tan uppercase tracking-wider">{t('dashboard.my_calendar')}</h3>
+                    </div>
+                    <p className="text-sm text-stone-400 mb-4">{t('dashboard.my_calendar_help')}</p>
+                    <div className="flex flex-col sm:flex-row gap-2">
+                        <a
+                            href={webcalUrl}
+                            className="flex items-center justify-center gap-2 bg-plutz-tan hover:bg-plutz-tan/90 transition-all text-plutz-dark px-5 py-2.5 rounded-lg font-bold text-sm uppercase tracking-wider"
+                        >
+                            <span className="material-symbols-outlined text-base">phone_iphone</span>
+                            {t('dashboard.subscribe_calendar')}
+                        </a>
+                        <div className="flex-1 flex items-center gap-2 bg-plutz-dark border border-plutz-tan/20 rounded-lg px-3 py-2">
+                            <code className="flex-1 text-xs text-stone-400 truncate">{icalUrl}</code>
+                            <button
+                                onClick={copyIcalUrl}
+                                className="flex items-center gap-1 text-plutz-tan hover:text-plutz-tan-light text-xs font-medium uppercase tracking-wider"
+                            >
+                                <span className="material-symbols-outlined text-sm">{icalCopied ? 'check' : 'content_copy'}</span>
+                                {icalCopied ? t('dashboard.copied') : t('dashboard.copy')}
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
                 {/* User Personal Stats */}
                 {userStats && (

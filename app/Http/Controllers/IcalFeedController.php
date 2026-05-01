@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\IcalFeed;
 use App\Models\Inquiry;
 use App\Models\Setting;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -83,7 +84,37 @@ class IcalFeedController extends Controller
             ->header('Cache-Control', 'max-age=300'); // Cache for 5 minutes
     }
 
-    private function generateICS($inquiries, string $timezone): string
+    /**
+     * Public per-user ICS feed endpoint — returns confirmed inquiries
+     * the user is assigned to as a band member.
+     */
+    public function showUser(string $token)
+    {
+        $user = User::where('ical_token', $token)->first();
+
+        if (!$user) {
+            abort(404, 'Feed not found');
+        }
+
+        $inquiries = Inquiry::where('status', 'confirmed')
+            ->whereHas('bandMembers', function ($q) use ($user) {
+                $q->where('users.id', $user->id);
+            })
+            ->with(['performanceType', 'bandMembers:id,name'])
+            ->orderBy('performance_date', 'asc')
+            ->get();
+
+        $timezone = Setting::where('key', 'app_timezone')->value('value') ?? 'Europe/Ljubljana';
+
+        $ics = $this->generateICS($inquiries, $timezone, 'Plutz - ' . $user->name);
+
+        return response($ics)
+            ->header('Content-Type', 'text/calendar; charset=utf-8')
+            ->header('Content-Disposition', 'inline; filename="plutz-calendar.ics"')
+            ->header('Cache-Control', 'max-age=300');
+    }
+
+    private function generateICS($inquiries, string $timezone, string $calendarName = 'Plutz Gigs'): string
     {
         $lines = [];
         $lines[] = 'BEGIN:VCALENDAR';
@@ -91,7 +122,7 @@ class IcalFeedController extends Controller
         $lines[] = 'PRODID:-//Plutz//Calendar//EN';
         $lines[] = 'CALSCALE:GREGORIAN';
         $lines[] = 'METHOD:PUBLISH';
-        $lines[] = 'X-WR-CALNAME:Plutz Gigs';
+        $lines[] = 'X-WR-CALNAME:' . $this->escapeICS($calendarName);
         $lines[] = 'X-WR-TIMEZONE:' . $timezone;
 
         foreach ($inquiries as $inquiry) {

@@ -40,6 +40,7 @@ Route::get('/', function () {
 Route::get('/help/install', [HelpController::class, 'install'])->name('help.install');
 
 // Public ICS feed (no auth required)
+Route::get('/ical/user/{token}.ics', [IcalFeedController::class, 'showUser'])->name('ical.user');
 Route::get('/ical/{token}.ics', [IcalFeedController::class, 'show'])->name('ical.show');
 
 // Public contract signing (no auth required)

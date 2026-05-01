@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -51,5 +52,15 @@ class User extends Authenticatable
             'is_band_member' => 'boolean',
             'hide_prices' => 'boolean',
         ];
+    }
+
+    public function getOrCreateIcalToken(): string
+    {
+        if (!$this->ical_token) {
+            $this->ical_token = Str::random(40);
+            $this->save();
+        }
+
+        return $this->ical_token;
     }
 }

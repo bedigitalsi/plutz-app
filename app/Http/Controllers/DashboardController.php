@@ -210,6 +210,10 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
+        // Personal iCal feed URL for the logged-in user
+        $icalToken = Auth::user()->getOrCreateIcalToken();
+        $icalUrl = url('/ical/user/' . $icalToken . '.ics');
+
         return Inertia::render('Dashboard', [
             'inquiryStats' => $inquiryStats,
             'inquiryTotals' => $inquiryTotals,
@@ -228,6 +232,7 @@ class DashboardController extends Controller
             'upcomingGigs' => $upcomingGigs,
             'recentInquiries' => $recentInquiries,
             'recentIncomes' => $recentIncomes,
+            'icalUrl' => $icalUrl,
             'filters' => [
                 'date_from' => $dateFrom,
                 'date_to' => $dateTo,

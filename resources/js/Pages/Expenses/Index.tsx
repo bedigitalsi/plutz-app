@@ -146,7 +146,7 @@ export default function Index({ expenses, filters }: Props) {
                             </Link>
                         </div>
                     ) : (
-                        <div className="overflow-hidden rounded-lg bg-plutz-surface shadow-sm">
+                        <div className="overflow-x-auto rounded-lg bg-plutz-surface shadow-sm">
                             <table className="min-w-full divide-y divide-plutz-tan/10">
                                 <thead className="bg-stone-900/50">
                                     <tr>

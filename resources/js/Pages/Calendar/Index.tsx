@@ -46,6 +46,24 @@ export default function Index({ currentMonth, monthLabel, events, upcoming, cale
     const [modalDate, setModalDate] = useState<string | null>(null);
     const [modalEvents, setModalEvents] = useState<CalendarEvent[]>([]);
 
+    // Month/year quick-picker
+    const [pickerOpen, setPickerOpen] = useState(false);
+    const [pickerYear, setPickerYear] = useState(() => parseInt(currentMonth.split('-')[0], 10));
+    const currentYearNum = parseInt(currentMonth.split('-')[0], 10);
+    const currentMonthNum = parseInt(currentMonth.split('-')[1], 10);
+    const monthNames = useMemo(() => Array.from({ length: 12 }, (_, i) =>
+        new Date(2000, i, 1).toLocaleString('sl-SI', { month: 'short' })
+    ), []);
+    const openPicker = () => {
+        setPickerYear(currentYearNum);
+        setPickerOpen(true);
+    };
+    const selectPickerMonth = (m: number) => {
+        setPickerOpen(false);
+        const newMonth = `${pickerYear}-${String(m).padStart(2, '0')}`;
+        router.visit(route('calendar.index', { month: newMonth }));
+    };
+
     // Build calendar grid
     const calendarDays = useMemo(() => {
         const days: { date: string; day: number; isCurrentMonth: boolean; isToday: boolean; events: CalendarEvent[] }[] = [];
@@ -139,7 +157,13 @@ export default function Index({ currentMonth, monthLabel, events, upcoming, cale
                             >
                                 <span className="material-symbols-outlined group-hover:-translate-x-0.5 transition-transform">chevron_left</span>
                             </button>
-                            <h2 className="font-serif text-3xl font-semibold text-white tracking-wide">{monthLabel}</h2>
+                            <button
+                                onClick={openPicker}
+                                className="flex items-center gap-1 font-serif text-3xl font-semibold text-white tracking-wide hover:text-plutz-tan transition-colors"
+                            >
+                                <span>{monthLabel}</span>
+                                <span className="material-symbols-outlined text-2xl">expand_more</span>
+                            </button>
                             <button
                                 onClick={() => navigateMonth('next')}
                                 className="p-2 rounded-lg hover:bg-plutz-surface text-stone-400 hover:text-white transition-colors group"
@@ -306,6 +330,55 @@ export default function Index({ currentMonth, monthLabel, events, upcoming, cale
                     </aside>
                 </div>
             </main>
+
+            {/* Month/Year quick picker */}
+            {pickerOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={() => setPickerOpen(false)}>
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+                    <div
+                        className="relative bg-plutz-surface rounded-xl border border-[#2d2a28] shadow-2xl w-full max-w-sm overflow-hidden"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {/* Year selector */}
+                        <div className="flex items-center justify-between p-4 border-b border-[#2d2a28]">
+                            <button
+                                onClick={() => setPickerYear(y => y - 1)}
+                                className="p-2 rounded-lg hover:bg-[#2a2624] text-stone-400 hover:text-white transition-colors"
+                            >
+                                <span className="material-symbols-outlined">chevron_left</span>
+                            </button>
+                            <span className="font-serif text-2xl font-semibold text-white">{pickerYear}</span>
+                            <button
+                                onClick={() => setPickerYear(y => y + 1)}
+                                className="p-2 rounded-lg hover:bg-[#2a2624] text-stone-400 hover:text-white transition-colors"
+                            >
+                                <span className="material-symbols-outlined">chevron_right</span>
+                            </button>
+                        </div>
+
+                        {/* Month grid */}
+                        <div className="grid grid-cols-3 gap-2 p-4">
+                            {monthNames.map((name, i) => {
+                                const m = i + 1;
+                                const isCurrent = pickerYear === currentYearNum && m === currentMonthNum;
+                                return (
+                                    <button
+                                        key={m}
+                                        onClick={() => selectPickerMonth(m)}
+                                        className={`py-3 rounded-lg text-sm font-medium capitalize transition-colors ${
+                                            isCurrent
+                                                ? 'bg-plutz-tan text-white'
+                                                : 'bg-[#252220] text-plutz-cream hover:bg-[#2a2624] hover:text-plutz-tan'
+                                        }`}
+                                    >
+                                        {name}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Modal for day events */}
             {modalDate && (

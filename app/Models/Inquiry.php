@@ -87,6 +87,21 @@ class Inquiry extends Model
     }
 
     /**
+     * Always expose the exact-time as HH:MM (DB stores HH:MM:SS via MySQL's
+     * TIME type). Trailing seconds confuse the HTML <input type="time">
+     * picker, which can then submit the field back with seconds and fail
+     * the HH:MM-only validation regex.
+     */
+    public function getPerformanceTimeExactAttribute($value): ?string
+    {
+        if (!$value) {
+            return $value;
+        }
+        // Match HH:MM at the start; ignore anything after.
+        return substr($value, 0, 5);
+    }
+
+    /**
      * Get band size label based on number of assigned members.
      */
     public function getBandSizeLabelAttribute(): string

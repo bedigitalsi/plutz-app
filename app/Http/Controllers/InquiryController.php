@@ -79,7 +79,7 @@ class InquiryController extends Controller
         $validated = $request->validate([
             'performance_date' => 'required|date',
             'performance_time_mode' => 'required|in:exact_time,text_time',
-            'performance_time_exact' => ['nullable', 'required_if:performance_time_mode,exact_time', 'exclude_if:performance_time_mode,text_time', 'regex:/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/'],
+            'performance_time_exact' => ['nullable', 'required_if:performance_time_mode,exact_time', 'exclude_if:performance_time_mode,text_time', 'regex:/^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/'],
             'performance_time_text' => ['nullable', 'required_if:performance_time_mode,text_time', 'exclude_if:performance_time_mode,exact_time', 'string', 'max:255'],
             'duration_minutes' => 'nullable|integer|min:1',
             'location_name' => 'required|string|max:255',
@@ -139,7 +139,7 @@ class InquiryController extends Controller
         $validated = $request->validate([
             'performance_date' => 'required|date',
             'performance_time_mode' => 'required|in:exact_time,text_time',
-            'performance_time_exact' => ['nullable', 'required_if:performance_time_mode,exact_time', 'exclude_if:performance_time_mode,text_time', 'regex:/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/'],
+            'performance_time_exact' => ['nullable', 'required_if:performance_time_mode,exact_time', 'exclude_if:performance_time_mode,text_time', 'regex:/^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/'],
             'performance_time_text' => ['nullable', 'required_if:performance_time_mode,text_time', 'exclude_if:performance_time_mode,exact_time', 'string', 'max:255'],
             'duration_minutes' => 'nullable|integer|min:1',
             'location_name' => 'required|string|max:255',

@@ -20,6 +20,7 @@ interface BandMember {
 interface Inquiry {
     id: number;
     performance_date: string;
+    received_at?: string;
     performance_time_mode: 'exact_time' | 'text_time';
     performance_time_exact?: string;
     performance_time_text?: string;
@@ -49,6 +50,7 @@ export default function Edit({ inquiry, performanceTypes, bandMembers }: Props) 
 
     const { data, setData, patch, processing, errors } = useForm({
         performance_date: inquiry.performance_date,
+        received_at: inquiry.received_at ? inquiry.received_at.substring(0, 10) : '',
         performance_time_mode: inquiry.performance_time_mode,
         performance_time_exact: inquiry.performance_time_exact || '',
         performance_time_text: inquiry.performance_time_text || '',
@@ -131,6 +133,18 @@ export default function Edit({ inquiry, performanceTypes, bandMembers }: Props) 
                                         ))}
                                     </select>
                                     <InputError message={errors.performance_type_id} className="mt-2" />
+                                </div>
+
+                                <div>
+                                    <InputLabel htmlFor="received_at" value={t('inquiries.received_date')} />
+                                    <TextInput
+                                        id="received_at"
+                                        type="date"
+                                        className="mt-1 block w-full"
+                                        value={data.received_at}
+                                        onChange={(e) => setData('received_at', e.target.value)}
+                                    />
+                                    <InputError message={errors.received_at} className="mt-2" />
                                 </div>
                             </div>
 

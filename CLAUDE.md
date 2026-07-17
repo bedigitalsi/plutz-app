@@ -149,6 +149,58 @@ Password: password
 - Soft deletes enabled on major models
 - Money amounts stored as integers (cents) in database
 
-## Deployment
+## Live Server — Production Deployment
 
-See `COMPLETE-DEPLOYMENT-GUIDE.md` and `CPANEL-DEPLOYMENT-GUIDE.md` for production setup.
+### Server Access
+- **Host:** root@5.9.70.52 (Hetzner — shared with Sansibe Brandy, ThaiSabai)
+- **Path:** /var/www/plutz
+- **Branch:** main
+- **URL:** https://app.plutz.si
+- **GitHub remote on server:** `git@github-plutz:bedigitalsi/plutz-app.git` (uses ~/.ssh/github_plutz)
+- **nginx vhost:** /etc/nginx/sites-available/plutz
+- **PHP-FPM socket:** /var/run/php/php8.4-fpm.sock
+- **Database:** MySQL on the same server
+
+### Deploy Flow
+
+After every commit and push to `main`, **deploy to the live server via SSH.**
+
+#### Standard deploy (no migrations):
+```bash
+ssh root@5.9.70.52 "cd /var/www/plutz && git pull origin main && sudo -u www-data php artisan config:cache && sudo -u www-data php artisan route:cache && sudo -u www-data php artisan view:cache"
+```
+
+#### With migrations:
+```bash
+ssh root@5.9.70.52 "cd /var/www/plutz && git pull origin main && sudo -u www-data php artisan migrate --force && sudo -u www-data php artisan config:cache && sudo -u www-data php artisan route:cache && sudo -u www-data php artisan view:cache"
+```
+
+#### With JS/CSS changes (React/Inertia frontend):
+Frontend must be built **locally** before push — server has no Node.js.
+```bash
+# Local: build frontend
+npm run build
+git add public/build/
+git commit -m "Rebuild frontend assets"
+git push origin main
+
+# Then deploy:
+ssh root@5.9.70.52 "cd /var/www/plutz && git pull origin main && sudo -u www-data php artisan config:cache && sudo -u www-data php artisan route:cache && sudo -u www-data php artisan view:cache"
+```
+
+#### Additional commands (add as needed):
+- **Queue-related code** → add `sudo -u www-data php artisan queue:restart`
+- **New composer deps** → add `composer install --optimize-autoloader --no-dev`
+- **Cache clear** → add `sudo -u www-data php artisan cache:clear`
+
+### ⚠️ Critical Rules
+- **ALWAYS** use `sudo -u www-data php artisan` — NEVER run artisan as root
+- **NEVER** run destructive commands on production (drop tables, delete files, etc.)
+- If `git pull` has merge conflicts: `git merge --abort && git reset --hard origin/main`
+- After deploy, verify the site loads: `curl -s -o /dev/null -w "%{http_code}" https://app.plutz.si`
+- The server does NOT have Node.js — all Vite builds must happen locally before push
+
+### API Access
+- **API Base:** https://app.plutz.si/api/v1
+- **API Token:** `1|2G39LqREeaLqsxgiTK1WcebRAzSZj6iqP4POeMV403d34287`
+- **Auth:** Bearer token in Authorization header

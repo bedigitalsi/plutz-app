@@ -169,6 +169,7 @@
     "inquiries.new_inquiry_page": "Novo povpraševanje",
     "inquiries.back_to_list": "Nazaj na seznam",
     "inquiries.performance_date": "Datum nastopa *",
+    "inquiries.received_date": "Datum povpra\u0161evanja",
     "inquiries.performance_type": "Vrsta nastopa *",
     "inquiries.select_type": "Izberi vrsto...",
     "inquiries.performance_time": "Čas nastopa *",

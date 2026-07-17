@@ -93,6 +93,7 @@ class InquiryController extends Controller
             'price_amount' => 'nullable|numeric|min:0',
             'currency' => 'nullable|string|max:3',
             'notes' => 'nullable|string',
+            'received_at' => 'nullable|date',
         ]);
 
         $memberIds = $validated['band_member_ids'];
@@ -100,7 +101,7 @@ class InquiryController extends Controller
 
         $validated['status'] = 'pending';
         $validated['created_by'] = Auth::id();
-        $validated['received_at'] = now();
+        $validated['received_at'] = $validated['received_at'] ?? now();
         $validated['currency'] = $validated['currency'] ?? 'EUR';
 
         if (empty($validated['duration_minutes'])) {
@@ -153,10 +154,16 @@ class InquiryController extends Controller
             'price_amount' => 'nullable|numeric|min:0',
             'currency' => 'nullable|string|max:3',
             'notes' => 'nullable|string',
+            'received_at' => 'nullable|date',
         ]);
 
         $memberIds = $validated['band_member_ids'];
         unset($validated['band_member_ids']);
+
+        // received_at column is NOT NULL — keep the existing value if the field was cleared
+        if (empty($validated['received_at'])) {
+            unset($validated['received_at']);
+        }
 
         if (empty($validated['duration_minutes'])) {
             $validated['duration_minutes'] = \App\Models\Setting::where('key', 'default_duration_minutes')->value('value') ?? 120;

@@ -28,8 +28,11 @@ export default function Create({ performanceTypes, bandMembers, date }: Props) {
     const hidePrices = (usePage().props.auth as any).user?.hide_prices;
     const [timeMode, setTimeMode] = useState<'exact_time' | 'text_time'>('exact_time');
 
+    const today = new Date().toLocaleDateString('sv-SE');
+
     const { data, setData, post, processing, errors } = useForm({
         performance_date: date || '',
+        received_at: today,
         performance_time_mode: 'exact_time',
         performance_time_exact: '',
         performance_time_text: '',
@@ -120,6 +123,18 @@ export default function Create({ performanceTypes, bandMembers, date }: Props) {
                                         ))}
                                     </select>
                                     <InputError message={errors.performance_type_id} className="mt-2" />
+                                </div>
+
+                                <div>
+                                    <InputLabel htmlFor="received_at" value={t('inquiries.received_date')} />
+                                    <TextInput
+                                        id="received_at"
+                                        type="date"
+                                        className="mt-1 block w-full"
+                                        value={data.received_at}
+                                        onChange={(e) => setData('received_at', e.target.value)}
+                                    />
+                                    <InputError message={errors.received_at} className="mt-2" />
                                 </div>
                             </div>
 

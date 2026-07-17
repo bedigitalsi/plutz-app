@@ -169,6 +169,7 @@
     "inquiries.new_inquiry_page": "New Inquiry",
     "inquiries.back_to_list": "Back to List",
     "inquiries.performance_date": "Performance Date *",
+    "inquiries.received_date": "Inquiry Date",
     "inquiries.performance_type": "Performance Type *",
     "inquiries.select_type": "Select type...",
     "inquiries.performance_time": "Performance Time *",

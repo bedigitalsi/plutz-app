@@ -7,6 +7,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 interface Inquiry {
     id: number;
     performance_date: string;
+    received_at?: string;
     performance_time_mode: 'exact_time' | 'text_time';
     performance_time_exact?: string;
     performance_time_text?: string;
@@ -181,6 +182,12 @@ export default function Show({ inquiry }: Props) {
                                         <div>
                                             <dt className="text-sm font-medium text-stone-500">{t('common.type')}</dt>
                                             <dd className="mt-1 text-sm text-plutz-cream">{inquiry.performance_type.name}</dd>
+                                        </div>
+                                    )}
+                                    {inquiry.received_at && (
+                                        <div>
+                                            <dt className="text-sm font-medium text-stone-500">{t('inquiries.received_date')}</dt>
+                                            <dd className="mt-1 text-sm text-plutz-cream">{formatDate(inquiry.received_at)}</dd>
                                         </div>
                                     )}
                                     {inquiry.band_members && inquiry.band_members.length > 0 && (

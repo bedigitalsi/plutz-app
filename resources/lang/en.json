@@ -219,6 +219,8 @@
     "incomes.select_type": "Select type...",
     "incomes.contact_person": "Contact Person *",
     "incomes.invoice_issued_checkbox": "Invoice Issued",
+    "incomes.mark_invoice_issued": "Mark invoice issued",
+    "incomes.unmark_invoice_issued": "Mark invoice not issued",
     "incomes.create_income": "Create Income",
     "expenses.title": "Expenses",
     "expenses.new_expense": "New Expense",

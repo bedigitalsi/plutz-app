@@ -105,6 +105,13 @@ class IncomeController extends Controller
         ]);
     }
 
+    public function toggleInvoice(Income $income)
+    {
+        $income->update(['invoice_issued' => !$income->invoice_issued]);
+
+        return Redirect::back();
+    }
+
     public function destroy(Income $income)
     {
         $hadFundDistribution = $income->distributions()

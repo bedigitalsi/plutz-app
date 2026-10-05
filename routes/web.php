@@ -161,6 +161,7 @@ Route::middleware(['auth', 'permission:income.create'])->group(function () {
     Route::get('/incomes/create', [IncomeController::class, 'create'])->name('incomes.create');
     Route::post('/incomes', [IncomeController::class, 'store'])->name('incomes.store');
     Route::delete('/incomes/{income}', [IncomeController::class, 'destroy'])->name('incomes.destroy');
+    Route::patch('/incomes/{income}/invoice', [IncomeController::class, 'toggleInvoice'])->name('incomes.toggle-invoice');
 });
 
 Route::middleware(['auth', 'permission:income.view'])->group(function () {

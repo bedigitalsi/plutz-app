@@ -104,7 +104,13 @@ export default function Show({ income, bandMembers, totalDistributed, remaining 
                                 </div>
                             </div>
 
-                            <div className="mt-6">
+                            <div className="mt-6 flex flex-wrap gap-2">
+                                <button
+                                    onClick={() => router.patch(route('incomes.toggle-invoice', income.id), {}, { preserveScroll: true })}
+                                    className="rounded-md border border-plutz-tan/40 px-4 py-2 text-sm font-semibold text-plutz-tan shadow-sm hover:bg-plutz-tan/10"
+                                >
+                                    {income.invoice_issued ? t('incomes.unmark_invoice_issued') : t('incomes.mark_invoice_issued')}
+                                </button>
                                 <button
                                     onClick={handleDelete}
                                     className="rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500/100"

@@ -219,6 +219,8 @@
     "incomes.select_type": "Izberi vrsto...",
     "incomes.contact_person": "Kontaktna oseba *",
     "incomes.invoice_issued_checkbox": "Račun izdan",
+    "incomes.mark_invoice_issued": "Označi račun kot izdan",
+    "incomes.unmark_invoice_issued": "Označi račun kot neizdan",
     "incomes.create_income": "Ustvari prihodek",
     "expenses.title": "Stroški",
     "expenses.new_expense": "Nov strošek",

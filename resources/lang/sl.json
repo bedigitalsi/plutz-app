@@ -658,5 +658,6 @@
     "signing.signer_signed": "podpisano",
     "signing.signer_pending": "čaka na podpis",
     "signing.partial_title": "Vaš podpis je zabeležen",
-    "signing.partial_message": "Hvala! Pogodbo morajo podpisati še ostali podpisniki. Ko podpišejo vsi, boste podpisano pogodbo prejeli po e-pošti."
+    "signing.partial_message": "Hvala! Pogodbo morajo podpisati še ostali podpisniki. Ko podpišejo vsi, boste podpisano pogodbo prejeli po e-pošti.",
+    "signing.signature_hint": "Podpišite se s prstom ali z miško"
 }

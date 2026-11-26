@@ -43,6 +43,8 @@ class GenerateSignedContractPdf implements ShouldQueue
         // Generate PDF using DOMPDF
         $pdf = Pdf::loadHTML($html);
         $pdf->setPaper('a4', 'portrait');
+        $pdf->setOption('isFontSubsettingEnabled', true);
+        $this->addPageNumbers($pdf);
         file_put_contents($pdfFullPath, $pdf->output());
 
         // Store as attachment
@@ -59,10 +61,31 @@ class GenerateSignedContractPdf implements ShouldQueue
         ]);
     }
 
+    /** Footer on every page: contract number on the left, "Stran X od Y" on the right. */
+    private function addPageNumbers(\Barryvdh\DomPDF\PDF $pdf): void
+    {
+        $pdf->render();
+        $dompdf = $pdf->getDomPDF();
+        $canvas = $dompdf->getCanvas();
+        $metrics = $dompdf->getFontMetrics();
+        $font = $metrics->getFont('Instrument Sans') ?: $metrics->getFont('DejaVu Sans');
+        $size = 7;
+        $color = [0.55, 0.52, 0.48];
+        $margin = 18 * 72 / 25.4;
+        $y = $canvas->get_height() - 11 * 72 / 25.4;
+
+        $number = $this->contract->contract_number ?? 'P-' . str_pad($this->contract->id, 4, '0', STR_PAD_LEFT);
+        $canvas->page_text($margin, $y, 'Pogodba ' . $number, $font, $size, $color);
+
+        // Right-aligned for a typical "Stran 1 od 3" (page_text has no alignment of its own)
+        $width = $metrics->getTextWidth('Stran 1 od 3', $font, $size);
+        $canvas->page_text($canvas->get_width() - $margin - $width, $y, 'Stran {PAGE_NUM} od {PAGE_COUNT}', $font, $size, $color);
+    }
+
     private function generateHtml(): string
     {
         $markdown = $this->contract->markdown_snapshot;
-        
+
         // Substitute variables using the centralized helper
         $markdown = ContractPlaceholders::substitute($markdown, $this->contract);
 
@@ -72,24 +95,6 @@ class GenerateSignedContractPdf implements ShouldQueue
 
         // Client signatures: one entry per person who signed
         $clientSigners = $this->clientSigners();
-
-        $clientSigHtml = '';
-        foreach ($clientSigners as $i => $signer) {
-            $style = $i > 0 ? ' style="margin-top: 14px;"' : '';
-            $clientSigHtml .= '<img src="' . $signer['image'] . '" alt="Signature"' . $style . ' />'
-                . '<p class="sig-name">' . e($signer['name']) . '</p>';
-        }
-
-        $auditHtml = '';
-        foreach ($clientSigners as $i => $signer) {
-            $label = count($clientSigners) > 1 ? 'Podpisnik ' . ($i + 1) : 'Podpisnik';
-            $auditHtml .= '<p><strong>' . $label . ':</strong> ' . e($signer['name'])
-                . ($signer['email'] ? ' (' . e($signer['email']) . ')' : '') . '</p>';
-            if ($signer['signed_at']) {
-                $auditHtml .= '<p><strong>Datum podpisa:</strong> ' . $signer['signed_at']
-                    . ($signer['ip'] ? ' &middot; <strong>IP naslov:</strong> ' . e($signer['ip']) : '') . '</p>';
-            }
-        }
 
         // Company signature from settings
         $companySignaturePath = Setting::getString('company_signature', '');
@@ -101,150 +106,319 @@ class GenerateSignedContractPdf implements ShouldQueue
             }
         }
 
-        // Company signature HTML block
-        $companySignatureHtml = '';
-        if ($companySignatureDataUri) {
-            $companySignatureHtml = <<<BLOCK
-            <div class="sig-col">
-                <h3>Podpis izvajalca</h3>
-                <img src="{$companySignatureDataUri}" alt="Company Signature" />
-                <p class="sig-name">KUD Tempo Bela krajina</p>
-                <p class="sig-name">Zastopa: Simona Plut</p>
-            </div>
-BLOCK;
+        // Signature section: client signers stacked on the left, the performer on the right (first row).
+        $performerBlock = $companySignatureDataUri
+            ? $this->signatureBlock('Podpis izvajalca', $companySignatureDataUri, 'KUD Tempo Bela krajina', ['Zastopa: Simona Plut'])
+            : '';
+
+        $company = trim((string) $this->contract->signer_company);
+        $signatureRows = '';
+        foreach ($clientSigners as $i => $signer) {
+            $meta = [];
+            if ($i === 0 && $company !== '' && $company !== '-') {
+                $meta[] = e($company);
+            }
+            if ($signer['signed_on']) {
+                $meta[] = 'Podpisano ' . $signer['signed_on'];
+            }
+            $label = $i === 0 ? (count($clientSigners) > 1 ? 'Podpis naročnikov' : 'Podpis naročnika') : '';
+            $signatureRows .= '<tr><td class="sig-cell sig-left">'
+                . $this->signatureBlock($label, $signer['image'], e($signer['name']), $meta)
+                . '</td><td class="sig-gap"></td><td class="sig-cell sig-right">'
+                . ($i === 0 ? $performerBlock : '')
+                . '</td></tr>';
         }
-        
+
+        // Audit trail: kept complete, but visually quiet
+        $auditHtml = '';
+        foreach ($clientSigners as $i => $signer) {
+            $label = count($clientSigners) > 1 ? 'Podpisnik ' . ($i + 1) : 'Podpisnik';
+            $auditHtml .= '<p><strong>' . $label . ':</strong> ' . e($signer['name'])
+                . ($signer['email'] ? ' (' . e($signer['email']) . ')' : '');
+            if ($signer['signed_at']) {
+                $auditHtml .= ' &nbsp;&middot;&nbsp; <strong>Datum podpisa:</strong> ' . $signer['signed_at']
+                    . ($signer['ip'] ? ' &nbsp;&middot;&nbsp; <strong>IP naslov:</strong> ' . e($signer['ip']) : '');
+            }
+            $auditHtml .= '</p>';
+        }
+
+        $fontFaces = $this->fontFaces();
+        $serif = $fontFaces ? "'Cormorant Garamond', 'DejaVu Serif', serif" : "'DejaVu Serif', serif";
+        $sans = $fontFaces ? "'Instrument Sans', 'DejaVu Sans', sans-serif" : "'DejaVu Sans', sans-serif";
+        // DejaVu runs wider than the brand fonts: step the sizes down when falling back
+        $k = $fontFaces ? 1 : 0.9;
+        $size = fn (float $pt): string => round($pt * $k, 2) . 'pt';
+
         $html = <<<HTML
 <!DOCTYPE html>
-<html>
+<html lang="sl">
 <head>
     <meta charset="UTF-8">
     <style>
+        {$fontFaces}
+        @page { margin: 17mm 18mm 20mm 18mm; }
         body {
-            font-family: DejaVu Sans, sans-serif;
+            font-family: {$sans};
             margin: 0;
-            padding: 50px 60px;
-            line-height: 1.7;
-            font-size: 11pt;
-            color: #1a1a1a;
+            padding: 0;
+            line-height: 1.32;
+            font-size: {$size(9.5)};
+            color: #171513;
+        }
+        .brand {
+            text-align: center;
+            font-family: {$serif};
+            font-size: {$size(11)};
+            letter-spacing: 5pt;
+            color: #A3886E;
+            margin: 0 0 12pt 0;
         }
         h1 {
-            font-size: 16pt;
-            color: #1a1a1a;
+            font-family: {$serif};
+            font-weight: bold;
+            font-size: {$size(21)};
+            line-height: 1.15;
+            color: #171513;
             text-align: center;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 5px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #1e40af;
+            letter-spacing: 1.2pt;
+            margin: 0 0 14pt 0;
+            padding-bottom: 12pt;
+            border-bottom: 0.6pt solid #A3886E;
         }
         h2 {
-            font-size: 13pt;
-            color: #1e40af;
-            margin-top: 25px;
-            margin-bottom: 10px;
-            padding-bottom: 5px;
-            border-bottom: 1px solid #e5e7eb;
+            font-family: {$sans};
+            font-weight: bold;
+            font-size: {$size(9.2)};
+            line-height: 1.25;
+            text-transform: uppercase;
+            letter-spacing: 1pt;
+            color: #171513;
+            margin: 14pt 0 5pt 0;
+            padding-bottom: 3pt;
+            border-bottom: 0.4pt solid #D9CDBF;
+            page-break-after: avoid;
         }
         h3 {
-            font-size: 11pt;
-            color: #333;
-            margin-top: 20px;
-            margin-bottom: 8px;
+            font-family: {$sans};
+            font-weight: bold;
+            font-size: {$size(9.6)};
+            color: #171513;
+            margin: 11pt 0 4pt 0;
+            page-break-after: avoid;
         }
         p {
-            margin: 4px 0;
+            margin: 0 0 4.5pt 0;
             text-align: justify;
         }
         ul, ol {
-            margin: 8px 0;
-            padding-left: 25px;
+            margin: 3pt 0 6pt 0;
+            padding-left: 16pt;
         }
         li {
-            margin-bottom: 4px;
+            margin-bottom: 1.5pt;
         }
         strong {
-            color: #1a1a1a;
+            font-weight: bold;
+            color: #171513;
+        }
+        a {
+            color: #171513;
+            text-decoration: none;
+        }
+        blockquote {
+            margin: 6pt 0;
+            padding-left: 10pt;
+            border-left: 1.5pt solid #A3886E;
+            color: #4A443E;
         }
         hr {
             border: none;
-            border-top: 1px solid #d1d5db;
-            margin: 20px 0;
+            border-top: 0.4pt solid #E4DCD0;
+            margin: 12pt 0;
         }
-        .signatures {
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 2px solid #1e40af;
-            width: 100%;
-        }
-        .signatures table {
-            width: 100%;
+        table {
             border-collapse: collapse;
         }
-        .signatures td {
-            width: 50%;
+        th, td {
+            padding: 3pt 5pt;
+            border-bottom: 0.4pt solid #E4DCD0;
+            text-align: left;
             vertical-align: top;
-            padding: 0 10px;
         }
-        .sig-col h3 {
-            color: #1e40af;
-            font-size: 12pt;
-            margin-bottom: 10px;
+        .signatures {
+            margin-top: 18pt;
+            padding-top: 12pt;
+            border-top: 0.6pt solid #A3886E;
+            page-break-inside: avoid;
         }
-        .sig-col img {
-            max-width: 220px;
-            border: 1px solid #d1d5db;
-            padding: 8px;
-            background: #fafafa;
+        .signatures table.sig-table {
+            width: 100%;
         }
-        .sig-col .sig-name {
-            font-size: 9pt;
-            color: #374151;
-            margin: 4px 0 0 0;
+        td.sig-cell {
+            width: 46%;
+            vertical-align: top;
+            padding: 0 0 9pt 0;
+            border: none;
+        }
+        td.sig-gap {
+            width: 8%;
+            padding: 0;
+            border: none;
+        }
+        .sig-label {
+            font-size: {$size(7)};
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1.4pt;
+            color: #A3886E;
+            margin: 0;
+            text-align: left;
+            height: 11pt;
+        }
+        table.sig-ink {
+            width: 100%;
+        }
+        table.sig-ink td {
+            height: 50pt;
+            vertical-align: bottom;
+            padding: 0 0 2pt 6pt;
+            border-bottom: 0.6pt solid #171513;
+        }
+        .sig-name {
+            font-family: {$serif};
+            font-weight: bold;
+            font-size: {$size(12.5)};
+            line-height: 1.2;
+            color: #171513;
+            margin: 4pt 0 1pt 0;
+            text-align: left;
+        }
+        .sig-meta {
+            font-size: {$size(7.6)};
+            line-height: 1.35;
+            color: #7A7168;
+            margin: 0;
             text-align: left;
         }
         .audit {
-            margin-top: 15px;
-            padding: 12px 15px;
-            background: #f9fafb;
-            border: 1px solid #e5e7eb;
-            border-radius: 4px;
-            font-size: 9pt;
-            color: #6b7280;
+            margin-top: 6pt;
+            padding-top: 6pt;
+            border-top: 0.4pt solid #E4DCD0;
+            font-size: {$size(6.8)};
+            line-height: 1.4;
+            color: #8C847B;
+            page-break-inside: avoid;
+        }
+        .audit .audit-title {
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1.2pt;
+            color: #A3886E;
+            margin: 0 0 2pt 0;
         }
         .audit p {
-            margin: 2px 0;
+            margin: 0;
             text-align: left;
+        }
+        .audit strong {
+            font-weight: normal;
+            color: #6B635A;
         }
     </style>
 </head>
 <body>
+    <div class="brand">PLUTZ</div>
+
     {$htmlContent}
 
     <div class="signatures">
-        <table>
-            <tr>
-                <td>
-                    <div class="sig-col">
-                        <h3>Podpis naročnika</h3>
-                        {$clientSigHtml}
-                    </div>
-                </td>
-                <td>
-                    {$companySignatureHtml}
-                </td>
-            </tr>
+        <table class="sig-table">
+            {$signatureRows}
         </table>
-    </div>
 
-    <div class="audit">
-        {$auditHtml}
+        <div class="audit">
+            <p class="audit-title">Elektronski podpis &ndash; revizijska sled</p>
+            {$auditHtml}
+        </div>
     </div>
 </body>
 </html>
 HTML;
 
         return $html;
+    }
+
+    /**
+     * One signature: ink on a thin line, the name and small details under it. No box around the image.
+     * $name and $meta are already HTML-safe.
+     */
+    private function signatureBlock(string $label, string $imageDataUri, string $name, array $meta = []): string
+    {
+        $img = '';
+        if ($imageDataUri !== '') {
+            [$w, $h] = $this->fitImage($imageDataUri, 170, 46);
+            $img = '<img src="' . $imageDataUri . '" alt="Podpis" style="width: ' . $w . 'pt; height: ' . $h . 'pt;" />';
+        }
+
+        $metaHtml = '';
+        foreach ($meta as $line) {
+            $metaHtml .= '<p class="sig-meta">' . $line . '</p>';
+        }
+
+        return '<p class="sig-label">' . ($label !== '' ? e($label) : '&nbsp;') . '</p>'
+            . '<table class="sig-ink"><tr><td>' . $img . '</td></tr></table>'
+            . '<p class="sig-name">' . $name . '</p>'
+            . $metaHtml;
+    }
+
+    /** Scale an image (data URI) to fit a box in points, keeping its proportions. */
+    private function fitImage(string $dataUri, float $maxW, float $maxH): array
+    {
+        $size = @getimagesizefromstring((string) base64_decode(substr($dataUri, strpos($dataUri, ',') + 1)));
+        if (!$size || $size[0] < 1 || $size[1] < 1) {
+            return [$maxW, $maxH];
+        }
+
+        $scale = min($maxW / $size[0], $maxH / $size[1]);
+
+        return [round($size[0] * $scale, 1), round($size[1] * $scale, 1)];
+    }
+
+    /**
+     * @font-face rules for the brand fonts (Cormorant Garamond + Instrument Sans, OFL, in resources/fonts).
+     * Returns '' when they cannot be used (files missing, font cache not writable) - the PDF then uses DejaVu.
+     */
+    private function fontFaces(): string
+    {
+        $cacheDir = (string) config('dompdf.options.font_cache', storage_path('fonts'));
+        if (!is_dir($cacheDir)) {
+            @mkdir($cacheDir, 0755, true);
+        }
+        if (!is_dir($cacheDir) || !is_writable($cacheDir)) {
+            return '';
+        }
+
+        $faces = [
+            ['Cormorant Garamond', 'normal', 'normal', 'CormorantGaramond-Medium.ttf'],
+            ['Cormorant Garamond', 'bold', 'normal', 'CormorantGaramond-SemiBold.ttf'],
+            ['Cormorant Garamond', 'normal', 'italic', 'CormorantGaramond-MediumItalic.ttf'],
+            ['Instrument Sans', 'normal', 'normal', 'InstrumentSans-Regular.ttf'],
+            ['Instrument Sans', 'bold', 'normal', 'InstrumentSans-SemiBold.ttf'],
+            ['Instrument Sans', 'normal', 'italic', 'InstrumentSans-Italic.ttf'],
+        ];
+
+        $css = '';
+        foreach ($faces as [$family, $weight, $style, $file]) {
+            $path = resource_path('fonts/' . $file);
+            if (!is_file($path)) {
+                return '';
+            }
+            $css .= "@font-face { font-family: '{$family}'; font-weight: {$weight}; font-style: {$style}; "
+                . "src: url('file://{$path}') format('truetype'); }\n";
+        }
+
+        return $css;
     }
 
     /**
@@ -271,17 +445,20 @@ HTML;
                     'name' => $t->signer_name,
                     'email' => $t->signer_email,
                     'image' => $image($t->signature_path),
-                    'signed_at' => $t->used_at->format('d.m.Y H:i:s'),
+                    'signed_at' => $this->auditTime($t->used_at),
+                    'signed_on' => $this->signedOn($t->used_at),
                     'ip' => $t->signer_ip,
                 ])->all();
         }
 
-        $signedAt = $this->contract->signed_at?->format('d.m.Y H:i:s');
+        $signedAt = $this->auditTime($this->contract->signed_at);
+        $signedOn = $this->signedOn($this->contract->signed_at);
         $signers = [[
             'name' => $this->contract->signer_name,
             'email' => $this->contract->signer_email,
             'image' => $image($this->signaturePath),
             'signed_at' => $signedAt,
+            'signed_on' => $signedOn,
             'ip' => $this->contract->signer_ip,
         ]];
 
@@ -291,10 +468,24 @@ HTML;
                 'email' => $this->contract->signer2_email,
                 'image' => $image($this->contract->signer2_signature_path),
                 'signed_at' => $signedAt,
+                'signed_on' => $signedOn,
+            'signed_on' => $signedOn,
                 'ip' => $this->contract->signer_ip,
             ];
         }
 
         return $signers;
+    }
+
+    /** Signing time for the audit trail, in Slovenian local time with the zone named. */
+    private function auditTime(?\DateTimeInterface $at): ?string
+    {
+        return $at ? \Illuminate\Support\Carbon::instance($at)->setTimezone('Europe/Ljubljana')->format('d.m.Y H:i:s T') : null;
+    }
+
+    /** Signing date shown under a signature, e.g. "26. 11. 2026 ob 14:32". */
+    private function signedOn(?\DateTimeInterface $at): ?string
+    {
+        return $at ? \Illuminate\Support\Carbon::instance($at)->setTimezone('Europe/Ljubljana')->format('j. n. Y \o\b H:i') : null;
     }
 }

@@ -129,5 +129,9 @@ class ContractSecondSignerTest extends TestCase
         $this->assertStringContainsString('Pavel Perhavc', $html);
         $this->assertStringContainsString('Podpisnik 2', $html);
         $this->assertSame(2, substr_count($html, 'data:image/png;base64,'));
+        // Signatures sit on a line under a shared heading; the audit trail is a quiet footer block
+        $this->assertStringContainsString('Podpis naročnikov', $html);
+        $this->assertStringContainsString('revizijska sled', $html);
+        $this->assertSame(2, substr_count($html, 'Datum podpisa:'));
     }
 }

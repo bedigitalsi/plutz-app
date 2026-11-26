@@ -91,3 +91,102 @@
     border: 0;
     border-top: 2px solid #f3f1eb;
 }
+
+/* Public signing page: the same contract in the PDF's palette, sized for phones first */
+.contract-content--sign {
+    font-family: 'Work Sans', ui-sans-serif, system-ui, sans-serif;
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: #171513;
+    overflow-wrap: break-word;
+}
+
+.contract-content--sign h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 21px;
+    line-height: 1.25;
+    letter-spacing: 0.02em;
+    text-align: center;
+    text-transform: uppercase;
+    color: #171513;
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #a3886e;
+}
+
+.contract-content--sign h2 {
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #171513;
+    margin-top: 24px;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #e4dcd0;
+}
+
+.contract-content--sign h3 {
+    font-family: inherit;
+    font-size: 15px;
+    color: #171513;
+    margin-top: 18px;
+    margin-bottom: 8px;
+}
+
+.contract-content--sign p {
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.contract-content--sign ul,
+.contract-content--sign ol {
+    margin-bottom: 12px;
+    padding-left: 20px;
+}
+
+.contract-content--sign ul {
+    list-style: disc;
+}
+
+.contract-content--sign ol {
+    list-style: decimal;
+}
+
+.contract-content--sign li {
+    margin-bottom: 5px;
+}
+
+.contract-content--sign blockquote {
+    border-left: 2px solid #a3886e;
+    padding-left: 14px;
+    color: #4a443e;
+}
+
+.contract-content--sign hr {
+    margin: 20px 0;
+    border-top: 1px solid #e4dcd0;
+}
+
+@media (min-width: 640px) {
+    .contract-content--sign {
+        font-size: 15.5px;
+        line-height: 1.7;
+    }
+
+    .contract-content--sign h1 {
+        font-size: 28px;
+        margin-bottom: 24px;
+        padding-bottom: 18px;
+    }
+
+    .contract-content--sign h2 {
+        font-size: 14px;
+        margin-top: 30px;
+    }
+
+    .contract-content--sign p {
+        text-align: justify;
+    }
+}

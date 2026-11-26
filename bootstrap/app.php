@@ -12,6 +12,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Public contract signing: the 64-char token in the URL is the secret, so a session CSRF token adds nothing
+        // there — and it broke signing (419) when a phone loaded the link twice and ended up with mismatched cookies.
+        $middleware->validateCsrfTokens(except: ['sign/*']);
+
         $middleware->web(append: [
             \App\Http\Middleware\SetLocale::class,
             \App\Http\Middleware\HandleInertiaRequests::class,

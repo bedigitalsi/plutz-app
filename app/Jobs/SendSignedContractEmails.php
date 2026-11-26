@@ -69,8 +69,11 @@ class SendSignedContractEmails implements ShouldQueue
         $clientSubject = __('email.signed_contract_client_subject') . ' - Plutz';
 
         Mail::raw($clientBody, function ($message) use ($pdfContent, $clientSubject) {
-            $message->to($this->contract->client_email)
-                ->subject($clientSubject)
+            $message->to($this->contract->client_email);
+            if ($this->contract->signer2_email && strcasecmp($this->contract->signer2_email, $this->contract->client_email) !== 0) {
+                $message->cc($this->contract->signer2_email);
+            }
+            $message->subject($clientSubject)
                 ->attachData($pdfContent, 'signed-contract.pdf', ['mime' => 'application/pdf'])
                 ;
             $message->getSymfonyMessage()->getHeaders()->addTextHeader('X-Email-Type', 'contract_signed');

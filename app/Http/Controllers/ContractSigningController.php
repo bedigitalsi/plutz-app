@@ -56,6 +56,10 @@ class ContractSigningController extends Controller
             'signer_address' => 'nullable|string',
             'signature_data' => 'required|string', // Base64 image
             'consented' => 'required|accepted',
+            // Optional second signer (companies that require two signatures)
+            'signer2_name' => 'nullable|required_with:signature2_data|string|max:255',
+            'signer2_email' => 'nullable|email',
+            'signature2_data' => 'nullable|required_with:signer2_name|string',
         ]);
 
         $contract = $signToken->contract;
@@ -66,6 +70,13 @@ class ContractSigningController extends Controller
         $signaturePath = 'signatures/contract-' . $contract->id . '-' . time() . '.png';
         \Storage::put($signaturePath, $signatureImage);
 
+        $signature2Path = null;
+        if (!empty($validated['signer2_name']) && !empty($validated['signature2_data'])) {
+            $signature2Image = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $validated['signature2_data']));
+            $signature2Path = 'signatures/contract-' . $contract->id . '-' . time() . '-2.png';
+            \Storage::put($signature2Path, $signature2Image);
+        }
+
         // Update contract
         $contract->update([
             'status' => 'signed',
@@ -74,6 +85,9 @@ class ContractSigningController extends Controller
             'signer_email' => $validated['signer_email'],
             'signer_company' => $validated['signer_company'] ?? null,
             'signer_address' => $validated['signer_address'] ?? null,
+            'signer2_name' => $signature2Path ? $validated['signer2_name'] : null,
+            'signer2_email' => $signature2Path ? ($validated['signer2_email'] ?? null) : null,
+            'signer2_signature_path' => $signature2Path,
             'signer_ip' => $request->ip(),
             'signer_user_agent' => $request->userAgent(),
             'consented_at' => now(),

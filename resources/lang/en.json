@@ -638,5 +638,13 @@
     "contracts.recipient_added": "Recipient added successfully.",
     "contracts.recipient_removed": "Recipient removed successfully.",
     "contracts.cannot_remove_signed_recipient": "Cannot remove a recipient who has already signed.",
-    "contracts.invitations_sent": "Invitations sent to :count recipients."
+    "contracts.invitations_sent": "Invitations sent to :count recipients.",
+    "signing.add_second_signer": "Two people sign this contract (second signer)",
+    "signing.second_signer": "Second signer",
+    "signing.second_signer_name": "Second signer full name",
+    "signing.second_signer_email": "Second signer email (optional)",
+    "signing.second_signature": "Second signer signature",
+    "signing.second_signature_error": "Please add the second signer's signature",
+    "signing.second_name_error": "Please enter the second signer's name",
+    "contracts.second_signer": "Second signer"
 }

@@ -24,6 +24,8 @@ interface Contract {
     signed_at: string | null;
     signer_name: string | null;
     signer_email: string | null;
+    signer2_name?: string | null;
+    signer2_email?: string | null;
     creator: {
         name: string;
     };
@@ -368,6 +370,14 @@ export default function Show({ auth, contract, flash }: Props & { flash?: any })
                                     <dt className="text-sm font-medium text-green-400">{t('common.email')}</dt>
                                     <dd className="mt-1 text-sm text-plutz-cream">{contract.signer_email}</dd>
                                 </div>
+                                {contract.signer2_name && (
+                                    <div>
+                                        <dt className="text-sm font-medium text-green-400">{t('contracts.second_signer')}</dt>
+                                        <dd className="mt-1 text-sm text-plutz-cream">
+                                            {contract.signer2_name}{contract.signer2_email ? ` (${contract.signer2_email})` : ''}
+                                        </dd>
+                                    </div>
+                                )}
                                 <div>
                                     <dt className="text-sm font-medium text-green-400">{t('contracts.signed_at')}</dt>
                                     <dd className="mt-1 text-sm text-plutz-cream">

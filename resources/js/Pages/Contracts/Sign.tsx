@@ -24,7 +24,12 @@ interface Props {
 export default function Sign({ contract, markdown, token }: Props) {
     const { t } = useTranslation();
     const signaturePad = useRef<SignatureCanvas>(null);
+    const signaturePad2 = useRef<SignatureCanvas>(null);
     const [signatureError, setSignatureError] = useState('');
+    const [hasSecondSigner, setHasSecondSigner] = useState(false);
+    const [signer2Name, setSigner2Name] = useState('');
+    const [signer2Email, setSigner2Email] = useState('');
+    const [signature2Error, setSignature2Error] = useState('');
     const [success, setSuccess] = useState(false);
     const [processing, setProcessing] = useState(false);
 
@@ -37,6 +42,8 @@ export default function Sign({ contract, markdown, token }: Props) {
         signature_data: '',
         consented: false,
     });
+
+    const extraErrors = errors as Record<string, string | undefined>;
 
     // Generate preview content with live placeholder substitution and markdown parsing
     const previewHtml = useMemo(() => {
@@ -62,7 +69,19 @@ export default function Sign({ contract, markdown, token }: Props) {
             return;
         }
 
+        if (hasSecondSigner) {
+            if (!signer2Name.trim()) {
+                setSignature2Error(t('signing.second_name_error'));
+                return;
+            }
+            if (signaturePad2.current?.isEmpty()) {
+                setSignature2Error(t('signing.second_signature_error'));
+                return;
+            }
+        }
+
         const signatureData = signaturePad.current?.toDataURL();
+        const signature2Data = hasSecondSigner ? signaturePad2.current?.toDataURL() : undefined;
         
         setProcessing(true);
         
@@ -74,6 +93,11 @@ export default function Sign({ contract, markdown, token }: Props) {
             signer_address: data.signer_address,
             signature_data: signatureData || '',
             consented: data.consented,
+            ...(hasSecondSigner ? {
+                signer2_name: signer2Name.trim(),
+                signer2_email: signer2Email.trim(),
+                signature2_data: signature2Data || '',
+            } : {}),
         }, {
             onSuccess: () => {
                 setSuccess(true);
@@ -234,6 +258,84 @@ export default function Sign({ contract, markdown, token }: Props) {
                             >
                                 {t('signing.clear')}
                             </button>
+                        </div>
+
+                        {/* Optional second signer */}
+                        <div className="border-t border-plutz-tan/10 pt-6">
+                            <div className="flex items-start">
+                                <input
+                                    type="checkbox"
+                                    checked={hasSecondSigner}
+                                    onChange={(e) => { setHasSecondSigner(e.target.checked); setSignature2Error(''); }}
+                                    className="mt-1 h-6 w-6 sm:h-4 sm:w-4 text-plutz-tan focus:ring-plutz-tan border-plutz-tan/20 rounded shrink-0"
+                                />
+                                <label className="ml-2 block text-sm text-stone-400">
+                                    {t('signing.add_second_signer')}
+                                </label>
+                            </div>
+
+                            {hasSecondSigner && (
+                                <div className="mt-4 space-y-4">
+                                    <h3 className="text-lg font-semibold text-plutz-cream">{t('signing.second_signer')}</h3>
+                                    <div>
+                                        <label className="block text-sm font-medium text-stone-400 mb-2">
+                                            {t('signing.second_signer_name')}
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={signer2Name}
+                                            onChange={(e) => { setSigner2Name(e.target.value); setSignature2Error(''); }}
+                                            className="w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
+                                            required
+                                        />
+                                        {extraErrors.signer2_name && (
+                                            <div className="text-red-400 text-sm mt-1">{extraErrors.signer2_name}</div>
+                                        )}
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-stone-400 mb-2">
+                                            {t('signing.second_signer_email')}
+                                        </label>
+                                        <input
+                                            type="email"
+                                            value={signer2Email}
+                                            onChange={(e) => setSigner2Email(e.target.value)}
+                                            className="w-full rounded-md border-plutz-tan/20 shadow-sm focus:border-plutz-tan focus:ring-plutz-tan"
+                                        />
+                                        {extraErrors.signer2_email && (
+                                            <div className="text-red-400 text-sm mt-1">{extraErrors.signer2_email}</div>
+                                        )}
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-stone-400 mb-2">
+                                            {t('signing.second_signature')}
+                                        </label>
+                                        <div className="border-2 border-plutz-tan/20 rounded-md bg-white">
+                                            <SignatureCanvas
+                                                ref={signaturePad2}
+                                                canvasProps={{
+                                                    className: 'w-full h-48 cursor-crosshair',
+                                                }}
+                                                backgroundColor="rgb(255, 255, 255)"
+                                                onEnd={() => setSignature2Error('')}
+                                            />
+                                        </div>
+                                        {signature2Error && (
+                                            <div className="text-red-400 text-sm mt-1">{signature2Error}</div>
+                                        )}
+                                        {extraErrors.signature2_data && (
+                                            <div className="text-red-400 text-sm mt-1">{extraErrors.signature2_data}</div>
+                                        )}
+                                        <button
+                                            type="button"
+                                            onClick={() => { signaturePad2.current?.clear(); setSignature2Error(''); }}
+                                            className="mt-2 text-sm text-stone-400 hover:text-plutz-cream"
+                                        >
+                                            {t('signing.clear')}
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
                         </div>
 
                         {/* Consent */}

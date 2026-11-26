@@ -169,7 +169,7 @@
     "inquiries.new_inquiry_page": "Novo povpraševanje",
     "inquiries.back_to_list": "Nazaj na seznam",
     "inquiries.performance_date": "Datum nastopa *",
-    "inquiries.received_date": "Datum povpra\u0161evanja",
+    "inquiries.received_date": "Datum povpraševanja",
     "inquiries.performance_type": "Vrsta nastopa *",
     "inquiries.select_type": "Izberi vrsto...",
     "inquiries.performance_time": "Čas nastopa *",
@@ -638,5 +638,13 @@
     "contracts.recipient_added": "Prejemnik uspešno dodan.",
     "contracts.recipient_removed": "Prejemnik uspešno odstranjen.",
     "contracts.cannot_remove_signed_recipient": "Ni mogoče odstraniti prejemnika, ki je že podpisal.",
-    "contracts.invitations_sent": "Povabila poslana :count prejemnikom."
+    "contracts.invitations_sent": "Povabila poslana :count prejemnikom.",
+    "signing.add_second_signer": "Pogodbo podpisujeta dve osebi (drugi podpisnik)",
+    "signing.second_signer": "Drugi podpisnik",
+    "signing.second_signer_name": "Ime in priimek drugega podpisnika",
+    "signing.second_signer_email": "Email drugega podpisnika (neobvezno)",
+    "signing.second_signature": "Podpis drugega podpisnika",
+    "signing.second_signature_error": "Prosimo, dodajte podpis drugega podpisnika",
+    "signing.second_name_error": "Prosimo, vpišite ime drugega podpisnika",
+    "contracts.second_signer": "Drugi podpisnik"
 }

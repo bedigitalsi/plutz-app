@@ -77,6 +77,23 @@ class GenerateSignedContractPdf implements ShouldQueue
             $signatureDataUri = 'data:image/png;base64,' . base64_encode(file_get_contents($signatureFullPath));
         }
 
+        // Optional second client signer
+        $signer2Html = '';
+        $signer2Audit = '';
+        if ($this->contract->signer2_name && $this->contract->signer2_signature_path) {
+            $signature2FullPath = Storage::disk('local')->path($this->contract->signer2_signature_path);
+            $signature2DataUri = file_exists($signature2FullPath)
+                ? 'data:image/png;base64,' . base64_encode(file_get_contents($signature2FullPath))
+                : '';
+            $signer2Name = e($this->contract->signer2_name);
+            $signer2Html = <<<BLOCK
+                        <img src="{$signature2DataUri}" alt="Signature 2" style="margin-top: 14px;" />
+                        <p class="sig-name">{$signer2Name}</p>
+BLOCK;
+            $signer2Email = $this->contract->signer2_email ? ' (' . e($this->contract->signer2_email) . ')' : '';
+            $signer2Audit = "<p><strong>Drugi podpisnik:</strong> {$signer2Name}{$signer2Email}</p>";
+        }
+
         // Company signature from settings
         $companySignaturePath = Setting::getString('company_signature', '');
         $companySignatureDataUri = '';
@@ -215,6 +232,7 @@ BLOCK;
                         <h3>Podpis naročnika</h3>
                         <img src="{$signatureDataUri}" alt="Signature" />
                         <p class="sig-name">{$this->contract->signer_name}</p>
+{$signer2Html}
                     </div>
                 </td>
                 <td>
@@ -227,6 +245,7 @@ BLOCK;
     <div class="audit">
         <p><strong>Podpisnik:</strong> {$this->contract->signer_name}</p>
         <p><strong>Email:</strong> {$this->contract->signer_email}</p>
+        {$signer2Audit}
         <p><strong>Datum podpisa:</strong> {$this->contract->signed_at->format('d.m.Y H:i:s')}</p>
         <p><strong>IP naslov:</strong> {$this->contract->signer_ip}</p>
     </div>

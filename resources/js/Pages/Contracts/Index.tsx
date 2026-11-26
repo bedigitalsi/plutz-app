@@ -50,11 +50,13 @@ export default function Index({ auth, contracts, filters }: Props) {
         const colors = {
             draft: 'bg-stone-800 text-plutz-cream',
             sent: 'bg-plutz-tan/20 text-plutz-tan',
+            partially_signed: 'bg-amber-500/10 text-amber-400',
             signed: 'bg-green-500/100/10 text-green-400',
         };
         const labels: Record<string, string> = {
             draft: t('contracts.draft'),
             sent: t('contracts.sent'),
+            partially_signed: t('contracts.partially_signed'),
             signed: t('contracts.signed'),
         };
         return (
@@ -103,6 +105,7 @@ export default function Index({ auth, contracts, filters }: Props) {
                                     <option value="">{t('contracts.all_statuses')}</option>
                                     <option value="draft">{t('contracts.draft')}</option>
                                     <option value="sent">{t('contracts.sent')}</option>
+                                    <option value="partially_signed">{t('contracts.partially_signed')}</option>
                                     <option value="signed">{t('contracts.signed')}</option>
                                 </select>
                             </div>

@@ -646,5 +646,17 @@
     "signing.second_signature": "Podpis drugega podpisnika",
     "signing.second_signature_error": "Prosimo, dodajte podpis drugega podpisnika",
     "signing.second_name_error": "Prosimo, vpišite ime drugega podpisnika",
-    "contracts.second_signer": "Drugi podpisnik"
+    "contracts.second_signer": "Drugi podpisnik",
+    "contracts.partially_signed": "Delno podpisano",
+    "contracts.signatures": "podpisov",
+    "contracts.require_all_signatures": "Vsak prejemnik podpiše po svoji povezavi (podpisati morajo vsi)",
+    "contracts.require_all_signatures_help": "Vsak prejemnik dobi svojo povezavo. Pogodba je podpisana šele, ko podpišejo vsi; po prvem podpisu je ni več mogoče urejati.",
+    "contracts.signing_mode_updated": "Način podpisovanja posodobljen.",
+    "contracts.all_signers": "Podpisniki",
+    "signing.signers_title": "Podpisniki pogodbe",
+    "signing.signers_help": "To pogodbo podpiše vsak podpisnik po svoji povezavi. Podpisana je, ko podpišejo vsi.",
+    "signing.signer_signed": "podpisano",
+    "signing.signer_pending": "čaka na podpis",
+    "signing.partial_title": "Vaš podpis je zabeležen",
+    "signing.partial_message": "Hvala! Pogodbo morajo podpisati še ostali podpisniki. Ko podpišejo vsi, boste podpisano pogodbo prejeli po e-pošti."
 }

@@ -93,7 +93,7 @@ class ContractController extends Controller
 
     public function edit(Contract $contract)
     {
-        if ($contract->status === 'signed') {
+        if ($contract->isLocked()) {
             return back()->with('error', __('contracts.cannot_edit_signed'));
         }
 
@@ -104,7 +104,7 @@ class ContractController extends Controller
 
     public function update(Request $request, Contract $contract)
     {
-        if ($contract->status === 'signed') {
+        if ($contract->isLocked()) {
             return back()->with('error', __('contracts.cannot_edit_signed'));
         }
 
@@ -164,12 +164,19 @@ class ContractController extends Controller
         // Collect all recipients: primary + additional
         $recipients = collect();
 
-        // Primary recipient
-        $recipients->push([
-            'name' => $contract->client_name,
-            'email' => $contract->client_email,
-            'is_primary' => true,
-        ]);
+        // Primary recipient (skipped when they already signed via their own link)
+        $primaryAlreadySigned = $contract->signTokens()
+            ->where('recipient_email', $contract->client_email)
+            ->whereNotNull('used_at')
+            ->exists();
+
+        if (!$primaryAlreadySigned) {
+            $recipients->push([
+                'name' => $contract->client_name,
+                'email' => $contract->client_email,
+                'is_primary' => true,
+            ]);
+        }
 
         // Additional recipients (added via UI, stored as sign_tokens with recipient_email)
         $additionalTokens = $contract->signTokens()
@@ -226,9 +233,9 @@ class ContractController extends Controller
             }
         }
 
-        // Update contract status
+        // Update contract status (a partially signed contract stays partially signed)
         $contract->update([
-            'status' => 'sent',
+            'status' => $contract->status === Contract::STATUS_PARTIALLY_SIGNED ? Contract::STATUS_PARTIALLY_SIGNED : 'sent',
             'sent_at' => now(),
         ]);
 
@@ -240,6 +247,10 @@ class ContractController extends Controller
 
     public function addRecipient(Request $request, Contract $contract)
     {
+        if ($contract->isLocked()) {
+            return back()->with('error', __('contracts.cannot_edit_signed'));
+        }
+
         $request->validate([
             'recipient_name' => 'required|string|max:255',
             'recipient_email' => 'required|email|max:255',
@@ -263,7 +274,7 @@ class ContractController extends Controller
             abort(403);
         }
 
-        if ($token->used_at) {
+        if ($token->used_at || $contract->isLocked()) {
             return back()->with('error', __('contracts.cannot_remove_signed_recipient'));
         }
 
@@ -272,4 +283,19 @@ class ContractController extends Controller
         return back()->with('success', __('contracts.recipient_removed'));
     }
 
+    /** Toggle: every recipient signs via their own link (all must sign) vs. one signature completes the contract. */
+    public function updateSigningMode(Request $request, Contract $contract)
+    {
+        if ($contract->isLocked()) {
+            return back()->with('error', __('contracts.cannot_edit_signed'));
+        }
+
+        $validated = $request->validate([
+            'require_all_signatures' => 'required|boolean',
+        ]);
+
+        $contract->update(['require_all_signatures' => $validated['require_all_signatures']]);
+
+        return back()->with('success', __('contracts.signing_mode_updated'));
+    }
 }

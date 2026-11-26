@@ -70,8 +70,8 @@ class SendSignedContractEmails implements ShouldQueue
 
         Mail::raw($clientBody, function ($message) use ($pdfContent, $clientSubject) {
             $message->to($this->contract->client_email);
-            if ($this->contract->signer2_email && strcasecmp($this->contract->signer2_email, $this->contract->client_email) !== 0) {
-                $message->cc($this->contract->signer2_email);
+            foreach ($this->copyRecipients() as $cc) {
+                $message->cc($cc);
             }
             $message->subject($clientSubject)
                 ->attachData($pdfContent, 'signed-contract.pdf', ['mime' => 'application/pdf'])
@@ -115,5 +115,25 @@ class SendSignedContractEmails implements ShouldQueue
                 $message->returnPath(MailSettings::getFromAddress());
             }
         });
+    }
+
+    /** Other people who signed (separate links or second signer on the same page), excluding the main client email. */
+    private function copyRecipients(): array
+    {
+        $emails = [$this->contract->signer2_email, $this->contract->signer_email];
+        if ($this->contract->require_all_signatures) {
+            foreach ($this->contract->signTokens()->whereNotNull('used_at')->get() as $t) {
+                $emails[] = $t->signer_email;
+                $emails[] = $t->recipient_email;
+            }
+        }
+
+        return collect($emails)
+            ->filter(fn ($e) => $e && filter_var($e, FILTER_VALIDATE_EMAIL))
+            ->map(fn ($e) => strtolower(trim($e)))
+            ->reject(fn ($e) => $e === strtolower(trim((string) $this->contract->client_email)))
+            ->unique()
+            ->values()
+            ->all();
     }
 }

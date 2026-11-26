@@ -18,6 +18,18 @@ class ContractSignToken extends Model
         'expires_at',
         'used_at',
         'created_by',
+        'signer_name',
+        'signer_email',
+        'signer_company',
+        'signer_address',
+        'signature_path',
+        'signer_ip',
+        'signer_user_agent',
+    ];
+
+    protected $hidden = [
+        'token_hash',
+        'signer_user_agent',
     ];
 
     protected $casts = [

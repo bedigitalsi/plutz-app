@@ -70,28 +70,25 @@ class GenerateSignedContractPdf implements ShouldQueue
         $converter = new \League\CommonMark\CommonMarkConverter();
         $htmlContent = $converter->convert($markdown);
 
-        // Client signature
-        $signatureFullPath = Storage::disk('local')->path($this->signaturePath);
-        $signatureDataUri = '';
-        if (file_exists($signatureFullPath)) {
-            $signatureDataUri = 'data:image/png;base64,' . base64_encode(file_get_contents($signatureFullPath));
+        // Client signatures: one entry per person who signed
+        $clientSigners = $this->clientSigners();
+
+        $clientSigHtml = '';
+        foreach ($clientSigners as $i => $signer) {
+            $style = $i > 0 ? ' style="margin-top: 14px;"' : '';
+            $clientSigHtml .= '<img src="' . $signer['image'] . '" alt="Signature"' . $style . ' />'
+                . '<p class="sig-name">' . e($signer['name']) . '</p>';
         }
 
-        // Optional second client signer
-        $signer2Html = '';
-        $signer2Audit = '';
-        if ($this->contract->signer2_name && $this->contract->signer2_signature_path) {
-            $signature2FullPath = Storage::disk('local')->path($this->contract->signer2_signature_path);
-            $signature2DataUri = file_exists($signature2FullPath)
-                ? 'data:image/png;base64,' . base64_encode(file_get_contents($signature2FullPath))
-                : '';
-            $signer2Name = e($this->contract->signer2_name);
-            $signer2Html = <<<BLOCK
-                        <img src="{$signature2DataUri}" alt="Signature 2" style="margin-top: 14px;" />
-                        <p class="sig-name">{$signer2Name}</p>
-BLOCK;
-            $signer2Email = $this->contract->signer2_email ? ' (' . e($this->contract->signer2_email) . ')' : '';
-            $signer2Audit = "<p><strong>Drugi podpisnik:</strong> {$signer2Name}{$signer2Email}</p>";
+        $auditHtml = '';
+        foreach ($clientSigners as $i => $signer) {
+            $label = count($clientSigners) > 1 ? 'Podpisnik ' . ($i + 1) : 'Podpisnik';
+            $auditHtml .= '<p><strong>' . $label . ':</strong> ' . e($signer['name'])
+                . ($signer['email'] ? ' (' . e($signer['email']) . ')' : '') . '</p>';
+            if ($signer['signed_at']) {
+                $auditHtml .= '<p><strong>Datum podpisa:</strong> ' . $signer['signed_at']
+                    . ($signer['ip'] ? ' &middot; <strong>IP naslov:</strong> ' . e($signer['ip']) : '') . '</p>';
+            }
         }
 
         // Company signature from settings
@@ -230,9 +227,7 @@ BLOCK;
                 <td>
                     <div class="sig-col">
                         <h3>Podpis naročnika</h3>
-                        <img src="{$signatureDataUri}" alt="Signature" />
-                        <p class="sig-name">{$this->contract->signer_name}</p>
-{$signer2Html}
+                        {$clientSigHtml}
                     </div>
                 </td>
                 <td>
@@ -243,16 +238,63 @@ BLOCK;
     </div>
 
     <div class="audit">
-        <p><strong>Podpisnik:</strong> {$this->contract->signer_name}</p>
-        <p><strong>Email:</strong> {$this->contract->signer_email}</p>
-        {$signer2Audit}
-        <p><strong>Datum podpisa:</strong> {$this->contract->signed_at->format('d.m.Y H:i:s')}</p>
-        <p><strong>IP naslov:</strong> {$this->contract->signer_ip}</p>
+        {$auditHtml}
     </div>
 </body>
 </html>
 HTML;
 
         return $html;
+    }
+
+    /**
+     * Everyone who signed for the client, in signing order.
+     * Separate-links mode: one entry per used sign token. Otherwise: the contract signer (+ optional second signer
+     * who signed on the same page).
+     */
+    private function clientSigners(): array
+    {
+        $disk = Storage::disk('local');
+        $image = function (?string $path) use ($disk): string {
+            if ($path && file_exists($disk->path($path))) {
+                return 'data:image/png;base64,' . base64_encode(file_get_contents($disk->path($path)));
+            }
+            return '';
+        };
+
+        if ($this->contract->require_all_signatures) {
+            return $this->contract->signTokens()
+                ->whereNotNull('used_at')
+                ->orderBy('used_at')->orderBy('id')
+                ->get()
+                ->map(fn ($t) => [
+                    'name' => $t->signer_name,
+                    'email' => $t->signer_email,
+                    'image' => $image($t->signature_path),
+                    'signed_at' => $t->used_at->format('d.m.Y H:i:s'),
+                    'ip' => $t->signer_ip,
+                ])->all();
+        }
+
+        $signedAt = $this->contract->signed_at?->format('d.m.Y H:i:s');
+        $signers = [[
+            'name' => $this->contract->signer_name,
+            'email' => $this->contract->signer_email,
+            'image' => $image($this->signaturePath),
+            'signed_at' => $signedAt,
+            'ip' => $this->contract->signer_ip,
+        ]];
+
+        if ($this->contract->signer2_name && $this->contract->signer2_signature_path) {
+            $signers[] = [
+                'name' => $this->contract->signer2_name,
+                'email' => $this->contract->signer2_email,
+                'image' => $image($this->contract->signer2_signature_path),
+                'signed_at' => $signedAt,
+                'ip' => $this->contract->signer_ip,
+            ];
+        }
+
+        return $signers;
     }
 }

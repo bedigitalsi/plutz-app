@@ -27,6 +27,7 @@ class Contract extends Model
         'deposit_amount',
         'currency',
         'status',
+        'require_all_signatures',
         'markdown_snapshot',
         'sent_at',
         'signed_at',
@@ -51,7 +52,16 @@ class Contract extends Model
         'sent_at' => 'datetime',
         'signed_at' => 'datetime',
         'consented_at' => 'datetime',
+        'require_all_signatures' => 'boolean',
     ];
+
+    public const STATUS_PARTIALLY_SIGNED = 'partially_signed';
+
+    /** Signed or partially signed: content and recipients can no longer change. */
+    public function isLocked(): bool
+    {
+        return in_array($this->status, ['signed', self::STATUS_PARTIALLY_SIGNED], true);
+    }
 
     protected static function boot()
     {

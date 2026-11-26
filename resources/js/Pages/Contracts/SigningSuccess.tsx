@@ -10,9 +10,10 @@ interface Contract {
 
 interface Props {
     contract: Contract;
+    pending?: boolean;
 }
 
-export default function SigningSuccess({ contract }: Props) {
+export default function SigningSuccess({ contract, pending = false }: Props) {
     const { t } = useTranslation();
     return (
         <div className="min-h-screen bg-plutz-dark flex items-center justify-center p-4">
@@ -27,9 +28,13 @@ export default function SigningSuccess({ contract }: Props) {
                 </div>
                 
                 <h1 className="text-3xl font-bold text-plutz-cream mb-3">
-                    {t('signing.success_title')}
+                    {pending ? t('signing.partial_title') : t('signing.success_title')}
                 </h1>
-                
+
+                {pending ? (
+                    <p className="text-stone-400 mb-6">{t('signing.partial_message')}</p>
+                ) : (
+                <>
                 <div className="mb-6 p-4 bg-green-500/10 rounded-lg border border-green-500/20">
                     <p className="text-stone-400">
                         <strong>{t('signing.signed_by')}</strong> {contract.signer_name}
@@ -42,11 +47,15 @@ export default function SigningSuccess({ contract }: Props) {
                 <p className="text-stone-400 mb-6">
                     {t('signing.thanks')}
                 </p>
+                </>
+                )}
 
                 <div className="border-t border-plutz-tan/10 pt-6">
-                    <p className="text-sm text-stone-500">
-                        {t('signing.email_info')}
-                    </p>
+                    {!pending && (
+                        <p className="text-sm text-stone-500">
+                            {t('signing.email_info')}
+                        </p>
+                    )}
                     <p className="text-sm text-stone-500 mt-2">
                         {t('signing.close_safely')}
                     </p>

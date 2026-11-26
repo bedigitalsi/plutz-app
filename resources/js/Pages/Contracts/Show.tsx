@@ -19,6 +19,7 @@ interface Contract {
     deposit_amount: string | null;
     currency: string;
     status: string;
+    require_all_signatures: boolean;
     markdown_snapshot: string;
     sent_at: string | null;
     signed_at: string | null;
@@ -35,6 +36,8 @@ interface Contract {
         recipient_email: string | null;
         expires_at: string;
         used_at: string | null;
+        signer_name: string | null;
+        signer_email: string | null;
         created_at: string;
     }[];
     attachments: any[];
@@ -68,6 +71,17 @@ export default function Show({ auth, contract, flash }: Props & { flash?: any })
         }
     };
 
+    const isLocked = contract.status === 'signed' || contract.status === 'partially_signed';
+    const canChangeRecipients = contract.status === 'draft' || contract.status === 'sent';
+    const primaryToken = contract.sign_tokens.find(tk => tk.recipient_email === contract.client_email && tk.used_at);
+    const additionalTokens = contract.sign_tokens.filter(tk => tk.recipient_email && tk.recipient_email !== contract.client_email);
+    const requiredCount = 1 + additionalTokens.length;
+    const signedCount = (primaryToken ? 1 : 0) + additionalTokens.filter(tk => tk.used_at).length;
+
+    const toggleSigningMode = (value: boolean) => {
+        router.patch(route('contracts.signing-mode', contract.id), { require_all_signatures: value }, { preserveScroll: true });
+    };
+
     const handleSend = () => {
         if (confirm(t('contracts.send_confirmation').replace(':email', contract.client_email))) {
             router.post(route('contracts.send', contract.id));
@@ -84,11 +98,13 @@ export default function Show({ auth, contract, flash }: Props & { flash?: any })
         const colors = {
             draft: 'bg-stone-800 text-plutz-cream',
             sent: 'bg-plutz-tan/20 text-plutz-tan',
+            partially_signed: 'bg-amber-500/10 text-amber-400',
             signed: 'bg-green-500/100/10 text-green-400',
         };
         const labels: Record<string, string> = {
             draft: t('contracts.draft'),
             sent: t('contracts.sent'),
+            partially_signed: t('contracts.partially_signed'),
             signed: t('contracts.signed'),
         };
         return (
@@ -130,10 +146,15 @@ export default function Show({ auth, contract, flash }: Props & { flash?: any })
                         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
                             <div>
                                 <h3 className="text-lg font-medium text-plutz-cream">{t('common.status')}</h3>
-                                <div className="mt-2">{getStatusBadge(contract.status)}</div>
+                                <div className="mt-2 flex items-center gap-2">
+                                    {getStatusBadge(contract.status)}
+                                    {contract.require_all_signatures && contract.status !== 'draft' && (
+                                        <span className="text-sm text-stone-400">{signedCount}/{requiredCount} {t('contracts.signatures')}</span>
+                                    )}
+                                </div>
                             </div>
                             <div className="flex flex-wrap gap-2">
-                                {contract.status !== 'signed' && (
+                                {!isLocked && (
                                     <>
                                         <Link
                                             href={route('contracts.edit', contract.id)}
@@ -149,7 +170,7 @@ export default function Show({ auth, contract, flash }: Props & { flash?: any })
                                         </button>
                                     </>
                                 )}
-                                {contract.status === 'sent' && (
+                                {contract.status === 'partially_signed' && (
                                     <button
                                         onClick={handleSend}
                                         className="inline-flex items-center px-4 py-2 bg-plutz-tan border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-plutz-tan/90"
@@ -226,7 +247,7 @@ export default function Show({ auth, contract, flash }: Props & { flash?: any })
                         <div className="bg-plutz-surface overflow-hidden shadow-sm sm:rounded-lg p-6">
                             <div className="flex justify-between items-center mb-4">
                                 <h3 className="text-lg font-medium text-plutz-cream">{t('contracts.recipients') || 'Prejemniki'}</h3>
-                                {contract.status === 'draft' && (
+                                {canChangeRecipients && (
                                     <button
                                         onClick={() => setShowAddRecipient(!showAddRecipient)}
                                         className="text-sm text-plutz-tan hover:text-plutz-tan-light font-medium"
@@ -243,11 +264,14 @@ export default function Show({ auth, contract, flash }: Props & { flash?: any })
                                         <span className="text-sm text-plutz-cream font-medium">{contract.client_name}</span>
                                         <span className="text-sm text-stone-400 ml-2">{contract.client_email}</span>
                                         <span className="ml-2 text-xs bg-plutz-tan/20 text-plutz-tan px-2 py-0.5 rounded-full">{t('contracts.primary') || 'Glavni'}</span>
+                                        {contract.require_all_signatures && primaryToken && (
+                                            <span className="ml-2 text-xs bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full">{t('contracts.signed')}</span>
+                                        )}
                                     </div>
                                 </div>
 
                                 {/* Additional recipients from sign_tokens */}
-                                {contract.sign_tokens.filter(t => t.recipient_email).map((token) => (
+                                {additionalTokens.map((token) => (
                                     <div key={token.id} className="flex items-center justify-between py-2 px-3 rounded bg-stone-800/50">
                                         <div>
                                             <span className="text-sm text-plutz-cream font-medium">{token.recipient_name}</span>
@@ -256,7 +280,7 @@ export default function Show({ auth, contract, flash }: Props & { flash?: any })
                                                 <span className="ml-2 text-xs bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full">{t('contracts.signed') || 'Podpisano'}</span>
                                             )}
                                         </div>
-                                        {!token.used_at && contract.status === 'draft' && (
+                                        {!token.used_at && canChangeRecipients && (
                                             <button
                                                 onClick={() => removeRecipient(token.id)}
                                                 className="text-red-400 hover:text-red-300 text-sm"
@@ -267,6 +291,21 @@ export default function Show({ auth, contract, flash }: Props & { flash?: any })
                                     </div>
                                 ))}
                             </div>
+
+                            {/* Signing mode */}
+                            <label className={`mt-4 flex items-start gap-2 ${canChangeRecipients ? 'cursor-pointer' : 'opacity-60'}`}>
+                                <input
+                                    type="checkbox"
+                                    checked={!!contract.require_all_signatures}
+                                    disabled={!canChangeRecipients}
+                                    onChange={(e) => toggleSigningMode(e.target.checked)}
+                                    className="mt-1 h-4 w-4 text-plutz-tan focus:ring-plutz-tan border-plutz-tan/20 rounded shrink-0"
+                                />
+                                <span>
+                                    <span className="block text-sm text-plutz-cream">{t('contracts.require_all_signatures')}</span>
+                                    <span className="block text-xs text-stone-400">{t('contracts.require_all_signatures_help')}</span>
+                                </span>
+                            </label>
 
                             {/* Add recipient form */}
                             {showAddRecipient && (
@@ -370,6 +409,16 @@ export default function Show({ auth, contract, flash }: Props & { flash?: any })
                                     <dt className="text-sm font-medium text-green-400">{t('common.email')}</dt>
                                     <dd className="mt-1 text-sm text-plutz-cream">{contract.signer_email}</dd>
                                 </div>
+                                {contract.require_all_signatures && contract.sign_tokens.filter(tk => tk.used_at).length > 1 && (
+                                    <div className="md:col-span-2">
+                                        <dt className="text-sm font-medium text-green-400">{t('contracts.all_signers')}</dt>
+                                        <dd className="mt-1 text-sm text-plutz-cream">
+                                            {contract.sign_tokens.filter(tk => tk.used_at).map(tk => (
+                                                <div key={tk.id}>{tk.signer_name}{tk.signer_email ? ` (${tk.signer_email})` : ''} — {new Date(tk.used_at as string).toLocaleString()}</div>
+                                            ))}
+                                        </dd>
+                                    </div>
+                                )}
                                 {contract.signer2_name && (
                                     <div>
                                         <dt className="text-sm font-medium text-green-400">{t('contracts.second_signer')}</dt>

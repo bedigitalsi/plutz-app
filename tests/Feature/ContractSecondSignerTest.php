@@ -127,7 +127,7 @@ class ContractSecondSignerTest extends TestCase
 
         $this->assertStringContainsString('Barbara Perko Brvar', $html);
         $this->assertStringContainsString('Pavel Perhavc', $html);
-        $this->assertStringContainsString('Drugi podpisnik', $html);
+        $this->assertStringContainsString('Podpisnik 2', $html);
         $this->assertSame(2, substr_count($html, 'data:image/png;base64,'));
     }
 }

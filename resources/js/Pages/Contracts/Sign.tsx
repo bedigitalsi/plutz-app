@@ -13,15 +13,19 @@ interface Contract {
     performance_date: string;
     total_price: string;
     currency: string;
+    require_all_signatures?: boolean;
 }
 
 interface Props {
     contract: Contract;
     markdown: string;
     token: string;
+    recipient?: { name: string | null; email: string | null };
+    signers?: { name: string | null; signed: boolean }[];
 }
 
-export default function Sign({ contract, markdown, token }: Props) {
+export default function Sign({ contract, markdown, token, recipient, signers = [] }: Props) {
+    const requireAll = !!contract.require_all_signatures;
     const { t } = useTranslation();
     const signaturePad = useRef<SignatureCanvas>(null);
     const signaturePad2 = useRef<SignatureCanvas>(null);
@@ -35,8 +39,8 @@ export default function Sign({ contract, markdown, token }: Props) {
 
     // Prefill form with contract values
     const { data, setData, errors } = useForm({
-        signer_name: contract.client_name || '',
-        signer_email: contract.client_email || '',
+        signer_name: recipient?.name || contract.client_name || '',
+        signer_email: recipient?.email || contract.client_email || '',
         signer_company: contract.client_company || '',
         signer_address: contract.client_address || '',
         signature_data: '',
@@ -69,7 +73,7 @@ export default function Sign({ contract, markdown, token }: Props) {
             return;
         }
 
-        if (hasSecondSigner) {
+        if (hasSecondSigner && !requireAll) {
             if (!signer2Name.trim()) {
                 setSignature2Error(t('signing.second_name_error'));
                 return;
@@ -81,7 +85,7 @@ export default function Sign({ contract, markdown, token }: Props) {
         }
 
         const signatureData = signaturePad.current?.toDataURL();
-        const signature2Data = hasSecondSigner ? signaturePad2.current?.toDataURL() : undefined;
+        const signature2Data = hasSecondSigner && !requireAll ? signaturePad2.current?.toDataURL() : undefined;
         
         setProcessing(true);
         
@@ -93,7 +97,7 @@ export default function Sign({ contract, markdown, token }: Props) {
             signer_address: data.signer_address,
             signature_data: signatureData || '',
             consented: data.consented,
-            ...(hasSecondSigner ? {
+            ...(hasSecondSigner && !requireAll ? {
                 signer2_name: signer2Name.trim(),
                 signer2_email: signer2Email.trim(),
                 signature2_data: signature2Data || '',
@@ -142,6 +146,23 @@ export default function Sign({ contract, markdown, token }: Props) {
                         {t('signing.description')}
                     </p>
                 </div>
+
+                {/* Who signs this contract (separate links) */}
+                {requireAll && signers.length > 1 && (
+                    <div className="bg-plutz-surface shadow-sm rounded-lg p-6 mb-6">
+                        <h2 className="text-lg font-semibold text-plutz-cream mb-1">{t('signing.signers_title')}</h2>
+                        <p className="text-sm text-stone-400 mb-3">{t('signing.signers_help')}</p>
+                        <ul className="space-y-1">
+                            {signers.map((s, i) => (
+                                <li key={i} className="flex items-center gap-2 text-sm">
+                                    <span className={s.signed ? 'text-green-400' : 'text-stone-500'}>{s.signed ? '✓' : '○'}</span>
+                                    <span className="text-plutz-cream">{s.name || '-'}</span>
+                                    <span className="text-stone-500">{s.signed ? t('signing.signer_signed') : t('signing.signer_pending')}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
 
                 {/* Contract Preview - PDF Style */}
                 <div className="bg-plutz-surface shadow-lg rounded-lg overflow-hidden mb-6">
@@ -260,7 +281,8 @@ export default function Sign({ contract, markdown, token }: Props) {
                             </button>
                         </div>
 
-                        {/* Optional second signer */}
+                        {/* Optional second signer (not offered when every recipient signs via their own link) */}
+                        {!requireAll && (
                         <div className="border-t border-plutz-tan/10 pt-6">
                             <div className="flex items-start">
                                 <input
@@ -337,6 +359,7 @@ export default function Sign({ contract, markdown, token }: Props) {
                                 </div>
                             )}
                         </div>
+                        )}
 
                         {/* Consent */}
                         <div className="flex items-start">

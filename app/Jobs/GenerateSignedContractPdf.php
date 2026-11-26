@@ -91,7 +91,11 @@ class GenerateSignedContractPdf implements ShouldQueue
 
         // Convert markdown to HTML
         $converter = new \League\CommonMark\CommonMarkConverter();
-        $htmlContent = $converter->convert($markdown);
+        $htmlContent = (string) $converter->convert($markdown);
+
+        // Keep the closing section (e.g. "9. PODPIS") on the same page as the signatures, so the signatures never
+        // end up alone on a page without contract text above them.
+        [$bodyHtml, $closingHtml] = $this->splitClosingSection($htmlContent);
 
         // Client signatures: one entry per person who signed
         $clientSigners = $this->clientSigners();
@@ -246,6 +250,9 @@ class GenerateSignedContractPdf implements ShouldQueue
             text-align: left;
             vertical-align: top;
         }
+        .closing {
+            page-break-inside: avoid;
+        }
         .signatures {
             margin-top: 18pt;
             padding-top: 12pt;
@@ -330,7 +337,10 @@ class GenerateSignedContractPdf implements ShouldQueue
 <body>
     <div class="brand">PLUTZ</div>
 
-    {$htmlContent}
+    {$bodyHtml}
+
+    <div class="closing">
+    {$closingHtml}
 
     <div class="signatures">
         <table class="sig-table">
@@ -342,11 +352,31 @@ class GenerateSignedContractPdf implements ShouldQueue
             {$auditHtml}
         </div>
     </div>
+    </div>
 </body>
 </html>
 HTML;
 
         return $html;
+    }
+
+    /**
+     * Split the contract HTML into [body, closing section]: the closing section is everything from the last <h2>
+     * on, and is kept together with the signatures. Long last sections are not moved (they'd leave a big gap).
+     */
+    private function splitClosingSection(string $html): array
+    {
+        $pos = strripos($html, '<h2');
+        if ($pos === false || $pos === 0) {
+            return [$html, ''];
+        }
+
+        $closing = substr($html, $pos);
+        if (mb_strlen(strip_tags($closing)) > 1200) {
+            return [$html, ''];
+        }
+
+        return [substr($html, 0, $pos), $closing];
     }
 
     /**

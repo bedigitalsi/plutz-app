@@ -236,6 +236,26 @@ class ContractSeparateSigningLinksTest extends TestCase
         $this->assertSame(2, substr_count($html, 'Datum podpisa:'));
     }
 
+    /** @test */
+    public function closing_section_is_kept_together_with_the_signatures()
+    {
+        [$contract, $barbara, $pavel] = $this->twoSignerContract();
+        $contract->update(['markdown_snapshot' => "# Pogodba\n\n## 1. PREDMET\nNastop.\n\n## 9. PODPIS\nS podpisom potrjujem, da sem prebral/a pogodbo."]);
+        $this->sign($barbara, 'Barbara Perko Brvar', 'barbara@example.com');
+        $this->sign($pavel, 'Pavel Perhavc', 'pavel@example.com');
+        $contract->refresh();
+
+        $first = $contract->signTokens()->orderBy('used_at')->first();
+        $job = new GenerateSignedContractPdf($contract, $first->signature_path);
+        $html = (new \ReflectionMethod($job, 'generateHtml'))->invoke($job);
+
+        $closingPos = strpos($html, '<div class="closing">');
+        $this->assertNotFalse($closingPos);
+        $this->assertGreaterThan($closingPos, strpos($html, '9. PODPIS'), 'last section sits inside the closing block');
+        $this->assertLessThan($closingPos, strpos($html, '1. PREDMET'), 'earlier sections stay in the body');
+        $this->assertGreaterThan(strpos($html, '9. PODPIS'), strpos($html, '<div class="signatures">'));
+    }
+
     private function jobRecipient(SendContractInvitation $job): ?string
     {
         foreach ((new \ReflectionClass($job))->getProperties() as $prop) {

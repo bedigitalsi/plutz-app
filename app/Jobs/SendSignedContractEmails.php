@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Contract;
 use App\Models\Setting;
+use App\Support\ContractEmail;
 use App\Support\MailSettings;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -65,16 +66,16 @@ class SendSignedContractEmails implements ShouldQueue
         $pdfContent = file_get_contents($pdfFullPath);
 
         // Send to client
-        $clientBody = __('email.signed_contract_client_body', ['name' => $this->contract->client_name]);
-        $clientSubject = __('email.signed_contract_client_subject') . ' - Plutz';
+        $clientData = ContractEmail::signedData($this->contract);
+        $clientSubject = ContractEmail::signedSubject($this->contract);
 
-        Mail::raw($clientBody, function ($message) use ($pdfContent, $clientSubject) {
+        Mail::send(['html' => 'emails.contract-signed', 'text' => 'emails.contract-signed-text'], $clientData, function ($message) use ($pdfContent, $clientSubject) {
             $message->to($this->contract->client_email);
             foreach ($this->copyRecipients() as $cc) {
                 $message->cc($cc);
             }
             $message->subject($clientSubject)
-                ->attachData($pdfContent, 'signed-contract.pdf', ['mime' => 'application/pdf'])
+                ->attachData($pdfContent, 'pogodba-' . ($this->contract->contract_number ?? 'P-' . str_pad((string) $this->contract->id, 4, '0', STR_PAD_LEFT)) . '-podpisana.pdf', ['mime' => 'application/pdf'])
                 ;
             $message->getSymfonyMessage()->getHeaders()->addTextHeader('X-Email-Type', 'contract_signed');
 
@@ -98,7 +99,7 @@ class SendSignedContractEmails implements ShouldQueue
         Mail::raw($adminBody, function ($message) use ($pdfContent) {
             $message->to(MailSettings::getAdminRecipient())
                 ->subject('Contract Signed - ' . $this->contract->client_name)
-                ->attachData($pdfContent, 'signed-contract.pdf', ['mime' => 'application/pdf'])
+                ->attachData($pdfContent, 'pogodba-' . ($this->contract->contract_number ?? 'P-' . str_pad((string) $this->contract->id, 4, '0', STR_PAD_LEFT)) . '-podpisana.pdf', ['mime' => 'application/pdf'])
                 ;
             $message->getSymfonyMessage()->getHeaders()->addTextHeader('X-Email-Type', 'contract_signed');
 

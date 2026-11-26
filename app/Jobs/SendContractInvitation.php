@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Contract;
 use App\Models\Setting;
+use App\Support\ContractEmail;
 use App\Support\MailSettings;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -40,18 +41,13 @@ class SendContractInvitation implements ShouldQueue
         // Apply mail settings from database
         MailSettings::apply();
 
-        $signingUrl = route('contracts.sign', $this->token);
-
         $recipientName = $this->recipientName ?? $this->contract->client_name;
         $recipientEmail = $this->recipientEmail ?? $this->contract->client_email;
 
-        $body = __('email.contract_invitation_body', [
-            'name' => $recipientName,
-            'url' => $signingUrl,
-        ]);
-        $subject = __('email.contract_invitation_subject') . ' - Plutz';
+        $data = ContractEmail::invitationData($this->contract, $this->token, $recipientEmail, $recipientName);
+        $subject = ContractEmail::invitationSubject($this->contract);
 
-        Mail::raw($body, function ($message) use ($subject, $recipientEmail) {
+        Mail::send(['html' => 'emails.contract-invitation', 'text' => 'emails.contract-invitation-text'], $data, function ($message) use ($subject, $recipientEmail) {
             $message->to($recipientEmail)
                 ->subject($subject)
                 ;
